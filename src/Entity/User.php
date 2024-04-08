@@ -48,12 +48,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastSeen = null;
 
-    #[ORM\OneToOne(targetEntity: self::class, inversedBy: 'parent', cascade: ['persist', 'remove'])]
-    private ?self $parent = null;
-
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    private ?array $meta = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +97,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->roles, true);
     }
 
     /**
@@ -185,30 +184,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastSeen(?\DateTimeInterface $lastSeen): static
     {
         $this->lastSeen = $lastSeen;
-
-        return $this;
-    }
-
-    public function getParent(): ?self
-    {
-        return $this->parent;
-    }
-
-    public function setParent(?self $parent): static
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    public function getMeta(): ?array
-    {
-        return $this->meta;
-    }
-
-    public function setMeta(?array $meta): static
-    {
-        $this->meta = $meta;
 
         return $this;
     }
