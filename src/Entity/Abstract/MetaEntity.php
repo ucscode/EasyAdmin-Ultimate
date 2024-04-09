@@ -13,10 +13,10 @@ abstract class MetaEntity
     protected ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    protected ?string $key = null;
+    protected ?string $_key = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    protected ?string $value = null;
+    protected ?string $_value = null;
 
     public function __construct(?string $key = null, mixed $value = null)
     {
@@ -30,24 +30,24 @@ abstract class MetaEntity
 
     public function getKey(): ?string
     {
-        return $this->key;
+        return $this->_key;
     }
 
     public function setKey(string $key): static
     {
-        $this->key = $key;
+        $this->_key = $key;
 
         return $this;
     }
     
     public function getValue(): mixed
     {
-        return json_decode($this->value, true, 512, JSON_UNESCAPED_UNICODE);
+        return json_decode($this->_value, true, 512, JSON_UNESCAPED_UNICODE);
     }
 
     public function setValue(mixed $value): static
     {
-        $this->value = json_encode($value, JSON_UNESCAPED_UNICODE);
+        $this->_value = json_encode($value, JSON_UNESCAPED_UNICODE);
 
         return $this;
     }

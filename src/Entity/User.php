@@ -66,6 +66,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserNotification::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $notificationCollection;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $avatar = null;
+
     public function __construct()
     {
         $this->uuid = Uuid::v4()->toRfc4122();
@@ -154,14 +157,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $plainPassword, bool $hashPassword = true): static
+    public function setPassword(?string $plainPassword, bool $hashPassword = true): static
     {
-        $this->password = !$hashPassword ? $plainPassword : $this->getPasswordHasher()->hashPassword($this, $plainPassword);
+        $this->password = $plainPassword && $hashPassword ? 
+            $this->getPasswordHasher()->hashPassword($this, $plainPassword) :
+            $plainPassword;
 
         return $this;
     }
@@ -261,8 +266,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function addMeta(UserMeta $meta): static
     {
         if (!$this->metaCollection->contains($meta)) {
-            $this->metaCollection->add($meta);
             $meta->setUser($this);
+            $this->metaCollection->add($meta);
         }
 
         return $this;
@@ -321,5 +326,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             ],
         ]);
         return new UserPasswordHasher($passwordHasherFactory);
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): static
+    {
+        $this->avatar = $avatar;
+
+        return $this;
     }
 }

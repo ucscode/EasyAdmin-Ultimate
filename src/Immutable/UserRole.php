@@ -2,9 +2,11 @@
 
 namespace App\Immutable;
 
-class UserRole
+use ReflectionClass;
+
+final class UserRole
 {
-    public const ROLE_SUPERADMIN = 'ROLE_SUPERADMIN';
+    public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_MANAGER = 'ROLE_MANAGER';
     public const ROLE_EDITOR = 'ROLE_EDITOR';
@@ -25,4 +27,21 @@ class UserRole
     public const ROLE_STUDENT = 'ROLE_STUDENT';
     public const ROLE_TEACHER = 'ROLE_TEACHER';
     public const ROLE_SUPPORT = 'ROLE_SUPPORT';
+
+    public static function all(bool $readable = false): array
+    {
+        $constants = (new ReflectionClass(self::class))->getConstants();
+        if($readable) {
+            $mapper = array_map(
+                fn($value) => trim(str_replace(
+                    ['ROLE', '_'],
+                    ['', ' '],
+                    $value, 
+                )),
+                $constants
+            );
+            $constants = array_combine($mapper, $constants);
+        }
+        return $constants;
+    }
 }

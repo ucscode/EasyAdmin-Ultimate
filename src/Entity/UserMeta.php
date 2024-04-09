@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class UserMeta extends MetaEntity
 {
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $epoch = null;
+    private ?\DateTimeInterface $_epoch = null;
 
     #[ORM\ManyToOne(inversedBy: 'metaCollection')]
     #[ORM\JoinColumn(nullable: false)]
@@ -27,12 +27,12 @@ class UserMeta extends MetaEntity
 
     public function getEpoch(): ?\DateTimeInterface
     {
-        return $this->epoch;
+        return $this->_epoch;
     }
 
     public function setEpoch(\DateTimeInterface $epoch): static
     {
-        $this->epoch = $epoch;
+        $this->_epoch = $epoch;
 
         return $this;
     }

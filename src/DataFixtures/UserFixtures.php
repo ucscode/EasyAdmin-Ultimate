@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Entity\UserMeta;
 use App\Immutable\UserRole;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -17,7 +18,10 @@ class UserFixtures extends Fixture
             ],
             'password' => '12345',
             'email' => 'root@localhost.com',
-            'username' => 'ucscode'
+            'username' => 'ucscode',
+            'meta' => [
+                'balance' => '2000'
+            ]
         ]
     ];
 
@@ -31,8 +35,13 @@ class UserFixtures extends Fixture
             $user->setRoles($data['roles']);
             $user->setPassword($data['password']);
             $user->setEmail($data['email']);
-            $user->setUsername('username');
+            $user->setUsername($data['username']);
 
+            foreach($data['meta'] as $key => $value) {
+                $meta = new UserMeta($key, $value);
+                $user->addMeta($meta);
+            }
+            
             $manager->persist($user);
         }
 
