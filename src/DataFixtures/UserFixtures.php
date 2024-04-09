@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use App\Entity\UserMeta;
+use App\Entity\UserProperty;
 use App\Immutable\UserRole;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -38,10 +39,10 @@ class UserFixtures extends Fixture
             $user->setUsername($data['username']);
 
             foreach($data['meta'] as $key => $value) {
-                $meta = new UserMeta($key, $value);
-                $user->addMeta($meta);
+                $meta = new UserProperty($key, $value);
+                $user->addUserProperty($meta);
             }
-            
+
             $manager->persist($user);
         }
 

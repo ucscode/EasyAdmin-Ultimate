@@ -24,9 +24,6 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        
-        yield IdField::new('id')->onlyOnDetail();
-
         yield ImageField::new('avatar')
             ->setUploadDir(SystemConfig::USER_IMAGE_UPLOAD_DIR)
             ->setBasePath(SystemConfig::USER_IMAGE_BASE_PATH)

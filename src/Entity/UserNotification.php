@@ -33,7 +33,7 @@ class UserNotification
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column]
-    private ?bool $read = null;
+    private ?bool $seenByUser = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $actionText = null;
@@ -48,6 +48,7 @@ class UserNotification
     public function __construct()
     {
         $this->category = 'DEFAULT';
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -127,14 +128,14 @@ class UserNotification
         return $this;
     }
 
-    public function isRead(): ?bool
+    public function isSeenByUser(): ?bool
     {
-        return $this->read;
+        return $this->seenByUser;
     }
 
-    public function setRead(bool $read): static
+    public function setSeenByUser(bool $seen): static
     {
-        $this->read = $read;
+        $this->seenByUser = $seen;
 
         return $this;
     }

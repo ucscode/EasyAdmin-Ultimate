@@ -2,8 +2,11 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Configuration;
 use App\Entity\User;
 use App\Entity\UserMeta;
+use App\Entity\UserNotification;
+use App\Entity\UserProperty;
 use App\Immutable\UserRole;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -44,8 +47,14 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class);
-        yield MenuItem::linkToCrud('meta', 'fa fa-users', UserMeta::class);
+
+        yield MenuItem::section('Users');
+        yield MenuItem::linkToCrud('List', 'fa fa-users', User::class);
+        yield MenuItem::linkToCrud('Properties', 'fa fa-infinity', UserProperty::class);
+        yield MenuItem::linkToCrud('Notifications', 'fa fa-bell', UserNotification::class);
+
+        yield MenuItem::section('settings');
+        yield MenuItem::linkToCrud('Configuration', 'fa fa-wrench', Configuration::class);
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 }
