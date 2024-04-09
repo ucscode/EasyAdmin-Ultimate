@@ -17,7 +17,7 @@ class UserMeta extends MetaEntity
 
     #[ORM\ManyToOne(inversedBy: 'metaCollection')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $userReference = null;
+    private ?User $user = null;
 
     public function __construct(?string $key = null, mixed $value = null)
     {
@@ -39,12 +39,12 @@ class UserMeta extends MetaEntity
 
     public function getUser(): ?User
     {
-        return $this->userReference;
+        return $this->user;
     }
 
     public function setUser(?User $user): static
     {
-        $this->userReference = $user;
+        $this->user = $user;
 
         return $this;
     }

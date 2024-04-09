@@ -40,7 +40,7 @@ class UserNotification
 
     #[ORM\ManyToOne(inversedBy: 'notificationCollection')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $userReference = null;
+    private ?User $user = null;
 
     #[ORM\Column(length: 255)]
     private ?string $category = null;
@@ -153,12 +153,12 @@ class UserNotification
 
     public function getUser(): ?User
     {
-        return $this->userReference;
+        return $this->user;
     }
 
     public function setUser(?User $user): static
     {
-        $this->userReference = $user;
+        $this->user = $user;
 
         return $this;
     }

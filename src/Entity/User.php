@@ -2,13 +2,17 @@
 
 namespace App\Entity;
 
+use App\Immutable\UserRole;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -53,17 +57,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, UserMeta>
      */
-    #[ORM\OneToMany(targetEntity: UserMeta::class, mappedBy: 'userReference', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: UserMeta::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $metaCollection;
 
     /**
      * @var Collection<int, UserNotification>
      */
-    #[ORM\OneToMany(targetEntity: UserNotification::class, mappedBy: 'userReference', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: UserNotification::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $notificationCollection;
 
     public function __construct()
     {
+        $this->uuid = Uuid::v4()->toRfc4122();
+        $this->roles[] = UserRole::ROLE_USER;
+        $this->referralCode = explode("-", $this->uuid)[0];
+        $this->registrationTime = new \DateTimeImmutable();
+        $this->lastSeen = new \DateTimeImmutable();
         $this->metaCollection = new ArrayCollection();
         $this->notificationCollection = new ArrayCollection();
     }
@@ -103,8 +112,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -124,6 +131,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return in_array($role, $this->getRoles(), true);
     }
 
+    public function addRole(string $role): static
+    {
+        $this->hasRole($role) ?: $this->roles[] = $role;
+
+        return $this;
+    }
+
+    public function removeRole(string $role): static
+    {
+        if($this->hasRole($role)) {
+            $key = array_search($role, $this->roles, true);
+            if($key !== false) {
+                unset($this->roles[$key]);
+                $this->roles = array_values($this->roles);
+            }
+        }
+
+        return $this;
+    }
+
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -132,11 +159,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $plainPassword, bool $hashPassword = true): static
     {
-        $this->password = $password;
+        $this->password = !$hashPassword ? $plainPassword : $this->getPasswordHasher()->hashPassword($this, $plainPassword);
 
         return $this;
+    }
+
+    public function isPasswordValid(string $plainPassword): bool
+    {
+        return $this->getPasswordHasher()->isPasswordValid($this, $plainPassword);
     }
 
     /**
@@ -276,5 +308,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    private function getPasswordHasher(): UserPasswordHasher
+    {
+
+        $passwordHasherFactory = new PasswordHasherFactory([
+            self::class => ['algorithm' => 'auto'],
+            PasswordAuthenticatedUserInterface::class => [
+                'algorithm' => 'auto',
+                'cost' => 15,
+            ],
+        ]);
+        return new UserPasswordHasher($passwordHasherFactory);
     }
 }
