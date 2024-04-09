@@ -47,8 +47,9 @@ class UserNotification
 
     public function __construct()
     {
-        $this->category = 'DEFAULT';
-        $this->createdAt = new \DateTime();
+        $this->setCategory('DEFAULT');
+        $this->setCreatedAt(new \DateTime());
+        $this->setSeenByUser(false);
     }
 
     public function getId(): ?int
