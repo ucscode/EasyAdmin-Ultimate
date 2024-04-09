@@ -19,8 +19,9 @@ class UserProperty extends AbstractMetaEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
     
-    public function __construct()
+    public function __construct(?string $key = null, mixed $value = null)
     {
+        parent::__construct($key, $value);
         $this->setEpoch(new \DateTime());
     }
 

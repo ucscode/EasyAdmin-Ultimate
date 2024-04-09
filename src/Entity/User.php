@@ -60,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, UserNotification>
      */
-    #[ORM\OneToMany(targetEntity: UserNotification::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: UserNotification::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'])]
     private Collection $notificationCollection;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -69,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, UserProperty>
      */
-    #[ORM\OneToMany(targetEntity: UserProperty::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: UserProperty::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'])]
     private Collection $userProperties;
 
     public function __construct()
