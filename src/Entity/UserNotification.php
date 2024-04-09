@@ -1,0 +1,177 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\UserNotificationRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: UserNotificationRepository::class)]
+class UserNotification
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $message = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $data = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageUrl = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $actionUrl = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column]
+    private ?bool $read = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $actionText = null;
+
+    #[ORM\ManyToOne(inversedBy: 'notificationCollection')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $userReference = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $category = null;
+
+    public function __construct()
+    {
+        $this->category = 'DEFAULT';
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): static
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    public function getData(): ?array
+    {
+        return $this->data;
+    }
+
+    public function setData(?array $data): static
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(?string $imageUrl): static
+    {
+        $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
+
+    public function getActionUrl(): ?string
+    {
+        return $this->actionUrl;
+    }
+
+    public function setActionUrl(?string $actionUrl): static
+    {
+        $this->actionUrl = $actionUrl;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function isRead(): ?bool
+    {
+        return $this->read;
+    }
+
+    public function setRead(bool $read): static
+    {
+        $this->read = $read;
+
+        return $this;
+    }
+
+    public function getActionText(): ?string
+    {
+        return $this->actionText;
+    }
+
+    public function setActionText(?string $actionText): static
+    {
+        $this->actionText = $actionText;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->userReference;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->userReference = $user;
+
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+}

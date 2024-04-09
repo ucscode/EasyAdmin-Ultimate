@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -47,6 +49,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastSeen = null;
+
+    /**
+     * @var Collection<int, UserMeta>
+     */
+    #[ORM\OneToMany(targetEntity: UserMeta::class, mappedBy: 'userReference', orphanRemoval: true)]
+    private Collection $metaCollection;
+
+    /**
+     * @var Collection<int, UserNotification>
+     */
+    #[ORM\OneToMany(targetEntity: UserNotification::class, mappedBy: 'userReference', orphanRemoval: true)]
+    private Collection $notificationCollection;
+
+    public function __construct()
+    {
+        $this->metaCollection = new ArrayCollection();
+        $this->notificationCollection = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -184,6 +204,76 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastSeen(?\DateTimeInterface $lastSeen): static
     {
         $this->lastSeen = $lastSeen;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserMeta>
+     */
+    public function getMetaCollection(): Collection
+    {
+        return $this->metaCollection;
+    }
+    
+    public function getMetaByKey(string $key): ?UserMeta
+    {
+        foreach ($this->metaCollection as $meta) {
+            if ($meta->getKey() === $key) {
+                return $meta;
+            }
+        }
+        return null;
+    }
+
+    public function addMeta(UserMeta $meta): static
+    {
+        if (!$this->metaCollection->contains($meta)) {
+            $this->metaCollection->add($meta);
+            $meta->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeta(UserMeta $meta): static
+    {
+        if ($this->metaCollection->removeElement($meta)) {
+            // set the owning side to null (unless already changed)
+            if ($meta->getUser() === $this) {
+                $meta->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserNotification>
+     */
+    public function getNotificationCollection(): Collection
+    {
+        return $this->notificationCollection;
+    }
+
+    public function addNotification(UserNotification $userNotification): static
+    {
+        if (!$this->notificationCollection->contains($userNotification)) {
+            $this->notificationCollection->add($userNotification);
+            $userNotification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(UserNotification $userNotification): static
+    {
+        if ($this->notificationCollection->removeElement($userNotification)) {
+            // set the owning side to null (unless already changed)
+            if ($userNotification->getUser() === $this) {
+                $userNotification->setUser(null);
+            }
+        }
 
         return $this;
     }
