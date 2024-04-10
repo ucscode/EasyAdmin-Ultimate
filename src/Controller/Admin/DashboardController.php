@@ -7,7 +7,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 class DashboardController extends AbstractAdminDashboardController
 {
     #[Route('/admin', name: 'admin')]

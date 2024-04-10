@@ -11,7 +11,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -72,7 +71,7 @@ class UserCrudController extends AbstractCrudController
         $originalEntityData = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
         $password = trim($entityInstance->getPassword() ?? '');
         !empty($password) ?: $entityInstance->setPassword($originalEntityData['password'], false);
-        
+
         parent::updateEntity($entityManager, $entityInstance);
     }
 }

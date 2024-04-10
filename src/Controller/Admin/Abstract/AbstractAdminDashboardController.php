@@ -16,13 +16,6 @@ abstract class AbstractAdminDashboardController extends AbstractDashboardControl
     public function __construct(protected EntityManagerInterface $entityManager)
     {}
 
-    protected function getConfigurationValue(string $metaKey): ?string
-    {
-        $config = $this->entityManager->getRepository(Configuration::class)->findOneBy(['metaKey' => $metaKey]);
-        $value = !$config ? null : $config->getMetaValueAsString();
-        return $value;
-    }
-    
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
@@ -51,5 +44,12 @@ abstract class AbstractAdminDashboardController extends AbstractDashboardControl
         return parent::configureUserMenu($user)
 
         ;
+    }
+    
+    protected function getConfigurationValue(string $metaKey): ?string
+    {
+        $config = $this->entityManager->getRepository(Configuration::class)->findOneBy(['metaKey' => $metaKey]);
+        $value = !$config ? null : $config->getMetaValueAsString();
+        return $value;
     }
 }

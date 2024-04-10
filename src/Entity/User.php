@@ -69,6 +69,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserProperty::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'])]
     private Collection $userProperties;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
+
     public function __construct()
     {
         $this->notificationCollection = new ArrayCollection();
@@ -319,6 +322,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $userProperty->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
