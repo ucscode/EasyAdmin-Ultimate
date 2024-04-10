@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Immutable\UserRole;
 use App\Repository\UserRepository;
+use App\Service\PrimaryTaskService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -13,11 +14,10 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_UUID', fields: ['uuid'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_UNIQUE_ID', fields: ['uniqueId'])]
 #[UniqueEntity(fields: ['email'])]
 #[UniqueEntity(fields: ['username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    private ?string $uuid = null;
+    private ?string $uniqueId = null;
 
     /**
      * @var list<string> The user roles
@@ -51,9 +51,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $registrationTime = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $referralCode = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastSeen = null;
 
@@ -74,13 +71,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->uuid = Uuid::v4()->toRfc4122();
-        $this->roles[] = UserRole::ROLE_USER;
-        $this->referralCode = explode("-", $this->uuid)[0];
-        $this->registrationTime = new \DateTimeImmutable();
-        $this->lastSeen = new \DateTimeImmutable();
         $this->notificationCollection = new ArrayCollection();
         $this->userProperties = new ArrayCollection();
+
+        $this->setUniqueId((new PrimaryTaskService())->keygen(7));
+        $this->addRole(UserRole::ROLE_USER);
+        $this->setRegistrationTime(new \DateTimeImmutable());
+        $this->setLastSeen(new \DateTimeImmutable());
     }
 
     public function __toString()
@@ -93,14 +90,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getUuid(): ?string
+    public function getUniqueId(): ?string
     {
-        return $this->uuid;
+        return $this->uniqueId;
     }
 
-    public function setUuid(string $uuid): static
+    public function setUniqueId(string $uniqueId): static
     {
-        $this->uuid = $uuid;
+        $this->uniqueId = $uniqueId;
 
         return $this;
     }
@@ -112,7 +109,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->uuid;
+        return (string) $this->uniqueId;
     }
 
     /**
@@ -225,18 +222,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRegistrationTime(\DateTimeInterface $registrationTime): static
     {
         $this->registrationTime = $registrationTime;
-
-        return $this;
-    }
-
-    public function getReferralCode(): ?string
-    {
-        return $this->referralCode;
-    }
-
-    public function setReferralCode(string $referralCode): static
-    {
-        $this->referralCode = $referralCode;
 
         return $this;
     }

@@ -13,7 +13,7 @@ class UserFixtures extends Fixture
 {
     const FIXTURES = [
         1 => [
-            'uuid' => '87e60f2b-09c3-4fec-8312-8c21fa267fd3',
+            'uniqueId' => '87e60f2b',
             'roles' => [
                 UserRole::ROLE_ADMIN,
             ],
@@ -32,7 +32,7 @@ class UserFixtures extends Fixture
 
             $user = new User();
 
-            $user->setUuid($data['uuid']);
+            $user->setUniqueId($data['uniqueId']);
             $user->setRoles($data['roles']);
             $user->setPassword($data['password']);
             $user->setEmail($data['email']);

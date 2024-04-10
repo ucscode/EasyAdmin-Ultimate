@@ -22,9 +22,13 @@ abstract class AbstractMetaEntity
     #[ORM\Column(type: Types::SMALLINT)]
     protected ?int $metaMode = null;
 
-    public function __construct(?string $key = null, mixed $value = null)
+    public function __construct(?string $key = null, mixed $value = null, int $mode = ModeEnum::READ_WRITE)
     {
-        is_null($key) ?: ($this->setMetaKey($key) && $this->setMetaValue($value));
+        if(!is_null($key)) {
+            $this->setMetaKey($key);
+            $this->setMetaValue($value);
+            $this->setMetaMode($mode);
+        }
         $this->setMetaMode(ModeEnum::READ_WRITE);
     }
 
@@ -55,6 +59,21 @@ abstract class AbstractMetaEntity
         $this->metaValue = json_encode($value, JSON_UNESCAPED_UNICODE);
 
         return $this;
+    }
+
+    public function getMetaValueAsString(): string
+    {
+        $value = $this->getMetaValue();
+
+        if(!is_scalar($value)) {
+            $value = sprintf("[%s]", gettype($value));
+        }
+
+        if(is_bool($value)) {
+            $value = $value ? 'TRUE' : 'FALSE';
+        }
+
+        return $value;
     }
 
     public function getMetaMode(): ?int

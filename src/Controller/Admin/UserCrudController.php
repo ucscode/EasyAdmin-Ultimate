@@ -24,6 +24,9 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        yield TextField::new('uniqueId')
+            ->hideOnForm();
+
         yield ImageField::new('avatar')
             ->setUploadDir(SystemConfig::USER_IMAGE_UPLOAD_DIR)
             ->setBasePath(SystemConfig::USER_IMAGE_BASE_PATH)
@@ -57,9 +60,6 @@ class UserCrudController extends AbstractCrudController
 
         yield DateTimeField::new('registrationTime');
 
-        yield TextField::new('referralCode', 'Ref Code')
-            ->setFormTypeOption('disabled', true);
-
         yield DateTimeField::new('lastSeen')->hideOnForm();
 
         yield ChoiceField::new('roles')
@@ -69,10 +69,10 @@ class UserCrudController extends AbstractCrudController
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $entityData = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
-        if(empty($entityInstance->getPassword())) {
-            $entityInstance->setPassword($entityData['password'], false);
-        }
+        $originalEntityData = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
+        $password = trim($entityInstance->getPassword() ?? '');
+        !empty($password) ?: $entityInstance->setPassword($originalEntityData['password'], false);
+        
         parent::updateEntity($entityManager, $entityInstance);
     }
 }

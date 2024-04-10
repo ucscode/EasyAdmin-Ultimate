@@ -7,8 +7,9 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
-                class: App\Entity\User
-                property: uuid
+                class: App\Entity\UserSample
+                property: identifier
+        # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -16,6 +17,16 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
