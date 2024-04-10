@@ -57,38 +57,5 @@ final class SystemConfig
             'value' => '123 Main Street Cityville, Stateville UK, 12345',
             'field' => TextareaField::class,
         ],
-
-        'smtp.enabled' => [
-            'value' => false,
-            'field' => BooleanField::class,
-        ],
-
-        'smtp.server' => [
-            'value' => 'smtp.gmail.com'
-        ],
-
-        'smtp.port' => [
-            'value' => 587,
-            'field' => IntegerField::class,
-        ],
-
-        'smtp.username' => [
-            'value' => 'username@gmail.com',
-            'field' => EmailField::class,
-        ],
-
-        'smtp.password' => [
-            'value' => '****',
-            'field' => TextField::class,
-        ],
-
-        'smtp.protocol' => [
-            'value' => 'TLS',
-            'field' => ChoiceField::class,
-            'choices' => [
-                'TLS' => 'TLS',
-                'SSL' => 'SSL',
-            ]
-        ]
     ];
 }
