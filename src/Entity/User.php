@@ -170,18 +170,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(?string $plainPassword, bool $hashPassword = true): static
+    public function setPassword(?string $password): static
     {
-        $this->password = $plainPassword && $hashPassword ? 
-            $this->getPasswordHasher()->hashPassword($this, $plainPassword) :
-            $plainPassword;
+        $this->password = $password;
 
         return $this;
-    }
-
-    public function isPasswordValid(string $plainPassword): bool
-    {
-        return $this->getPasswordHasher()->isPasswordValid($this, $plainPassword);
     }
 
     /**
@@ -269,19 +262,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
-    }
-
-    private function getPasswordHasher(): UserPasswordHasher
-    {
-
-        $passwordHasherFactory = new PasswordHasherFactory([
-            self::class => ['algorithm' => 'auto'],
-            PasswordAuthenticatedUserInterface::class => [
-                'algorithm' => 'auto',
-                'cost' => 15,
-            ],
-        ]);
-        return new UserPasswordHasher($passwordHasherFactory);
     }
 
     public function getAvatar(): ?string
