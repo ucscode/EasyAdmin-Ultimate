@@ -46,7 +46,7 @@ class InitCommand extends Command
                     $config = (new Configuration())
                         ->setMetaKey($key)
                         ->setMetaValue($context['value'])
-                        ->setMetaMode($context['mode'] ?? ModeEnum::READ_WRITE)
+                        ->addBitwiseMode($context['mode'] ?? ModeEnum::READ->value|ModeEnum::WRITE->value)
                     ;
 
                     $this->entityManager->persist($config);

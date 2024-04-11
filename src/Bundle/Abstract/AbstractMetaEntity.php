@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Entity\Abstract;
+namespace App\Bundle\Abstract;
 
 use App\Enum\ModeEnum;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-abstract class AbstractMetaEntity
+abstract class AbstractMetaEntity extends AbstractBitwiseMode
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,20 +19,20 @@ abstract class AbstractMetaEntity
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected ?string $metaValue = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     protected ?\DateTimeInterface $metaTimestamp = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    protected ?int $metaMode = null;
+    #[ORM\Column(type: Types::SMALLINT, length: 3)]
+    protected int $bitwiseMode = 0;
 
-    public function __construct(?string $key = null, mixed $value = null, int $mode = ModeEnum::READ_WRITE)
+    public function __construct(?string $key = null, mixed $value = null, int|ModeEnum $mode = ModeEnum::READ)
     {
         if(!is_null($key)) {
             $this->setMetaKey($key);
             $this->setMetaValue($value);
         }
-        $this->setMetaTimestamp(new DateTime());
-        $this->setMetaMode($mode);
+        $this->setMetaTimestamp(new \DateTime());
+        $this->addBitwiseMode($mode);
     }
 
     public function getId(): ?int
@@ -74,7 +73,7 @@ abstract class AbstractMetaEntity
         }
 
         if(is_bool($value)) {
-            $value = $value ? 'TRUE' : 'FALSE';
+            $value = $value ? 'Enabled' : 'Disabled';
         }
 
         return $value;
@@ -90,17 +89,5 @@ abstract class AbstractMetaEntity
     public function getMetaTimestamp(): ?\DateTimeInterface
     {
         return $this->metaTimestamp;
-    }
-
-    public function getMetaMode(): ?int
-    {
-        return $this->metaMode;
-    }
-
-    public function setMetaMode(?int $mode): static
-    {
-        $this->metaMode = $mode;
-
-        return $this;
     }
 }

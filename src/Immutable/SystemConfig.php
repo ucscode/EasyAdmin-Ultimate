@@ -19,7 +19,7 @@ final class SystemConfig
 
         'app.name' => [
             'value' => 'User Synthetics',
-            'mode' => ModeEnum::READ_WRITE,
+            'mode' => 4|2,
         ],
         
         'app.logo' => [
@@ -58,6 +58,11 @@ final class SystemConfig
         'test.key' => [
             'value' => false,
             'field' => BooleanField::class,
+        ],
+
+        'test.hidden' => [
+            'value' => 'seen',
+            'mode' => 0,
         ]
     ];
 }
