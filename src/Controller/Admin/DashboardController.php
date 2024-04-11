@@ -3,7 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Controller\Admin\Abstract\AbstractAdminDashboardController;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -29,30 +28,5 @@ class DashboardController extends AbstractAdminDashboardController
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
         // return $this->render('some/path/my-dashboard.html.twig');
-    }
-
-    public function configureDashboard(): Dashboard
-    {
-        # Uncomment any of the option below for customization
-
-        return Dashboard::new()
-
-            ->setTitle($this->getConfigurationValue('app.name'))    
-
-            ->renderContentMaximized()
-            
-            ->disableDarkMode()
-
-            // ->renderSidebarMinimized()
-
-            /**
-             * IMPORTANT: the locale feature won't work unless you add the {_locale} parameter 
-             * in the admin dashboard URL (e.g. '/admin/{_locale}').
-             * the name of each locale will be rendered in that locale
-             * (in the following example you'll see: "English", "Polski")
-            */
-
-            // ->setLocales(['en', 'pl']) 
-        ;
     }
 }

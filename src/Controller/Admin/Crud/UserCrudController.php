@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\Admin\Crud;
 
 use App\Controller\Admin\Abstract\AbstractAdminCrudController;
+use App\Controller\Admin\DashboardController;
 use App\Entity\User;
 use App\Immutable\SystemConfig;
 use App\Immutable\UserRole;
@@ -29,7 +30,8 @@ class UserCrudController extends AbstractAdminCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('uniqueId')
-            ->setDisabled();
+            ->setDisabled()
+            ->hideWhenCreating();
 
         yield ImageField::new('avatar')
             ->setUploadDir(SystemConfig::USER_IMAGE_UPLOAD_DIR)

@@ -2,19 +2,25 @@
 
 namespace App\Controller\Admin\Abstract;
 
+use App\Controller\General\Abstract\AbstractGeneralDashboardController;
 use App\Entity\Configuration;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-abstract class AbstractAdminDashboardController extends AbstractDashboardController
+abstract class AbstractAdminDashboardController extends AbstractGeneralDashboardController
 {
-    public function __construct(protected EntityManagerInterface $entityManager)
-    {}
+    public function configureDashboard(): Dashboard
+    {
+        /**
+         * You can modify this configuration
+         */
+        return parent::configureDashboard()
+        ;
+    }
 
     public function configureMenuItems(): iterable
     {
@@ -44,13 +50,5 @@ abstract class AbstractAdminDashboardController extends AbstractDashboardControl
         return parent::configureUserMenu($user)
 
         ;
-    }
-    
-    protected function getConfigurationValue(string $metaKey, ?string $default = null): ?string
-    {
-        $repository = $this->entityManager->getRepository(Configuration::class);
-        $config = $repository->findOneBy(['metaKey' => $metaKey]);
-        $value = $config?->getMetaValueAsString() ?? $default;
-        return $value;
     }
 }
