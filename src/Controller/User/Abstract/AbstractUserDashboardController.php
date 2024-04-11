@@ -20,6 +20,11 @@ abstract class AbstractUserDashboardController extends AbstractGeneralDashboardC
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+
+        yield MenuItem::linkToRoute('Profile', 'fas fa-list', 'user_profile', [
+            'joe' => 'glow'
+        ]);
+
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 }
