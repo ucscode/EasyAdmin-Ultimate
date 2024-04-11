@@ -2,13 +2,15 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\Admin\Abstract\AbstractAdminCrudController;
 use App\Entity\User;
 use App\Immutable\SystemConfig;
 use App\Immutable\UserRole;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -16,7 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class UserCrudController extends AbstractCrudController
+class UserCrudController extends AbstractAdminCrudController
 {
     public static function getEntityFqcn(): string
     {
@@ -79,6 +81,25 @@ class UserCrudController extends AbstractCrudController
         }
 
         yield $parentField;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $userPropertyAction = Action::new('userProperty', 'Properties')
+            ->linkToUrl(function(User $entity) {
+                return $this->adminUrlGenerator
+                    ->setDashboard(DashboardController::class)
+                    ->setController(UserPropertyCrudController::class)
+                    ->setAction(Crud::PAGE_INDEX)
+                    ->set('userId', $entity->getId())
+                    ->generateUrl()
+                ;
+            });
+        ;
+            
+        return $actions
+            ->add(Crud::PAGE_INDEX, $userPropertyAction)
+        ;
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void

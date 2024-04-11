@@ -82,11 +82,11 @@ class ConfigurationCrudController extends AbstractCrudController
         $entity = $this->getContext()->getEntity()->getInstance();
 
         if(!$entity) {
-            throw new \RuntimeException('Configuration cannot be created from GUI');
+            throw new \RuntimeException('New configuration cannot be created from GUI');
         }
-
-        if($entity->getBitwiseMode() < ModeEnum::WRITE->value) {
-            throw new \Exception(sprintf('%s configuration cannot be modified from GUI', $entity->getMetaKey()));
+        
+        if(!$entity->hasBitwiseMode(ModeEnum::WRITE)) {
+            throw new \Exception(sprintf('`%s` configuration is readonly and cannot be modified from GUI', $entity->getMetaKey()));
         }
         
         $structure = SystemConfig::getConfigurationStructure($entity->getMetaKey());
