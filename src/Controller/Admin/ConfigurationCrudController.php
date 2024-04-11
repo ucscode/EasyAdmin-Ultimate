@@ -16,6 +16,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ConfigurationCrudController extends AbstractCrudController
@@ -44,15 +48,19 @@ class ConfigurationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('metaKey', 'Name')
-            ->setDisabled(true)
-            ->formatValue(function($value) {
-                return $this->formatLabel($value);
-            });
+        if(!$this->isFormPage($pageName)) {
 
-        yield $this->getDynamicMetaValueField($pageName)
+            yield TextField::new('metaKey', 'Name')
+                ->formatValue(function($value) {
+                    return $this->formatLabel($value);
+                });
+                
+            yield TextField::new('metaValueAsString', 'value');
             
-        ;
+            return;
+        }
+
+        yield $this->getDynamicMetaValueField($pageName);
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
@@ -65,40 +73,47 @@ class ConfigurationCrudController extends AbstractCrudController
 
     protected function getDynamicMetaValueField(string $pageName): FieldInterface
     {
-        if(in_array($pageName, [Crud::PAGE_INDEX, Crud::PAGE_DETAIL])) {
-            return TextField::new('metaValueAsString', 'value');
+        $entity = $this->getContext()->getEntity()->getInstance();
+
+        if(!$entity) {
+            throw new \RuntimeException('Configuration cannot be created from GUI');
         }
 
-        $configurations = $this->entityManager->getRepository(Configuration::class)->findAll();
-
-        $configurations = array_filter($configurations, function(Configuration $config) {
-            return $config->hasBitwiseMode(ModeEnum::READ);
-        });
-
-        dd($configurations);
+        if($entity->getBitwiseMode() < ModeEnum::WRITE->value) {
+            throw new \Exception(sprintf('%s configuration cannot be modified from GUI', $entity->getMetaKey()));
+        }
         
-        
-
-        // $entity = $this->getContext()->getEntity()->getInstance();
-        // $metaField = TextField::new('metaValue', $this->formatLabel($entity?->getMetaKey()));
-
-        // if($entity) {
-        //     foreach(SystemConfig::ADMIN_CONFIG_STRUCTURE as $metaKey => $config) {
-        //         if($metaKey === $entity->getMetaKey()) {
-        //             if(!empty($config['field'])) {
-        //                 $label = $config['label'] ?? $entity->getMetaKey();
-        //                 $metaField = $config['field']::new('metaValue', $this->formatLabel($label));
-        //             }
-        //             break;
-        //         }
-        //     }
-        // }
-        
-        return $metaField;
+        return $this->getConfigurationField($entity);
     }
 
-    protected function formatLabel(?string $label): string
+    private function getConfigurationField(Configuration $entity): FieldInterface
+    {
+        $metaKey = $entity->getMetaKey();
+        $name = 'metaValue';
+
+        $field = match($metaKey) {
+            'app.slogan' => TextareaField::new($name),
+            'app.description' => TextareaField::new($name),
+            'office.email' => EmailField::new($name),
+            'office.phone' => TelephoneField::new($name),
+            'office.address' => TextareaField::new($name),
+            'test.key' => BooleanField::new($name),
+            default => TextField::new($name),
+        };
+
+        $field->setLabel($this->formatLabel($metaKey));
+
+        return $field;
+    }
+
+    private function formatLabel(?string $label): string
     {
         return empty($label) ? 'Value' : ucwords(implode(' ', explode(".", $label)));
     }
+
+    private function isFormPage(string $pageName): bool
+    {
+        return in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT]);
+    }
+
 }
