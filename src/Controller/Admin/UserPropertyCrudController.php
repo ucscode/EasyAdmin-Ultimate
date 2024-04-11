@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Controller\Admin\Abstract\AbstractAdminCrudController;
 use App\Entity\User;
 use App\Entity\UserProperty;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Enum\ModeEnum;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use Doctrine\ORM\QueryBuilder;
@@ -18,12 +18,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class UserPropertyCrudController extends AbstractAdminCrudController
 {
     const PROPERTY_KEY = 'metaValue';
+
+    public static function getEntityFqcn(): string
+    {
+        return UserProperty::class;
+    }
 
     public function configureCrud(Crud $crud): Crud
     {
@@ -32,41 +36,61 @@ class UserPropertyCrudController extends AbstractAdminCrudController
         ;
     }
 
-    public static function getEntityFqcn(): string
-    {
-        return UserProperty::class;
-    }
-
+    /**
+     * @return \Generator
+     */
     public function configureFields(string $pageName): iterable
     {
         yield AssociationField::new('user')
             ->setDisabled()
         ;
 
-        yield TextField::new('metaKey')
+        yield TextField::new('metaKey', 'Property')
             ->setDisabled()
         ;
 
-        // If crud is EDIT page, use dynamic fields. Otherwise, use regular field
+        // if page is form page
 
-        yield in_array($pageName, [Crud::PAGE_EDIT]) ? 
-            $this->getDynamicFields() : 
-            Field::new('metaValueAsString')
-                ->formatValue(function(mixed $value, UserProperty $entity) {
-                    return $value . '-';
-                });
+        if(in_array($pageName, [Crud::PAGE_EDIT])) {
+
+            yield $this->getDynamicFormFields();
+
+            return;
+        };
+
+        yield Field::new('metaValueAsString', 'Value')
+            ->formatValue(
+                function(mixed $value, UserProperty $entity) {
+                    // Write your condition to format values in INDEX page
+                    return $value;
+                }
+            );
     }
 
     public function configureActions(Actions $actions): Actions
     {
         return $actions
             ->disable(Action::BATCH_DELETE, Action::NEW, Action::DELETE)
+            ->update(Crud::PAGE_INDEX, Action::EDIT, function(Action $action) {
+                return $action
+                    ->displayIf(function(UserProperty $entity) {
+                        // Write your condition to hide edit button
+                        return $entity->hasBitwiseMode(ModeEnum::WRITE->value);
+                    });
+            })
         ;
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
+        /** 
+         * @var \Symfony\Component\HttpFoundation\Request 
+         * */
         $request = $this->getContext()->getRequest();
+
+        /**
+         * @var ?int
+         */
         $userId = $request->query->get('userId');
 
         if(!$userId) {
@@ -76,7 +100,14 @@ class UserPropertyCrudController extends AbstractAdminCrudController
             ));
         }
 
+        /**
+         * @var ?\App\Repository\UserRepository
+         */
         $userRepository = $this->entityManager->getRepository(User::class);
+
+        /**
+         * @var ?\App\Entity\User 
+         */
         $userEntity = $userRepository->find($userId);
 
         if(!$userEntity) {
@@ -89,18 +120,44 @@ class UserPropertyCrudController extends AbstractAdminCrudController
 
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
             ->andWhere('entity.user = :user')
-            ->setParameter('user', $userEntity);
+            ->andWhere('entity.bitwiseMode >= :mode')
+            ->setParameter('user', $userEntity)
+            ->setParameter('mode', ModeEnum::READ->value)
+        ;
     }
 
-    public function getDynamicFields(): FieldInterface
+    protected function getDynamicFormFields(): FieldInterface
     {
+        /** 
+         * @var UserProperty $entity
+         * */
         $entity = $this->getContext()->getEntity()?->getInstance();
+
+        if(!$entity->hasBitwiseMode(ModeEnum::WRITE)) {
+            throw new \RuntimeException(sprintf(
+                'The user property "%s" is readonly and cannot be modified from GUI',
+                $entity->getMetaKey()
+            ));
+        }
+
         $metaKey = $entity->getMetaKey();
-        $field = $this->getDistinctPropertyFields()[$metaKey] ?? TextField::new(self::PROPERTY_KEY);
+
+        /** 
+         * @var Field $field 
+         * */
+        $field = $this->getMetaValueFieldTypes()[$metaKey] ?? TextField::new(self::PROPERTY_KEY);
+
+        $field->setLabel('Value');
+        
         return $field;
     }
 
-    protected function getDistinctPropertyFields(): array
+    /**
+     * Edit the array within the function to match your project preference
+     * 
+     * @return array
+     */
+    protected function getMetaValueFieldTypes(): array
     {
         return [
             'balance' => MoneyField::new(self::PROPERTY_KEY)

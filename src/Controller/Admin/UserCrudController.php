@@ -40,6 +40,82 @@ class UserCrudController extends AbstractAdminCrudController
 
         yield TextField::new('username');
 
+        yield $this->passwordFieldFactory($pageName);
+
+        yield DateTimeField::new('registrationTime');
+
+        yield DateTimeField::new('lastSeen')->hideOnForm();
+
+        yield ChoiceField::new('roles')
+            ->allowMultipleChoices()
+            ->setChoices($this->getAllowedRoles())
+        ;
+
+        $parentField = AssociationField::new('parent')
+            ->hideOnIndex();
+        
+        if($this->getUser()) {
+            $parentField->setFormTypeOption('query_builder', function (UserRepository $userRepository) {
+                return $userRepository->createQueryBuilder('u')
+                    ->andWhere('u.id != :currentUserId')
+                    ->setParameter('currentUserId', $this->getUser()->getId());
+            });
+        }
+
+        yield $parentField;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $userPropertyAction = Action::new('userProperty', 'Properties')
+            ->linkToUrl(
+                function(User $entity) {
+                    return $this->adminUrlGenerator
+                        ->setDashboard(DashboardController::class)
+                        ->setController(UserPropertyCrudController::class)
+                        ->setAction(Crud::PAGE_INDEX)
+                        ->set('userId', $entity->getId())
+                        ->generateUrl()
+                    ;
+                }
+            );
+        ;
+
+        return $actions
+            ->add(Crud::PAGE_INDEX, $userPropertyAction)
+        ;
+    }
+
+    public function createEntity(string $entityFqcn): User
+    {
+        /**
+         * Modify the entity instance or create associates entities
+         * 
+         * Example: Your can add mandatory `UserProperty` to the entity instance
+         * 
+         * @var User
+         */
+        $entity = parent::createEntity($entityFqcn);
+
+        return $entity;
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $originalEntityData = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
+        $plainPassword = trim($entityInstance->getPassword() ?? '');
+
+        !empty($plainPassword) ?: $entityInstance->setPassword($originalEntityData['password'], false); // restore original password
+
+        /**
+         * Make your custom modification here
+         */
+        
+        parent::updateEntity($entityManager, $entityInstance); // Flush & Persist
+    }
+
+    protected function passwordFieldFactory(string $pageName): TextField
+    {
         $passwordField = TextField::new('password')
             ->onlyOnForms()
             ->setFormTypeOptions([
@@ -59,55 +135,23 @@ class UserCrudController extends AbstractAdminCrudController
                 ));
         }
 
-        yield $passwordField;
-
-        yield DateTimeField::new('registrationTime');
-
-        yield DateTimeField::new('lastSeen')->hideOnForm();
-
-        yield ChoiceField::new('roles')
-            ->allowMultipleChoices()
-            ->setChoices(UserRole::all(true));
-
-        $parentField = AssociationField::new('parent')
-            ->hideOnIndex();
-        
-        if($this->getUser()) {
-            $parentField->setFormTypeOption('query_builder', function (UserRepository $userRepository) {
-                return $userRepository->createQueryBuilder('u')
-                    ->andWhere('u.id != :currentUserId')
-                    ->setParameter('currentUserId', $this->getUser()->getId());
-            });
-        }
-
-        yield $parentField;
+        return $passwordField;
     }
 
-    public function configureActions(Actions $actions): Actions
+    protected function getAllowedRoles(): array
     {
-        $userPropertyAction = Action::new('userProperty', 'Properties')
-            ->linkToUrl(function(User $entity) {
-                return $this->adminUrlGenerator
-                    ->setDashboard(DashboardController::class)
-                    ->setController(UserPropertyCrudController::class)
-                    ->setAction(Crud::PAGE_INDEX)
-                    ->set('userId', $entity->getId())
-                    ->generateUrl()
-                ;
-            });
-        ;
-            
-        return $actions
-            ->add(Crud::PAGE_INDEX, $userPropertyAction)
-        ;
-    }
+        /**
+         * Get the array of allowed user roles.
+         *
+         * If the array is empty, all roles will be returned.
+         *
+         * @var array
+         */
 
-    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        $originalEntityData = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
-        $password = trim($entityInstance->getPassword() ?? '');
-        !empty($password) ?: $entityInstance->setPassword($originalEntityData['password'], false);
+        $allowedRoles = [
+            // 'Display Value' => UserRole::ROLE_ADMIN
+        ];
 
-        parent::updateEntity($entityManager, $entityInstance);
+        return $allowedRoles ?: UserRole::all(true);
     }
 }
