@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Configuration;
 use App\Enum\ModeEnum;
 use App\Immutable\SystemConfig;
+use App\Service\PrimaryTaskService;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -16,19 +17,18 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ConfigurationCrudController extends AbstractCrudController
 {
-    public function __construct(protected EntityManagerInterface $entityManager)
-    {
-        
+    public function __construct(
+        protected EntityManagerInterface $entityManager,
+        protected PrimaryTaskService $primaryTaskService,
+    )
+    {   
+        // constructor
     }
+
     public static function getEntityFqcn(): string
     {
         return Configuration::class;
@@ -49,14 +49,19 @@ class ConfigurationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        if(!$this->isFormPage($pageName)) {
+        if(!in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT])) {
 
             yield TextField::new('metaKey', 'Name')
                 ->formatValue(function($value) {
-                    return $this->formatLabel($value);
+                    return ucwords(str_replace('.', " ", $value));
                 });
                 
-            yield TextField::new('metaValueAsString', 'value');
+            yield TextField::new('metaValueAsString', 'value')
+                ->formatValue(function($value, $entity) {
+                    // return your formated value here
+                    return $this->primaryTaskService->truncateText($value);
+                })
+            ;
             
             return;
         }
@@ -84,50 +89,8 @@ class ConfigurationCrudController extends AbstractCrudController
             throw new \Exception(sprintf('%s configuration cannot be modified from GUI', $entity->getMetaKey()));
         }
         
-        return $this->getConfigurationField($entity);
+        $structure = SystemConfig::getConfigurationStructure($entity->getMetaKey());
+
+        return $structure['field'];
     }
-
-    private function getConfigurationField(Configuration $entity): FieldInterface
-    {
-        $metaKey = $entity->getMetaKey();
-        $name = 'metaValue';
-
-        $field = match($metaKey) {
-
-            'app.slogan' => TextareaField::new($name),
-
-            'app.description' => TextareaField::new($name),
-
-            'app.logo' => ImageField::new($name)
-                ->setUploadDir('public/assets/images/system')
-                ->setBasePath('assets/images/system')
-            ,
-
-            'office.email' => EmailField::new($name),
-
-            'office.phone' => TelephoneField::new($name),
-
-            'office.address' => TextareaField::new($name),
-
-            'test.key' => BooleanField::new($name),
-
-            default => TextField::new($name),
-
-        };
-
-        $field->setLabel($this->formatLabel($metaKey));
-
-        return $field;
-    }
-
-    private function formatLabel(?string $label): string
-    {
-        return empty($label) ? 'Value' : ucwords(implode(' ', explode(".", $label)));
-    }
-
-    private function isFormPage(string $pageName): bool
-    {
-        return in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT]);
-    }
-
 }

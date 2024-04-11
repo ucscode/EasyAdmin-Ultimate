@@ -26,4 +26,12 @@ class PrimaryTaskService
 
         return implode($keyset);
     }
+
+    public function truncateText(string $text, $length = 63): string
+    {
+        if (strlen($text) > $length) {
+            $text = substr($text, 0, $length) . '&hellip;';
+        }
+        return $text;
+    }
 }
