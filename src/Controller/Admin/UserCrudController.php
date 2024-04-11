@@ -28,7 +28,7 @@ class UserCrudController extends AbstractAdminCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('uniqueId')
-            ->hideOnForm();
+            ->setDisabled();
 
         yield ImageField::new('avatar')
             ->setUploadDir(SystemConfig::USER_IMAGE_UPLOAD_DIR)
@@ -110,7 +110,7 @@ class UserCrudController extends AbstractAdminCrudController
         /**
          * Make your custom modification here
          */
-        
+
         parent::updateEntity($entityManager, $entityInstance); // Flush & Persist
     }
 

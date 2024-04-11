@@ -46,10 +46,11 @@ abstract class AbstractAdminDashboardController extends AbstractDashboardControl
         ;
     }
     
-    protected function getConfigurationValue(string $metaKey): ?string
+    protected function getConfigurationValue(string $metaKey, ?string $default = null): ?string
     {
-        $config = $this->entityManager->getRepository(Configuration::class)->findOneBy(['metaKey' => $metaKey]);
-        $value = !$config ? null : $config->getMetaValueAsString();
+        $repository = $this->entityManager->getRepository(Configuration::class);
+        $config = $repository->findOneBy(['metaKey' => $metaKey]);
+        $value = $config?->getMetaValueAsString() ?? $default;
         return $value;
     }
 }

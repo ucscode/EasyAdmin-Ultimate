@@ -33,7 +33,26 @@ class DashboardController extends AbstractAdminDashboardController
 
     public function configureDashboard(): Dashboard
     {
+        # Uncomment any of the option below for customization
+
         return Dashboard::new()
-            ->setTitle($this->getConfigurationValue('app.name'));
+
+            ->setTitle($this->getConfigurationValue('app.name'))    
+
+            ->renderContentMaximized()
+            
+            ->disableDarkMode()
+
+            // ->renderSidebarMinimized()
+
+            /**
+             * IMPORTANT: the locale feature won't work unless you add the {_locale} parameter 
+             * in the admin dashboard URL (e.g. '/admin/{_locale}').
+             * the name of each locale will be rendered in that locale
+             * (in the following example you'll see: "English", "Polski")
+            */
+
+            // ->setLocales(['en', 'pl']) 
+        ;
     }
 }
