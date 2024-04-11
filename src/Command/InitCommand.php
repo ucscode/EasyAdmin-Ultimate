@@ -11,8 +11,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'uss:init',
@@ -33,7 +31,7 @@ class InitCommand extends Command
             ''
         ]);
         
-        foreach(SystemConfig::ADMIN_CONFIG_STRUCTURE as $key => $context) {
+        foreach(SystemConfig::getConfigurationStructure() as $key => $context) {
             
             $config = $this->entityManager->getRepository(Configuration::class)->findOneBy([
                 'metaKey' => $key
@@ -42,11 +40,11 @@ class InitCommand extends Command
             if(!$config) {
 
                 try {
-
+                    
                     $config = (new Configuration())
                         ->setMetaKey($key)
                         ->setMetaValue($context['value'])
-                        ->addBitwiseMode($context['mode'] ?? ModeEnum::READ->value|ModeEnum::WRITE->value)
+                        ->setBitwiseMode($context['mode'])
                     ;
 
                     $this->entityManager->persist($config);

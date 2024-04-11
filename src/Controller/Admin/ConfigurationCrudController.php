@@ -18,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -92,13 +93,26 @@ class ConfigurationCrudController extends AbstractCrudController
         $name = 'metaValue';
 
         $field = match($metaKey) {
+
             'app.slogan' => TextareaField::new($name),
+
             'app.description' => TextareaField::new($name),
+
+            'app.logo' => ImageField::new($name)
+                ->setUploadDir('public/assets/images/system')
+                ->setBasePath('assets/images/system')
+            ,
+
             'office.email' => EmailField::new($name),
+
             'office.phone' => TelephoneField::new($name),
+
             'office.address' => TextareaField::new($name),
+
             'test.key' => BooleanField::new($name),
+
             default => TextField::new($name),
+
         };
 
         $field->setLabel($this->formatLabel($metaKey));

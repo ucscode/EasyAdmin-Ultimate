@@ -15,14 +15,7 @@ abstract class AbstractBitwiseMode
     
     public function setBitwiseMode(int|ModeEnum $mode): static
     {
-        $modeInteger = $this->getModeInteger($mode);
-        $validModes = array_map(fn($case) => $case->value, ModeEnum::cases());
-
-        if(!in_array($modeInteger, $validModes)) {
-            throw new \InvalidArgumentException('Invalid mode');
-        }
-    
-        $this->bitwiseMode = $modeInteger;
+        $this->bitwiseMode = $this->getModeInteger($mode);
     
         return $this;
     }
@@ -61,9 +54,12 @@ abstract class AbstractBitwiseMode
 
     private function getModeInteger(int|ModeEnum $mode): int
     {
-        if($mode instanceof ModeEnum) {
-            $mode = $mode->value;
+        $modeInteger = $mode instanceof ModeEnum ? $mode->value : $mode;
+
+        if($modeInteger & ModeEnum::EXECUTE->value|ModeEnum::READ->value|ModeEnum::WRITE->value) {
+            return $modeInteger;
         }
-        return $mode;
+        
+        throw new \InvalidArgumentException('Invalid Bitwise Mode');
     }
 }

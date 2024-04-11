@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 final class SystemConfig
 {
@@ -15,54 +16,54 @@ final class SystemConfig
     const USER_IMAGE_BASE_PATH = 'assets/images/users';
     const USER_IMAGE_UPLOAD_FILE_PATTERN = '[contenthash]-[timestamp].[extension]';
 
-    const ADMIN_CONFIG_STRUCTURE = [
+    public static function getConfigurationStructure(): array
+    {
+        $name = 'metaValue';
 
-        'app.name' => [
-            'value' => 'User Synthetics',
-            'mode' => 4|2,
-        ],
-        
-        'app.logo' => [
-            'value' => 'http://ucscode.com/common/images/origin.png',
-            'field' => ImageField::class,
-            'image' => [
-                'upload_dir' => 'public/assets/images/system',
-                'assets/images/system',
+        $configuration = [
+            'app.name' => 'User Synthetics',
+            'app.logo' => [
+                'value' => 'http://ucscode.com/common/images/origin.png',
+                'field' => ImageField::new($name)
+                    ->setUploadDir('public/assets/images/system')
+                    ->setBasePath('assets/images/system'),
             ],
-        ],
+            'app.slogan' => [
+                'value' => 'Your premier destination for creating stunning and effective websites.',
+                'field' => TextareaField::new($name),
+            ],
+            'app.description' => [
+                'value' => "Our comprehensive suite of services covers every aspect of website creation, from concept and design to development and launch. We work closely with our clients to understand their goals, audience, and brand identity, ensuring that every website we create reflects their vision and objectives.",
+                'field' => TextareaField::new($name),
+            ],
+            'office.email' => [
+                'value' => 'office@example.com',
+                'field' => EmailField::new($name),
+            ],
+            'office.phone' => [
+                'value' => '+1 212-555-0123',
+                'field' => TelephoneField::new($name),
+            ],
+            'office.address' => [
+                'value' => "123 Main Street \nAnytown, CA 12345 \nUnited States",
+                'field' => TextareaField::new($name),
+            ],
+            'test.key' => [
+                'value' => false,
+                'field' => BooleanField::class,
+            ],
+            'test.hidden' => [
+                'value' => 'seen',
+                'mode' => 0,
+            ]
+        ];
 
-        'app.slogan' => [
-            'value' => 'Commercial web framework for building professional application',
-        ],
+        array_walk($configuration, function(&$context, $key) use ($name) {
+            is_array($context) ?: $context = ['value' => $context];
+            !empty($context['field']) ?: $context['field'] = TextField::new($name);
+            is_integer($context['mode'] ?? null) ?: $context['mode'] = ModeEnum::READ->value|ModeEnum::WRITE->value;
+        });
 
-        'app.description' => [
-            'value' => 'Describe your website briefly! This may be visible to client that visit your page',
-            'field' => TextareaField::class,
-        ],
-
-        'office.email' => [
-            'value' => 'webmail@example.com',
-            'field' => EmailField::class,
-        ],
-
-        'office.phone' => [
-            'value' => '123455',
-            'field' => TelephoneField::class,
-        ],
-
-        'office.address' => [
-            'value' => '123 Main Street Cityville, Stateville UK, 12345',
-            'field' => TextareaField::class,
-        ],
-
-        'test.key' => [
-            'value' => false,
-            'field' => BooleanField::class,
-        ],
-
-        'test.hidden' => [
-            'value' => 'seen',
-            'mode' => 0,
-        ]
-    ];
+        return $configuration;
+    }
 }
