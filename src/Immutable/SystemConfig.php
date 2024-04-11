@@ -4,13 +4,10 @@ namespace App\Immutable;
 
 use App\Enum\ModeEnum;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 final class SystemConfig
 {
@@ -57,5 +54,10 @@ final class SystemConfig
             'value' => '123 Main Street Cityville, Stateville UK, 12345',
             'field' => TextareaField::class,
         ],
+
+        'test.key' => [
+            'value' => false,
+            'field' => BooleanField::class,
+        ]
     ];
 }

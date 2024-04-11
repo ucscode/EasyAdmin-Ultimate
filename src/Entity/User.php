@@ -10,8 +10,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -71,6 +69,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
+    private ?self $parent = null;
 
     public function __construct()
     {
@@ -314,6 +315,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): static
+    {
+        $this->parent = $parent;
 
         return $this;
     }

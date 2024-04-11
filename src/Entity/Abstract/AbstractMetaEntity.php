@@ -3,6 +3,7 @@
 namespace App\Entity\Abstract;
 
 use App\Enum\ModeEnum;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,6 +20,9 @@ abstract class AbstractMetaEntity
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected ?string $metaValue = null;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    protected ?\DateTimeInterface $metaTimestamp = null;
+
     #[ORM\Column(type: Types::SMALLINT)]
     protected ?int $metaMode = null;
 
@@ -27,9 +31,9 @@ abstract class AbstractMetaEntity
         if(!is_null($key)) {
             $this->setMetaKey($key);
             $this->setMetaValue($value);
-            $this->setMetaMode($mode);
         }
-        $this->setMetaMode(ModeEnum::READ_WRITE);
+        $this->setMetaTimestamp(new DateTime());
+        $this->setMetaMode($mode);
     }
 
     public function getId(): ?int
@@ -74,6 +78,18 @@ abstract class AbstractMetaEntity
         }
 
         return $value;
+    }
+
+    public function setMetaTimestamp(?\DateTimeInterface $timestamp): static
+    {
+        $this->metaTimestamp = $timestamp;
+
+        return $this;
+    }
+
+    public function getMetaTimestamp(): ?\DateTimeInterface
+    {
+        return $this->metaTimestamp;
     }
 
     public function getMetaMode(): ?int

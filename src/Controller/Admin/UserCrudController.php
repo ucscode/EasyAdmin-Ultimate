@@ -5,9 +5,11 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use App\Immutable\SystemConfig;
 use App\Immutable\UserRole;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
@@ -64,6 +66,19 @@ class UserCrudController extends AbstractCrudController
         yield ChoiceField::new('roles')
             ->allowMultipleChoices()
             ->setChoices(UserRole::all(true));
+
+        $parentField = AssociationField::new('parent')
+            ->hideOnIndex();
+        
+        if($this->getUser()) {
+            $parentField->setFormTypeOption('query_builder', function (UserRepository $userRepository) {
+                return $userRepository->createQueryBuilder('u')
+                    ->andWhere('u.id != :currentUserId')
+                    ->setParameter('currentUserId', $this->getUser()->getId());
+            });
+        }
+
+        yield $parentField;
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
