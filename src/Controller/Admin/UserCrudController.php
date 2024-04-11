@@ -8,6 +8,7 @@ use App\Immutable\SystemConfig;
 use App\Immutable\UserRole;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -54,11 +55,25 @@ class UserCrudController extends AbstractAdminCrudController
         $parentField = AssociationField::new('parent')
             ->hideOnIndex();
         
-        if($this->getUser()) {
-            $parentField->setFormTypeOption('query_builder', function (UserRepository $userRepository) {
-                return $userRepository->createQueryBuilder('u')
-                    ->andWhere('u.id != :currentUserId')
-                    ->setParameter('currentUserId', $this->getUser()->getId());
+        /**
+         * Filter parent associates to prevent user from selecting oneself as parent
+         */
+        if(in_array($pageName, [Crud::PAGE_EDIT, Crud::PAGE_NEW])) {
+
+            $parentField->setFormTypeOption('query_builder', function (UserRepository $userRepository): QueryBuilder{
+                /**
+                 * @var User
+                 */
+                $entity = $this->getContext()->getEntity()->getInstance();
+                $queryBuilder = $userRepository->createQueryBuilder('u');
+                
+                if($entity?->getId()) {
+                    $queryBuilder
+                        ->andWhere('u.id != :currentUserId')
+                        ->setParameter('currentUserId', $entity->getId());
+                };
+
+                return $queryBuilder;
             });
         }
 
