@@ -1,14 +1,49 @@
 {% extends '@EasyAdmin/layout.html.twig' %}
 
+{% set easy_admin_url = 'https://symfony.com/bundles/EasyAdminBundle/current/index.html' %}
+
 {% block main %}
 
     <h4>Welcome to (Symfony) User Synthetics Dashboard</h4>
 
+    <div class='border-top border-bottom p-3 my-3'>
+
+        <p class='lead'>Building website just got a whole lot easier</p>
+
+        <ul>
+            <li class='mb-2'>
+                Modify the content of this page by editing &mdash; <span class='text-secondary'>templates/{{ _self }}</span>
+            </li>
+            <li class='mb-2'>
+                Access the controller of this page in &mdash; <span class='text-secondary'>src/Controller/Admin/DashboardController.php</span>
+            </li>
+        </ul>
+
+    </div>
+
+    <div class=''>
+
+        <p>
+            This Dashboard is powered by 
+            <a href='{{ easy_admin_url }}' target='_blank'>
+                EasyAdmin <i class="fa fa-external-link ms-1"></i>
+            </a>
+        </p>
+
+        <p>
+            For more information, visit the 
+            <a href='{{ easy_admin_url }}' target='_blank'>
+                EasyAdmin Documentation <i class="fa fa-external-link ms-1"></i>
+            </a>
+        </p>
+
+    </div>
+
     <hr>
 
-    Building website just got a whole lot easier
-
-    <hr>
+    <h5 class="py-3">
+        An Example Of Symfony <a href='https://ux.symfony.com/chartjs' target='_blank'>UX Chart.js</a> Interface
+    </h5>
 
     <div class="row">
         <div class="col-lg-6">

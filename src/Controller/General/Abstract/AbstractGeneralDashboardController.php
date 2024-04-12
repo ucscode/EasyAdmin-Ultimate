@@ -4,6 +4,7 @@ namespace App\Controller\General\Abstract;
 
 use App\Entity\Configuration;
 use App\Entity\User;
+use App\Immutable\SystemConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -59,7 +60,11 @@ abstract class AbstractGeneralDashboardController extends AbstractDashboardContr
         return parent::configureAssets()
 
             ->addAssetMapperEntry('app')
-            
+
+            ->addCssFile(SystemConfig::SYSTEM_CSS_FILE)
+
+            ->addJsFile(SystemConfig::SYSTEM_JS_FILE)
+
         ;
     }
     

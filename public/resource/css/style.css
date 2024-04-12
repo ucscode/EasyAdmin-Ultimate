@@ -17,3 +17,6 @@ For instance:
 These variables can then be applied across your stylesheets, promoting consistency and making it simpler to 
 update your design scheme in the future.
 */
+body {
+    word-wrap: break-word;
+}

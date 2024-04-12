@@ -2,6 +2,7 @@
 
 namespace App\Controller\General\Abstract;
 
+use App\Immutable\SystemConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -24,6 +25,10 @@ abstract class AbstractGeneralCrudController extends AbstractCrudController
         return parent::configureAssets($assets)
 
             ->addAssetMapperEntry('app')
+
+            ->addCssFile(SystemConfig::SYSTEM_CSS_FILE)
+
+            ->addJsFile(SystemConfig::SYSTEM_JS_FILE)
 
         ;
     }

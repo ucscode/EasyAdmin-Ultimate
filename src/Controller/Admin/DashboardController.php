@@ -3,7 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Controller\Admin\Abstract\AbstractAdminDashboardController;
-use App\Immutable\UserRole;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
