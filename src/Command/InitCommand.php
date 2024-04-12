@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'uss:init',
+    name: 'uss:initialize',
     description: 'Initialize User Synthetics Application',
     hidden: false,
 )]
@@ -35,7 +35,7 @@ class InitCommand extends Command
         try {
 
             $this->overloadAdminConfiguration();
-            $this->compileAssetMapperProdEnv(); 
+            $this->computeAssetMapperResource(); 
 
         } catch(Exception $exception) {
 
@@ -86,8 +86,11 @@ class InitCommand extends Command
         $this->output->writeln('<info>Initialization Successful</info>');
     }
 
-    protected function compileAssetMapperProdEnv(): void
+    protected function computeAssetMapperResource(): void
     {
+        // php bin/console importmap:install
+
+        # If env == prod
         // php bin/console asset-map:compile
     }
 }

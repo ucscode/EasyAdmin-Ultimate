@@ -1,0 +1,19 @@
+/**
+Custom Style Configuration
+--------------------------
+
+Customizing CSS using variables can greatly enhance maintainability and flexibility in your stylesheets. 
+By defining variables at the root level (:root), you establish a centralized repository of values that 
+can be easily adjusted throughout your project.
+
+For instance:
+
+:root {
+    --sidebar-bg: lightgrey;
+    --main-text-color: black;
+    --accent-color: var(--sidebar-bg);
+}
+
+These variables can then be applied across your stylesheets, promoting consistency and making it simpler to 
+update your design scheme in the future.
+*/
