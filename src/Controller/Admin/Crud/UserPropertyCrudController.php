@@ -33,6 +33,8 @@ class UserPropertyCrudController extends AbstractAdminCrudController
     {
         return $crud
             ->showEntityActionsInlined()
+            ->setPageTitle(Crud::PAGE_INDEX, 'User Properties')
+            ->setPageTitle(Crud::PAGE_EDIT, 'Modify User Property')
         ;
     }
 

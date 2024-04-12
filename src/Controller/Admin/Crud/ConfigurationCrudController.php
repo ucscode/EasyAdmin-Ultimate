@@ -18,13 +18,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use function Symfony\Component\String\u;
 
 class ConfigurationCrudController extends AbstractCrudController
 {
-    public function __construct(
-        protected EntityManagerInterface $entityManager,
-        protected PrimaryTaskService $primaryTaskService,
-    )
+    public function __construct(protected EntityManagerInterface $entityManager)
     {   
         // constructor
     }
@@ -59,7 +57,7 @@ class ConfigurationCrudController extends AbstractCrudController
             yield TextField::new('metaValueAsString', 'value')
                 ->formatValue(function($value, $entity) {
                     // return your formated value here
-                    return $this->primaryTaskService->truncateText($value);
+                    return u($value)->truncate(71, '&hellip;');
                 })
             ;
             

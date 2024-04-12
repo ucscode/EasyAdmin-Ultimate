@@ -30,14 +30,6 @@ class PrimaryTaskService
         return implode($keyset);
     }
 
-    public function truncateText(string $text, $length = 63): string
-    {
-        if (strlen($text) > $length) {
-            $text = substr($text, 0, $length) . '&hellip;';
-        }
-        return $text;
-    }
-
     public function relativeTime(DateTimeInterface|int|string $time, bool $verbose = false): string
     {
         if(!($time instanceof DateTimeInterface)) {

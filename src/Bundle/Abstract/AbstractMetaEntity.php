@@ -73,7 +73,7 @@ abstract class AbstractMetaEntity extends AbstractBitwiseMode
         }
 
         if(is_bool($value)) {
-            $value = $value ? 'Enabled' : 'Disabled';
+            $value = $value ? 'On' : 'Off';
         }
 
         return $value;

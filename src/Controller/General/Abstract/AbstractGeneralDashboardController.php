@@ -5,6 +5,7 @@ namespace App\Controller\General\Abstract;
 use App\Entity\Configuration;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -49,6 +50,15 @@ abstract class AbstractGeneralDashboardController extends AbstractDashboardContr
         return parent::configureUserMenu($user)
 
             // ->setAvatarUrl($user->getAvatar()) 
+
+        ;
+    }
+
+    public function configureAssets(): Assets
+    {
+        return parent::configureAssets()
+
+            
 
         ;
     }
