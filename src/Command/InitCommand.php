@@ -19,6 +19,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class InitCommand extends Command
 {
+    protected InputInterface $input;
+    protected OutputInterface $output;
+
     public function __construct(protected EntityManagerInterface $entityManager)
     {
         parent::__construct();
@@ -26,53 +29,65 @@ class InitCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln([
+        $this->input = $input;
+        $this->output = $output;
+
+        try {
+
+            $this->overloadAdminConfiguration();
+            $this->compileAssetMapperProdEnv(); 
+
+        } catch(Exception $exception) {
+
+            $output->writeln(sprintf(
+                "<error>%s on %s:%s</error>", 
+                $exception->getMessage(),
+                $exception->getFile(),
+                $exception->getLine(),
+            ));
+
+            return Command::FAILURE;
+
+        }
+
+        return Command::SUCCESS;
+    }
+
+    protected function overloadAdminConfiguration(): void
+    {
+        $this->output->writeln([
             'Creating Admin Configuration',
             ''
         ]);
         
         foreach(SystemConfig::getConfigurationStructure() as $key => $context) {
             
-            $config = $this->entityManager->getRepository(Configuration::class)->findOneBy([
-                'metaKey' => $key
-            ]);
+            $config = $this->entityManager->getRepository(Configuration::class)->findOneBy(['metaKey' => $key]);
 
             if(!$config) {
-
-                try {
                     
-                    $config = (new Configuration())
-                        ->setMetaKey($key)
-                        ->setMetaValue($context['value'])
-                        ->setBitwiseMode($context['mode'])
-                    ;
+                $config = (new Configuration())
+                    ->setMetaKey($key)
+                    ->setMetaValue($context['value'])
+                    ->setBitwiseMode($context['mode'])
+                ;
 
-                    $this->entityManager->persist($config);
+                $this->entityManager->persist($config);
 
-                    $output->writeln([
-                        sprintf('[<info>%s</info>] = %s', $key, $context['value']),
-                        ''
-                    ]);
-
-                } catch(Exception $exception) {
-
-                    $output->writeln(sprintf(
-                        "<error>%s on %s:%s</error>", 
-                        $exception->getMessage(),
-                        $exception->getFile(),
-                        $exception->getLine(),
-                    ));
-
-                    return Command::FAILURE;
-
-                }
+                $this->output->writeln([
+                    sprintf('[<info>%s</info>] = %s', $key, $context['value']),
+                    ''
+                ]);
             }
         }
 
         $this->entityManager->flush();
 
-        $output->writeln('<info>Initialization Successful</info>');
+        $this->output->writeln('<info>Initialization Successful</info>');
+    }
 
-        return Command::SUCCESS;
+    protected function compileAssetMapperProdEnv(): void
+    {
+        // php bin/console asset-map:compile
     }
 }
