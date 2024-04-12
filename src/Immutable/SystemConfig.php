@@ -22,8 +22,13 @@ final class SystemConfig
     {
         /**
          * System Default Configurations
+         * -----------------------------
          * 
-         * $metaKey => (array)$context
+         * $metaKey => (array) $context
+         * 
+         * If a new configuration is added to the list, you must run the following command to implement it:
+         * 
+         * $ php bin/console uss:initialize
          * 
          * @var array
          */
