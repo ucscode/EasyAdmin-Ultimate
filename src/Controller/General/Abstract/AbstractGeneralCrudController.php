@@ -3,6 +3,7 @@
 namespace App\Controller\General\Abstract;
 
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -16,5 +17,14 @@ abstract class AbstractGeneralCrudController extends AbstractCrudController
     )
     {
         // constructor
+    }
+
+    public function configureAssets(Assets $assets): Assets
+    {
+        return parent::configureAssets($assets)
+
+            ->addAssetMapperEntry('app')
+
+        ;
     }
 }

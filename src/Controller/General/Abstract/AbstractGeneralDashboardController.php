@@ -58,8 +58,8 @@ abstract class AbstractGeneralDashboardController extends AbstractDashboardContr
     {
         return parent::configureAssets()
 
+            ->addAssetMapperEntry('app')
             
-
         ;
     }
     
