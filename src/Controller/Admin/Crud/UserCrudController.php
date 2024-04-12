@@ -119,10 +119,22 @@ class UserCrudController extends AbstractAdminCrudController
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
+        $submittedPassword = trim($entityInstance->getPassword() ?? '');
         $originalEntityData = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
-        $plainPassword = trim($entityInstance->getPassword() ?? '');
 
-        !empty($plainPassword) ?: $entityInstance->setPassword($originalEntityData['password'], false); // restore original password
+        /**
+         * @var User $entityInstance
+         */
+        $entityInstance->setPassword($originalEntityData['password'], false); // restore original password
+        
+        if(!empty($submittedPassword)) {
+            $entityInstance->setPassword(
+                $this->userPasswordHasher->hashPassword(
+                    $entityInstance,
+                    $submittedPassword
+                )
+            );
+        }
 
         /**
          * Make your custom modification here
