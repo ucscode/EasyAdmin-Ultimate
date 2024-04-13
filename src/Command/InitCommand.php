@@ -48,7 +48,7 @@ class InitCommand extends Command
 
         try {
 
-            if($this->kernel->getEnvironment() === self::ENV_DEV) {
+            if(!$this->isProductionEnvironment()) {
                 $this->symfonyStyle->warning('You are currently in "development" environment');
             }
 
@@ -128,7 +128,7 @@ class InitCommand extends Command
         $this->runSymfonyConsoleCommand(['php', 'bin/console', 'importmap:install']);
 
         # If env == prod
-        if($this->kernel->getEnvironment() === self::ENV_PROD) {
+        if($this->isProductionEnvironment()) {
             
             $this->runSymfonyConsoleCommand(['php', 'bin/console', 'asset-map:compile']);
 
@@ -141,7 +141,7 @@ class InitCommand extends Command
     {
         $this->symfonyStyle->title('Generating APP_SECRET');
 
-        if($this->kernel->getEnvironment() === self::ENV_PROD) {
+        if($this->isProductionEnvironment()) {
 
             $secret = $this->primaryTaskService->keygen(32);
             $result = shell_exec('sed -i -E "s/^APP_SECRET=.{32}$/APP_SECRET=' . $secret . '/" .env');
@@ -164,5 +164,10 @@ class InitCommand extends Command
         }
 
         $this->symfonyStyle->text($process->getOutput());
+    }
+
+    private function isProductionEnvironment(): bool
+    {
+        return $this->kernel->getEnvironment() === self::ENV_PROD;
     }
 }
