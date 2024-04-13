@@ -1,7 +1,13 @@
-{% extends '@EasyAdmin/page/content.html.twig' %}
+{% extends '@!EasyAdmin/crud/edit.html.twig' %}
 
-{% block main %}
+{% block edit_form %}
 
-    This is a profile page
+    {{ form(edit_form) }}
+
+    {# {{ form_row(edit_form.oldPassword) }}
+    {{ form_row(edit_form.plainPassword) }}
+
+    {{ form_end(edit_form) }} #}
+
 
 {% endblock %}

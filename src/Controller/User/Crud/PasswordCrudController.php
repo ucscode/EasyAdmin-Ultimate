@@ -25,17 +25,19 @@ class PasswordCrudController extends ProfileCrudController
             ->setFormTypeOptions([
                 'mapped' => false,
             ])
+            ->setRequired(true)
         ;
 
         yield TextField::new('plainPassword')
             ->setFormType(RepeatedType::class)
             ->setFormTypeOptions([
                 'type' => PasswordType::class,
-                'first_options'  => ['label' => 'Password'],
+                'first_options'  => ['label' => 'New Password'],
                 'second_options' => ['label' => 'Confirm Password'],
                 'invalid_message' => 'The password fields must match.',
                 'mapped' => false,
             ])
+            ->setRequired(true)
         ;
     }
 
