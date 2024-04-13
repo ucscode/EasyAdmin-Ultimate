@@ -8,12 +8,14 @@ use App\Entity\User;
 use App\Immutable\SystemConfig;
 use App\Immutable\UserRole;
 use App\Repository\UserRepository;
+use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
@@ -31,7 +33,8 @@ class UserCrudController extends AbstractAdminCrudController
     {
         yield TextField::new('uniqueId')
             ->setDisabled()
-            ->hideWhenCreating();
+            ->hideWhenCreating()
+        ;
 
         yield ImageField::new('avatar')
             ->setUploadDir(SystemConfig::USER_IMAGE_UPLOAD_DIR)
@@ -45,17 +48,29 @@ class UserCrudController extends AbstractAdminCrudController
 
         yield $this->passwordFieldFactory($pageName);
 
-        yield DateTimeField::new('registrationTime');
+        yield DateTimeField::new('registrationTime')
+            ->hideOnIndex()
+        ;
 
-        yield DateTimeField::new('lastSeen')->hideOnForm();
+        yield DateTimeField::new('lastSeen')
+            ->hideOnForm()
+            ->formatValue(function(DateTimeInterface $value) {
+                return $this->primaryTaskService->relativeTime($value, true);
+            })
+        ;
 
         yield ChoiceField::new('roles')
             ->allowMultipleChoices()
             ->setChoices($this->getAllowedRoles())
         ;
 
+        yield BooleanField::new('isVerified', 'verified')
+            ->renderAsSwitch(false)
+        ;
+
         $parentField = AssociationField::new('parent')
-            ->hideOnIndex();
+            ->hideOnIndex()
+        ;
         
         /**
          * Filter parent associates to prevent user from selecting oneself as parent
@@ -117,9 +132,20 @@ class UserCrudController extends AbstractAdminCrudController
         return $entity;
     }
 
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $this->hashEntityPassword($entityInstance, $entityInstance->getPassword());
+
+        /**
+         * Make your custom modification here
+         */
+        parent::persistEntity($entityManager, $entityInstance);
+    }
+
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         $submittedPassword = trim($entityInstance->getPassword() ?? '');
+
         $originalEntityData = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
 
         /**
@@ -127,19 +153,11 @@ class UserCrudController extends AbstractAdminCrudController
          */
         $entityInstance->setPassword($originalEntityData['password'], false); // restore original password
         
-        if(!empty($submittedPassword)) {
-            $entityInstance->setPassword(
-                $this->userPasswordHasher->hashPassword(
-                    $entityInstance,
-                    $submittedPassword
-                )
-            );
-        }
+        empty($submittedPassword) ?: $this->hashEntityPassword($entityInstance, $submittedPassword);
 
         /**
          * Make your custom modification here
          */
-
         parent::updateEntity($entityManager, $entityInstance); // Flush & Persist
     }
 
@@ -182,5 +200,15 @@ class UserCrudController extends AbstractAdminCrudController
         ];
 
         return $allowedRoles ?: UserRole::all(true);
+    }
+
+    private function hashEntityPassword(User $entity, string $plainPassword): void
+    {
+        $entity->setPassword(
+            $this->userPasswordHasher->hashPassword(
+                $entity,
+                $plainPassword
+            )
+        );
     }
 }

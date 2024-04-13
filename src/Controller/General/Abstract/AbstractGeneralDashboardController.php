@@ -2,10 +2,10 @@
 
 namespace App\Controller\General\Abstract;
 
+use App\Controller\General\Trait\DashboardGeneralControllerTrait;
 use App\Entity\Configuration;
 use App\Entity\User;
 use App\Immutable\SystemConfig;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
@@ -14,10 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 abstract class AbstractGeneralDashboardController extends AbstractDashboardController
 {
-    public function __construct(protected EntityManagerInterface $entityManager)
-    {
-        
-    }
+    use DashboardGeneralControllerTrait;
 
     public function configureDashboard(): Dashboard
     {
@@ -66,17 +63,5 @@ abstract class AbstractGeneralDashboardController extends AbstractDashboardContr
             ->addJsFile(SystemConfig::SYSTEM_JS_FILE)
 
         ;
-    }
-    
-    protected function getConfigurationValue(string $metaKey, ?string $default = null): ?string
-    {
-        $repository = $this->entityManager->getRepository(Configuration::class);
-        /**
-         * @var Configuration
-         */
-        $config = $repository->findOneBy(['metaKey' => $metaKey]);
-        $value = $config?->getMetaValueAsString() ?? $default;
-        
-        return $value;
     }
 }
