@@ -19,17 +19,4 @@ abstract class AbstractGeneralCrudController extends AbstractCrudController
     {
         // constructor
     }
-
-    public function configureAssets(Assets $assets): Assets
-    {
-        return parent::configureAssets($assets)
-
-            ->addAssetMapperEntry('app')
-
-            ->addCssFile(SystemConfig::SYSTEM_CSS_FILE)
-
-            ->addJsFile(SystemConfig::SYSTEM_JS_FILE)
-
-        ;
-    }
 }

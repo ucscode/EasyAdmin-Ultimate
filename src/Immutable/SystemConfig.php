@@ -13,7 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 final class SystemConfig
 {
     const SYSTEM_CSS_FILE = 'resource/css/style.css';
-    const SYSTEM_JS_FILE = 'resource/css/script.js';
+    const SYSTEM_JS_FILE = 'resource/js/script.js';
 
     const USER_IMAGE_UPLOAD_DIR = 'public/resource/images/users';
     const USER_IMAGE_BASE_PATH = 'resource/images/users';
