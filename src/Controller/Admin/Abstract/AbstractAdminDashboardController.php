@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin\Abstract;
 
+use App\Controller\Admin\Crud\UserCrudController;
 use App\Controller\General\Abstract\AbstractGeneralDashboardController;
 use App\Entity\Configuration;
 use App\Entity\User;
@@ -28,8 +29,11 @@ abstract class AbstractAdminDashboardController extends AbstractGeneralDashboard
 
         yield MenuItem::section('Membership');
 
-        yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class);
+        yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class)
+            ->setController(UserCrudController::class);
+            
         yield MenuItem::linkToCrud('Add User', 'fa fa-user-plus', User::class)
+            ->setController(UserCrudController::class)
             ->setAction(Crud::PAGE_NEW);
 
         // yield MenuItem::linkToCrud('Properties', 'fa fa-infinity', UserProperty::class);

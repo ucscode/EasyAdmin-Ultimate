@@ -3,7 +3,6 @@
 namespace App\Controller\User;
 
 use App\Controller\User\Abstract\AbstractUserDashboardController;
-use App\Immutable\UserRole;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
