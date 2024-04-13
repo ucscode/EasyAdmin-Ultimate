@@ -104,7 +104,7 @@ class InitCommand extends Command
                     ->setBitwiseMode($context['mode'])
                 ;
 
-                // $this->entityManager->persist($config);
+                $this->entityManager->persist($config);
 
                 $this->symfonyStyle->text(
                     sprintf(
