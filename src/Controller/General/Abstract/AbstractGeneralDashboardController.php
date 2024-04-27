@@ -2,19 +2,30 @@
 
 namespace App\Controller\General\Abstract;
 
-use App\Controller\General\Trait\DashboardGeneralControllerTrait;
+use App\Controller\General\Trait\GeneralDashboardControllerTrait;
 use App\Entity\Configuration;
 use App\Entity\User;
 use App\Immutable\SystemConfig;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Base controller for general dashboard operations.
+ *
+ * This abstract class serves as the foundation for all dashboard-related controllers.
+ * It extends from the `AbstractDashboardController`, inheriting its methods and properties,
+ * and can be further extended by specific dashboard controllers to provide a consistent
+ * interface for managing both administrative and user-facing dashboards.
+ * 
+ * @author Ucscode
+ */
 abstract class AbstractGeneralDashboardController extends AbstractDashboardController
 {
-    use DashboardGeneralControllerTrait;
+    use GeneralDashboardControllerTrait;
 
     public function configureDashboard(): Dashboard
     {
@@ -58,9 +69,9 @@ abstract class AbstractGeneralDashboardController extends AbstractDashboardContr
 
             ->addAssetMapperEntry('app')
 
-            ->addCssFile(SystemConfig::SYSTEM_CSS_FILE)
+            ->addCssFile(Asset::new(SystemConfig::SYSTEM_CSS_FILE))
 
-            ->addJsFile(SystemConfig::SYSTEM_JS_FILE)
+            ->addJsFile(Asset::new(SystemConfig::SYSTEM_JS_FILE)->htmlAttr('type', 'module'))
 
         ;
     }

@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-trait DashboardGeneralControllerTrait
+trait GeneralDashboardControllerTrait
 {
     public function __construct(
         protected AdminUrlGenerator $adminUrlGenerator,

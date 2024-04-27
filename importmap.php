@@ -31,4 +31,10 @@ return [
     '@kurkle/color' => [
         'version' => '0.3.2',
     ],
+    'bootbox' => [
+        'version' => '6.0.0',
+    ],
+    'jquery' => [
+        'version' => '3.7.1',
+    ],
 ];

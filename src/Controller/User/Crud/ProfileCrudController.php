@@ -14,6 +14,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ProfileCrudController extends AbstractUserCrudController
 {
+    protected string $actionLabel = 'Update Profile';
+
     public static function getEntityFqcn(): string
     {
         return User::class;
@@ -55,7 +57,7 @@ class ProfileCrudController extends AbstractUserCrudController
 
             ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function(Action $action) {
                 return $action
-                    ->setLabel("Update Profile")
+                    ->setLabel($this->actionLabel)
                 ;
             })
 

@@ -1,10 +1,10 @@
 /**
- * Custom JavaScript Guide
- * -----------------------
+ * Write custom javascript code here
  * 
- * Follow best practices for writing maintainable and efficient JavaScript code.
- * 
- * "use strict"; // Enable strict mode for better error checking
+ * Note: This file is imported as a module to make it highly compactible with symfony asset mapper
  */
 'use strict';
 
+import bootbox from 'bootbox'
+
+// $(() => bootbox.alert('Hello! <br> This is a bootbox modal example'))

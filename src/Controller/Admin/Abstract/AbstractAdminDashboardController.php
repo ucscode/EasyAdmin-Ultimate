@@ -12,6 +12,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Specialized controller for Admin Dashboard operations.
+ *
+ * This abstract class extends `AbstractGeneralDashboardController` to provide a consistent
+ * interface specifically for the Admin Dashboard. It encapsulates the logic and functionalities
+ * pertinent to the administrative side of the application, ensuring a focused and streamlined admin experience.
+ * 
+ * @author Ucscode
+ */
 abstract class AbstractAdminDashboardController extends AbstractGeneralDashboardController
 {
     public function configureDashboard(): Dashboard

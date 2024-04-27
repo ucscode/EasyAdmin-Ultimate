@@ -11,6 +11,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 
+/**
+ * Specialized controller for User Dashboard operations.
+ *
+ * This abstract class extends `AbstractGeneralDashboardController` to provide a consistent
+ * interface specifically for the User Dashboard. It encapsulates the logic and functionalities
+ * pertinent to the user side of the application, ensuring a focused and streamlined user experience.
+ * 
+ * @author Ucscode
+ */
 abstract class AbstractUserDashboardController extends AbstractGeneralDashboardController
 {
     public function configureDashboard(): Dashboard
