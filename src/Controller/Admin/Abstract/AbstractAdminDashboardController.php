@@ -4,6 +4,7 @@ namespace App\Controller\Admin\Abstract;
 
 use App\Controller\Admin\Crud\UserCrudController;
 use App\Controller\General\Abstract\AbstractGeneralDashboardController;
+use App\Entity\CodeInfusion;
 use App\Entity\Configuration;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -34,14 +35,14 @@ abstract class AbstractAdminDashboardController extends AbstractGeneralDashboard
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToDashboard('Dashboard', 'fas fa-home');
 
         yield MenuItem::section('Membership');
 
-        yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class)
+        yield MenuItem::linkToCrud('Users', 'fas fa-users', User::class)
             ->setController(UserCrudController::class);
             
-        yield MenuItem::linkToCrud('Add User', 'fa fa-user-plus', User::class)
+        yield MenuItem::linkToCrud('Add User', 'fas fa-user-plus', User::class)
             ->setController(UserCrudController::class)
             ->setAction(Crud::PAGE_NEW);
 
@@ -50,12 +51,13 @@ abstract class AbstractAdminDashboardController extends AbstractGeneralDashboard
 
         yield MenuItem::section('settings');
 
-        yield MenuItem::linkToCrud('Configuration', 'fa fa-wrench', Configuration::class);
+        yield MenuItem::linkToCrud('Configuration', 'fas fa-wrench', Configuration::class);
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
 
         yield MenuItem::section('Misc');
 
-        // yield MenuItem::linkToLogout('Logout', 'fa fa-exit');
+        yield MenuItem::linkToCrud('Code Infusion', 'fa fa-code', CodeInfusion::class);
+        yield MenuItem::linkToLogout('Logout', 'fas fa-arrow-right-from-bracket');
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu
