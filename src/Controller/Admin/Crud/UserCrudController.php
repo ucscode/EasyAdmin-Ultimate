@@ -2,12 +2,12 @@
 
 namespace App\Controller\Admin\Crud;
 
+use App\Constants\FilePathConstants;
 use App\Controller\Admin\Abstract\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User;
-use App\Immutable\SystemConfig;
-use App\Immutable\UserRole;
 use App\Repository\UserRepository;
+use App\Utils\RoleUtils;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -37,11 +37,11 @@ class UserCrudController extends AbstractAdminCrudController
         ;
 
         yield ImageField::new('avatar')
-            ->setUploadDir(SystemConfig::USER_IMAGE_UPLOAD_DIR)
-            ->setBasePath(SystemConfig::USER_IMAGE_BASE_PATH)
-            ->setUploadedFileNamePattern(SystemConfig::USER_IMAGE_UPLOAD_FILE_PATTERN)
+            ->setUploadDir(FilePathConstants::USER_IMAGE_UPLOAD_DIR)
+            ->setBasePath(FilePathConstants::USER_IMAGE_BASE_PATH)
+            ->setUploadedFileNamePattern(FilePathConstants::USER_IMAGE_UPLOAD_FILE_PATTERN)
         ;
-        
+
         yield EmailField::new('email');
 
         yield TextField::new('username');
@@ -54,7 +54,7 @@ class UserCrudController extends AbstractAdminCrudController
 
         yield DateTimeField::new('lastSeen')
             ->hideOnForm()
-            ->formatValue(function(DateTimeInterface $value) {
+            ->formatValue(function (DateTimeInterface $value) {
                 return $this->primaryTaskService->relativeTime($value, true);
             })
         ;
@@ -71,19 +71,19 @@ class UserCrudController extends AbstractAdminCrudController
         $parentField = AssociationField::new('parent')
             ->hideOnIndex()
         ;
-        
+
         /**
          * Filter parent associates to prevent user from selecting oneself as parent
          */
         if(in_array($pageName, [Crud::PAGE_EDIT, Crud::PAGE_NEW])) {
 
-            $parentField->setFormTypeOption('query_builder', function (UserRepository $userRepository): QueryBuilder{
+            $parentField->setFormTypeOption('query_builder', function (UserRepository $userRepository): QueryBuilder {
                 /**
                  * @var User
                  */
                 $entity = $this->getContext()->getEntity()->getInstance();
                 $queryBuilder = $userRepository->createQueryBuilder('u');
-                
+
                 if($entity?->getId()) {
                     $queryBuilder
                         ->andWhere('u.id != :currentUserId')
@@ -101,7 +101,7 @@ class UserCrudController extends AbstractAdminCrudController
     {
         $userPropertyAction = Action::new('userProperty', 'Properties')
             ->linkToUrl(
-                function(User $entity) {
+                function (User $entity) {
                     return $this->adminUrlGenerator
                         ->setDashboard(DashboardController::class)
                         ->setController(UserPropertyCrudController::class)
@@ -122,9 +122,9 @@ class UserCrudController extends AbstractAdminCrudController
     {
         /**
          * Modify the entity instance or create associates entities
-         * 
+         *
          * Example: Your can add mandatory `UserProperty` to the entity instance
-         * 
+         *
          * @var User
          */
         $entity = parent::createEntity($entityFqcn);
@@ -152,7 +152,7 @@ class UserCrudController extends AbstractAdminCrudController
          * @var User $entityInstance
          */
         $entityInstance->setPassword($originalEntityData['password'], false); // restore original password
-        
+
         empty($submittedPassword) ?: $this->hashEntityPassword($entityInstance, $submittedPassword);
 
         /**
@@ -176,8 +176,8 @@ class UserCrudController extends AbstractAdminCrudController
         if($pageName === Crud::PAGE_EDIT) {
             $passwordField
                 ->setHelp(sprintf(
-                    "<i class='%s'></i> %s", 
-                    'fa fa-info-circle', 
+                    "<i class='%s'></i> %s",
+                    'fa fa-info-circle',
                     'Leave blank to preserve current password'
                 ));
         }
@@ -199,7 +199,7 @@ class UserCrudController extends AbstractAdminCrudController
             // 'Display Value' => UserRole::ROLE_ADMIN
         ];
 
-        return $allowedRoles ?: UserRole::all(true);
+        return $allowedRoles ?: RoleUtils::getAllRoles(true);
     }
 
     private function hashEntityPassword(User $entity, string $plainPassword): void

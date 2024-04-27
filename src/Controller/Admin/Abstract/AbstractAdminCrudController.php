@@ -11,7 +11,7 @@ use App\Controller\General\Abstract\AbstractGeneralCrudController;
  * `AbstractGeneralCrudController` to provide CRUD operations within the admin context.
  * It encapsulates the logic and functionalities pertinent to the administrative side of the
  * application, ensuring a focused and streamlined admin experience.
- * 
+ *
  * @author Ucscode
  */
 abstract class AbstractAdminCrudController extends AbstractGeneralCrudController

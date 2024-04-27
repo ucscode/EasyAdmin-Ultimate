@@ -15,9 +15,8 @@ class DashboardController extends AbstractAdminDashboardController
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected ChartBuilderInterface $chartBuilder
-    )
-    {
-        
+    ) {
+
     }
 
     // #[IsGranted(UserRole::ROLE_ADMIN)]
@@ -47,7 +46,7 @@ class DashboardController extends AbstractAdminDashboardController
     protected function createChart(): Chart
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
-        
+
         $chart->setData([
             'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             'datasets' => [

@@ -11,7 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
  * This abstract class provides common functionalities required for entity management
  * within the administrative and user-facing dashboards, ensuring a consistent
  * CRUD interface for both contexts.
- * 
+ *
  * @author Ucscode
  */
 abstract class AbstractGeneralCrudController extends AbstractCrudController

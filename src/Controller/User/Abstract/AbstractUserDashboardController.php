@@ -17,7 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
  * This abstract class extends `AbstractGeneralDashboardController` to provide a consistent
  * interface specifically for the User Dashboard. It encapsulates the logic and functionalities
  * pertinent to the user side of the application, ensuring a focused and streamlined user experience.
- * 
+ *
  * @author Ucscode
  */
 abstract class AbstractUserDashboardController extends AbstractGeneralDashboardController
@@ -39,7 +39,7 @@ abstract class AbstractUserDashboardController extends AbstractGeneralDashboardC
         $user = $this->getUser();
 
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        
+
         yield MenuItem::section('Account');
 
         yield MenuItem::linkToCrud('My Profile', 'fas fa-user', User::class)

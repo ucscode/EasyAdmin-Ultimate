@@ -15,11 +15,10 @@ trait GeneralDashboardControllerTrait
         protected EntityManagerInterface $entityManager,
         protected UserPasswordHasherInterface $userPasswordHasher,
         protected PrimaryTaskService $primaryTaskService
-    )
-    {
+    ) {
         // constructor
     }
-    
+
     protected function getConfigurationValue(string $metaKey, ?string $default = null): ?string
     {
         $repository = $this->entityManager->getRepository(Configuration::class);
@@ -28,7 +27,7 @@ trait GeneralDashboardControllerTrait
          */
         $config = $repository->findOneBy(['metaKey' => $metaKey]);
         $value = $config?->getMetaValueAsString() ?? $default;
-        
+
         return $value;
     }
 }

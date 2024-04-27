@@ -3,19 +3,18 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use App\Entity\UserMeta;
 use App\Entity\UserProperty;
-use App\Immutable\UserRole;
+use App\Utils\RoleUtils;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 class UserFixtures extends Fixture
 {
-    const FIXTURES = [
+    public const FIXTURES = [
         1 => [
             'uniqueId' => '87e60f2b',
             'roles' => [
-                UserRole::ROLE_ADMIN,
+                RoleUtils::ROLE_ADMIN,
             ],
             'password' => '12345',
             'email' => 'root@localhost.com',

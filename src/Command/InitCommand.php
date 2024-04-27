@@ -24,8 +24,8 @@ use Symfony\Component\Process\Process;
 )]
 class InitCommand extends Command
 {
-    const ENV_PROD = 'prod';
-    const ENV_DEV = 'dev';
+    public const ENV_PROD = 'prod';
+    public const ENV_DEV = 'dev';
 
     protected InputInterface $input;
     protected OutputInterface $output;
@@ -35,8 +35,7 @@ class InitCommand extends Command
         protected EntityManagerInterface $entityManager,
         protected PrimaryTaskService $primaryTaskService,
         protected KernelInterface $kernel
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -54,14 +53,14 @@ class InitCommand extends Command
 
             $this->updateComposerPackages();
             $this->overloadAdminConfiguration();
-            $this->computeAssetMapperResource(); 
+            $this->computeAssetMapperResource();
             $this->generateSecretKey();
 
         } catch(Exception $exception) {
 
             $this->symfonyStyle->error(
                 sprintf(
-                    "%s on %s:%s", 
+                    "%s on %s:%s",
                     $exception->getMessage(),
                     $exception->getFile(),
                     $exception->getLine(),
@@ -89,15 +88,15 @@ class InitCommand extends Command
     protected function overloadAdminConfiguration(): void
     {
         $configurationRepository = $this->entityManager->getRepository(Configuration::class);
-        
+
         $this->symfonyStyle->title('Updating admin configurations');
-        
+
         foreach(SystemConfig::getConfigurationStructure() as $key => $context) {
-            
+
             $config = $configurationRepository->findOneBy(['metaKey' => $key]);
 
             if(!$config) {
-                    
+
                 $config = (new Configuration())
                     ->setMetaKey($key)
                     ->setMetaValue($context['value'])
@@ -108,8 +107,8 @@ class InitCommand extends Command
 
                 $this->symfonyStyle->text(
                     sprintf(
-                        '[<info>%s</info>] = %s', 
-                        $key, 
+                        '[<info>%s</info>] = %s',
+                        $key,
                         implode(' ⏎ ', array_map('trim', explode("\n", $config->getMetaValueAsString())))
                     ),
                 );
@@ -124,16 +123,16 @@ class InitCommand extends Command
     protected function computeAssetMapperResource(): void
     {
         $this->symfonyStyle->title("Initializing Asset Mapper");
-        
+
         $this->runSymfonyConsoleCommand(['php', 'bin/console', 'importmap:install']);
 
         # If env == prod
         if($this->isProductionEnvironment()) {
-            
+
             $this->runSymfonyConsoleCommand(['php', 'bin/console', 'asset-map:compile']);
 
         };
-        
+
         $this->symfonyStyle->success('Asset Mapper Initialized');
     }
 

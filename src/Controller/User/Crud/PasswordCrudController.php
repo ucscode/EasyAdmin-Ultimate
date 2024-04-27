@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Context\ExecutionContext;
 class PasswordCrudController extends ProfileCrudController
 {
     protected string $actionLabel = 'Update Password';
-    
+
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)
@@ -33,11 +33,11 @@ class PasswordCrudController extends ProfileCrudController
             ])
             ->setRequired(true)
         ;
-        
+
         yield $this->passwordFieldFactory('newPassword', null)
             ->setFormTypeOption('constraints', [
-                // new PasswordStrength(null, PasswordStrength::STRENGTH_WEAK), 
-                new Callback(function(string $value, ExecutionContext $context): void {
+                // new PasswordStrength(null, PasswordStrength::STRENGTH_WEAK),
+                new Callback(function (string $value, ExecutionContext $context): void {
                     /**
                      * @var \Symfony\Component\Form\FormInterface
                      */
@@ -54,7 +54,7 @@ class PasswordCrudController extends ProfileCrudController
             ]);
 
         yield $this->passwordFieldFactory('confirmPassword', null)
-            ->setFormTypeOption('constraints', new Callback(function(string $value, ExecutionContext $context) {
+            ->setFormTypeOption('constraints', new Callback(function (string $value, ExecutionContext $context) {
                 /**
                  * @var \Symfony\Component\Form\FormInterface
                  */
@@ -83,9 +83,9 @@ class PasswordCrudController extends ProfileCrudController
         $formData = $this->getContext()->getRequest()->request->all('User');
 
         $hashedPassword = $this->userPasswordHasher->hashPassword($user, $formData['newPassword']);
-        
+
         $entityInstance->setPassword($hashedPassword);
-        
+
         parent::updateEntity($entityManager, $entityInstance);
     }
 

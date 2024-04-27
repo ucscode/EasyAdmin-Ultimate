@@ -10,8 +10,8 @@ class PrimaryTaskService
     public function keygen(int $length = 10, bool $includeSpecialChars = false): string
     {
         $characters = [
-            ...range(0, 9), 
-            ...range('a', 'z'), 
+            ...range(0, 9),
+            ...range('a', 'z'),
             ...range('A', 'Z')
         ];
 

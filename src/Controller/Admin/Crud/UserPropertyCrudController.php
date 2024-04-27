@@ -22,7 +22,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class UserPropertyCrudController extends AbstractAdminCrudController
 {
-    const PROPERTY_KEY = 'metaValue';
+    public const PROPERTY_KEY = 'metaValue';
 
     public static function getEntityFqcn(): string
     {
@@ -62,7 +62,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
 
         yield Field::new('metaValueAsString', 'Value')
             ->formatValue(
-                function(mixed $value, UserProperty $entity) {
+                function (mixed $value, UserProperty $entity) {
                     // Write your condition to format values in INDEX page
                     return $value;
                 }
@@ -73,9 +73,9 @@ class UserPropertyCrudController extends AbstractAdminCrudController
     {
         return $actions
             ->disable(Action::BATCH_DELETE, Action::NEW, Action::DELETE)
-            ->update(Crud::PAGE_INDEX, Action::EDIT, function(Action $action) {
+            ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
                 return $action
-                    ->displayIf(function(UserProperty $entity) {
+                    ->displayIf(function (UserProperty $entity) {
                         // Write your condition to hide edit button
                         return $entity->hasBitwiseMode(ModeEnum::WRITE->value);
                     });
@@ -85,8 +85,8 @@ class UserPropertyCrudController extends AbstractAdminCrudController
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
-        /** 
-         * @var \Symfony\Component\HttpFoundation\Request 
+        /**
+         * @var \Symfony\Component\HttpFoundation\Request
          * */
         $request = $this->getContext()->getRequest();
 
@@ -108,7 +108,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
         $userRepository = $this->entityManager->getRepository(User::class);
 
         /**
-         * @var ?\App\Entity\User 
+         * @var ?\App\Entity\User
          */
         $userEntity = $userRepository->find($userId);
 
@@ -130,7 +130,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
 
     protected function getDynamicFormFields(): FieldInterface
     {
-        /** 
+        /**
          * @var UserProperty $entity
          * */
         $entity = $this->getContext()->getEntity()?->getInstance();
@@ -144,19 +144,19 @@ class UserPropertyCrudController extends AbstractAdminCrudController
 
         $metaKey = $entity->getMetaKey();
 
-        /** 
-         * @var Field $field 
+        /**
+         * @var Field $field
          * */
         $field = $this->getMetaValueFieldTypes()[$metaKey] ?? TextField::new(self::PROPERTY_KEY);
 
         $field->setLabel('Value');
-        
+
         return $field;
     }
 
     /**
      * Edit the array within the function to match your project preference
-     * 
+     *
      * @return array
      */
     protected function getMetaValueFieldTypes(): array

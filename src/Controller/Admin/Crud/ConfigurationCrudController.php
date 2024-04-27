@@ -7,6 +7,7 @@ use App\Entity\Configuration;
 use App\Enum\ModeEnum;
 use App\Immutable\SystemConfig;
 use App\Service\PrimaryTaskService;
+use App\Utils\ConfigUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -18,12 +19,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+
 use function Symfony\Component\String\u;
 
 class ConfigurationCrudController extends AbstractAdminCrudController
 {
     public function __construct(protected EntityManagerInterface $entityManager)
-    {   
+    {
         // constructor
     }
 
@@ -50,17 +52,17 @@ class ConfigurationCrudController extends AbstractAdminCrudController
         if(!in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT])) {
 
             yield TextField::new('metaKey', 'Name')
-                ->formatValue(function($value) {
+                ->formatValue(function ($value) {
                     return ucwords(str_replace('.', " ", $value));
                 });
-                
+
             yield TextField::new('metaValueAsString', 'value')
-                ->formatValue(function($value, $entity) {
+                ->formatValue(function ($value, $entity) {
                     // return your formated value here
                     return u($value)->truncate(71, '&hellip;');
                 })
             ;
-            
+
             return;
         }
 
@@ -82,12 +84,15 @@ class ConfigurationCrudController extends AbstractAdminCrudController
         if(!$entity) {
             throw new \RuntimeException('New configuration cannot be created from GUI');
         }
-        
+
         if(!$entity->hasBitwiseMode(ModeEnum::WRITE)) {
             throw new \Exception(sprintf('`%s` configuration is readonly and cannot be modified from GUI', $entity->getMetaKey()));
         }
-        
-        $structure = SystemConfig::getConfigurationStructure($entity->getMetaKey());
+
+        /**
+         * @var array
+         */
+        $structure = ConfigUtils::getConfigurationStructure($entity->getMetaKey());
 
         return $structure['field'];
     }

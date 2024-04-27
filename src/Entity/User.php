@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use App\Immutable\UserRole;
 use App\Repository\UserRepository;
 use App\Service\PrimaryTaskService;
+use App\Utils\RoleUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -79,7 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userProperties = new ArrayCollection();
 
         $this->setUniqueId((new PrimaryTaskService())->keygen(7));
-        $this->addRole(UserRole::ROLE_USER);
+        $this->addRole(RoleUtils::ROLE_USER);
         $this->setRegistrationTime(new \DateTimeImmutable());
         $this->setLastSeen(new \DateTimeImmutable());
     }

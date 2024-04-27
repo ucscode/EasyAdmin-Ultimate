@@ -51,7 +51,7 @@ abstract class AbstractMetaEntity extends AbstractBitwiseMode
 
         return $this;
     }
-    
+
     public function getMetaValue(): mixed
     {
         return json_decode($this->metaValue, true, 512, JSON_UNESCAPED_UNICODE);

@@ -2,9 +2,9 @@
 
 namespace App\Controller\User\Crud;
 
+use App\Constants\FilePathConstants;
 use App\Controller\User\Abstract\AbstractUserCrudController;
 use App\Entity\User;
-use App\Immutable\SystemConfig;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -37,8 +37,8 @@ class ProfileCrudController extends AbstractUserCrudController
         $user = $this->getUser();
 
         yield ImageField::new('avatar')
-            ->setUploadDir(SystemConfig::USER_IMAGE_UPLOAD_DIR)
-            ->setBasePath(SystemConfig::USER_IMAGE_BASE_PATH)
+            ->setUploadDir(FilePathConstants::USER_IMAGE_UPLOAD_DIR)
+            ->setBasePath(FilePathConstants::USER_IMAGE_BASE_PATH)
         ;
 
         yield TextField::new('username')
@@ -55,7 +55,7 @@ class ProfileCrudController extends AbstractUserCrudController
 
             ->remove(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN)
 
-            ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function(Action $action) {
+            ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
                 return $action
                     ->setLabel($this->actionLabel)
                 ;

@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * This abstract class extends `AbstractGeneralDashboardController` to provide a consistent
  * interface specifically for the Admin Dashboard. It encapsulates the logic and functionalities
  * pertinent to the administrative side of the application, ensuring a focused and streamlined admin experience.
- * 
+ *
  * @author Ucscode
  */
 abstract class AbstractAdminDashboardController extends AbstractGeneralDashboardController
@@ -41,7 +41,7 @@ abstract class AbstractAdminDashboardController extends AbstractGeneralDashboard
 
         yield MenuItem::linkToCrud('Users', 'fas fa-users', User::class)
             ->setController(UserCrudController::class);
-            
+
         yield MenuItem::linkToCrud('Add User', 'fas fa-user-plus', User::class)
             ->setController(UserCrudController::class)
             ->setAction(Crud::PAGE_NEW);

@@ -42,8 +42,8 @@ class SecurityController extends AbstractDashboardController
 
             'forgot_password_enabled' => true,
             'forgot_password_path' => $this->generateUrl('app_forgot_password_request'),
-            'forgot_password_label' => 'Forgot your password?',            
-            
+            'forgot_password_label' => 'Forgot your password?',
+
             'remember_me_enabled' => false,
             'remember_me_checked' => false,
             'remember_me_label' => 'Remember me',

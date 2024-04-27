@@ -12,11 +12,11 @@ abstract class AbstractBitwiseMode
     {
         return $this->bitwiseMode;
     }
-    
+
     public function setBitwiseMode(int|ModeEnum $mode): static
     {
         $this->bitwiseMode = $this->getModeInteger($mode);
-    
+
         return $this;
     }
 
@@ -56,10 +56,10 @@ abstract class AbstractBitwiseMode
     {
         $modeInteger = $mode instanceof ModeEnum ? $mode->value : $mode;
 
-        if($modeInteger & ModeEnum::EXECUTE->value|ModeEnum::READ->value|ModeEnum::WRITE->value) {
+        if($modeInteger & ModeEnum::EXECUTE->value | ModeEnum::READ->value | ModeEnum::WRITE->value) {
             return $modeInteger;
         }
-        
+
         throw new \InvalidArgumentException('Invalid Bitwise Mode');
     }
 }

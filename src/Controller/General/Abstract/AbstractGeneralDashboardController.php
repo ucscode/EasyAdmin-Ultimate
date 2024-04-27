@@ -2,6 +2,7 @@
 
 namespace App\Controller\General\Abstract;
 
+use App\Constants\FilePathConstants;
 use App\Controller\General\Trait\GeneralDashboardControllerTrait;
 use App\Entity\Configuration;
 use App\Entity\User;
@@ -20,7 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * It extends from the `AbstractDashboardController`, inheriting its methods and properties,
  * and can be further extended by specific dashboard controllers to provide a consistent
  * interface for managing both administrative and user-facing dashboards.
- * 
+ *
  * @author Ucscode
  */
 abstract class AbstractGeneralDashboardController extends AbstractDashboardController
@@ -31,22 +32,22 @@ abstract class AbstractGeneralDashboardController extends AbstractDashboardContr
     {
         return Dashboard::new()
 
-            ->setTitle($this->getConfigurationValue('app.name'))    
+            ->setTitle($this->getConfigurationValue('app.name'))
 
             ->renderContentMaximized()
-            
+
             ->disableDarkMode()
 
             // ->renderSidebarMinimized()
 
             /**
-             * IMPORTANT: the locale feature won't work unless you add the {_locale} parameter 
+             * IMPORTANT: the locale feature won't work unless you add the {_locale} parameter
              * in the admin dashboard URL (e.g. '/admin/{_locale}').
              * the name of each locale will be rendered in that locale
              * (in the following example you'll see: "English", "Polski")
             */
 
-            // ->setLocales(['en', 'pl']) 
+            // ->setLocales(['en', 'pl'])
         ;
     }
 
@@ -58,7 +59,7 @@ abstract class AbstractGeneralDashboardController extends AbstractDashboardContr
 
         return parent::configureUserMenu($user)
 
-            // ->setAvatarUrl($user->getAvatar()) 
+            // ->setAvatarUrl($user->getAvatar())
 
         ;
     }
@@ -69,9 +70,9 @@ abstract class AbstractGeneralDashboardController extends AbstractDashboardContr
 
             ->addAssetMapperEntry('app')
 
-            ->addCssFile(Asset::new(SystemConfig::SYSTEM_CSS_FILE))
+            ->addCssFile(Asset::new(FilePathConstants::SYSTEM_CSS_FILE))
 
-            ->addJsFile(Asset::new(SystemConfig::SYSTEM_JS_FILE)->htmlAttr('type', 'module'))
+            ->addJsFile(Asset::new(FilePathConstants::SYSTEM_JS_FILE)->htmlAttr('type', 'module'))
 
         ;
     }
