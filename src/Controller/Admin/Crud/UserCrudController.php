@@ -199,7 +199,7 @@ class UserCrudController extends AbstractAdminCrudController
             // 'Display Value' => UserRole::ROLE_ADMIN
         ];
 
-        return $allowedRoles ?: RoleUtils::getAllRoles(true);
+        return $allowedRoles ?: RoleUtils::getChoices('ROLE_');
     }
 
     private function hashEntityPassword(User $entity, string $plainPassword): void

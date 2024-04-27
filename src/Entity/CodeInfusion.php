@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CodeInfusionRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,8 +21,8 @@ class CodeInfusion
     #[ORM\Column(length: 25)]
     private ?string $slot = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $location = null;
+    #[ORM\Column(type: Types::JSON)]
+    private array $locations = [];
 
     #[ORM\Column]
     private ?bool $enabled = null;
@@ -34,6 +35,11 @@ class CodeInfusion
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -64,14 +70,39 @@ class CodeInfusion
         return $this;
     }
 
-    public function getLocation(): ?string
+    public function getLocations(): array
     {
-        return $this->location;
+        return $this->locations;
     }
 
-    public function setLocation(string $location): static
+    public function setLocations(array $locations): static
     {
-        $this->location = $location;
+        $this->locations = $locations;
+
+        return $this;
+    }
+
+    public function hasLocation(string $location): bool
+    {
+        return in_array($location, $this->locations, true);
+    }
+
+    public function addLocation(string $location): static
+    {
+        if(!$this->hasLocation($location)) {
+            $this->locations[] = $location;
+        }
+
+        return $this;
+    }
+
+    public function removeLocation(string $location): static
+    {
+        $index = array_search($location, $this->locations, true);
+
+        if($index !== false) {
+            unset($this->locations[$index]);
+        }
 
         return $this;
     }

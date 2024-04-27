@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin\Crud;
 
+use App\Utils\CodeInfusionUtils;
 use App\Entity\CodeInfusion;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -24,23 +25,16 @@ class CodeInfusionCrudController extends AbstractCrudController
         ;
 
         yield ChoiceField::new('slot')
-            ->setFormTypeOption('choices', [
-                'Header' => 'header',
-                'Footer' => 'footer',
-                'Custom Slot' => 'custom',
-            ])
+            ->setFormTypeOption('choices', CodeInfusionUtils::getChoices('SLOT_'))
             ->setHelp('Where in a page should the code be placed?')
+            ->onlyOnForms()
         ;
 
-        yield ChoiceField::new('location')
-            ->setFormTypeOption('choices', [
-                'ADMIN PANEL' => 'ADMIN_PANEL',
-                'USER PANEL' => 'USER_PANEL',
-                'AUTHENTICATION PANEL' => 'AUTHENTICATION PANEL',
-                'FRONT PANEL' => 'FRONT_PANEL',
-            ])
+        yield ChoiceField::new('locations')
+            ->setFormTypeOption('choices', CodeInfusionUtils::getChoices('PANEL_'))
             ->allowMultipleChoices()
             ->setHelp('In what panel should this code be available?')
+            ->onlyOnForms()
         ;
 
         yield BooleanField::new('enabled');

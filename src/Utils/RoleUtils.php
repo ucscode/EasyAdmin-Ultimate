@@ -2,9 +2,9 @@
 
 namespace App\Utils;
 
-use ReflectionClass;
+use App\Utils\Abstract\AbstractUtils;
 
-final class RoleUtils
+final class RoleUtils extends AbstractUtils
 {
     public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -27,17 +27,4 @@ final class RoleUtils
     public const ROLE_STUDENT = 'ROLE_STUDENT';
     public const ROLE_TEACHER = 'ROLE_TEACHER';
     public const ROLE_SUPPORT = 'ROLE_SUPPORT';
-
-    public static function getAllRoles(bool $readable = false): array
-    {
-        $constants = (new ReflectionClass(self::class))->getConstants();
-        if($readable) {
-            $mapper = array_map(
-                fn ($value) => trim(str_replace(['ROLE', '_'], ['', ' '], $value,)),
-                $constants
-            );
-            $constants = array_combine($mapper, $constants);
-        }
-        return $constants;
-    }
 }
