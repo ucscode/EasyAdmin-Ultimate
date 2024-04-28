@@ -1,2 +1,11 @@
 {% extends '@!EasyAdmin/layout.html.twig' %}
 
+{% block head_javascript %}
+    {{ parent() }}
+    {{ codeInfusion(constant('App\\Utils\\CodeInfusionUtils::SLOT_HEADER'), _context) }}
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    {{ codeInfusion(constant('App\\Utils\\CodeInfusionUtils::SLOT_FOOTER')) }}
+{% endblock %}

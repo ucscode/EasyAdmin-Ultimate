@@ -90,7 +90,7 @@ final class ConfigUtils
             if(empty($context['label'])) {
                 $context['label'] = ucwords(preg_replace('/[._]/', " ", $key));
             }
-            
+
             $context['field']->setLabel($context['label']);
 
         };

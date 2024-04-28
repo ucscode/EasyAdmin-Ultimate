@@ -8,7 +8,7 @@ abstract class AbstractUtils
 {
     /**
      * Get all constants declared in the inheriting class
-     * 
+     *
      * @return array - defined constants
      */
     public static function getConstants(): array
@@ -18,15 +18,15 @@ abstract class AbstractUtils
 
     /**
      * Get all or limited constants as Choice Field Options
-     * 
+     *
      * This accepts a prefix to filter constants and then return it as choices to be selected
-     * 
+     *
      * @return array
      */
     public static function getChoices(?string $prefix = null): array
     {
         $constants = self::getConstants();
-        
+
         if($prefix) {
             $regexp = sprintf("/^%s/", $prefix);
             $constants = array_filter($constants, fn ($constantValue) => preg_match($regexp, $constantValue), ARRAY_FILTER_USE_KEY);
@@ -34,7 +34,7 @@ abstract class AbstractUtils
         }
 
         $mapper = array_map(fn ($value) => trim(str_replace('_', ' ', $value)), $mapper ?? $constants);
-        
+
         return array_combine($mapper, $constants);
     }
 }

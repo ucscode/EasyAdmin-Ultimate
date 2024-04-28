@@ -38,7 +38,8 @@ class CodeInfusion
 
     public function __construct()
     {
-        $this->createdAt = new DateTime();
+        $this->setCreatedAt(new DateTime());
+        $this->setSort(0);
     }
 
     public function getId(): ?int
