@@ -3,6 +3,7 @@
 namespace App\Controller\User\Abstract;
 
 use App\Controller\General\Abstract\AbstractGeneralCrudController;
+use App\Controller\User\Interface\UserControllerInterface;
 
 /**
  * Specialized CRUD controller for the User Dashboard.
@@ -13,6 +14,6 @@ use App\Controller\General\Abstract\AbstractGeneralCrudController;
  *
  * @author Ucscode
  */
-abstract class AbstractUserCrudController extends AbstractGeneralCrudController
+abstract class AbstractUserCrudController extends AbstractGeneralCrudController implements UserControllerInterface
 {
 }

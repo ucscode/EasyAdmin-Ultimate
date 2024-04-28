@@ -22,7 +22,7 @@ class CodeInfusion
     private ?string $slot = null;
 
     #[ORM\Column(type: Types::JSON)]
-    private array $locations = [];
+    private array $targets = [];
 
     #[ORM\Column]
     private ?bool $enabled = null;
@@ -71,38 +71,39 @@ class CodeInfusion
         return $this;
     }
 
-    public function getLocations(): array
+    public function getTargets(): array
     {
-        return $this->locations;
+        return $this->targets;
     }
 
-    public function setLocations(array $locations): static
+    public function setTargets(array $targets): static
     {
-        $this->locations = $locations;
+        $this->targets = array_values(array_unique($targets));
 
         return $this;
     }
 
-    public function hasLocation(string $location): bool
+    public function hasTarget(string $target): bool
     {
-        return in_array($location, $this->locations, true);
+        return in_array($target, $this->targets, true);
     }
 
-    public function addLocation(string $location): static
+    public function addTarget(string $target): static
     {
-        if(!$this->hasLocation($location)) {
-            $this->locations[] = $location;
+        if(!$this->hasTarget($target)) {
+            $this->targets[] = $target;
         }
 
         return $this;
     }
 
-    public function removeLocation(string $location): static
+    public function removeTarget(string $target): static
     {
-        $index = array_search($location, $this->locations, true);
+        $index = array_search($target, $this->targets, true);
 
         if($index !== false) {
-            unset($this->locations[$index]);
+            unset($this->targets[$index]);
+            $this->targets = array_values($this->targets);
         }
 
         return $this;

@@ -6,6 +6,7 @@ use App\Controller\General\Abstract\AbstractGeneralDashboardController;
 use App\Controller\User\Crud\PasswordCrudController;
 use App\Controller\User\DashboardController;
 use App\Controller\User\Crud\ProfileCrudController;
+use App\Controller\User\Interface\UserControllerInterface;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -20,7 +21,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
  *
  * @author Ucscode
  */
-abstract class AbstractUserDashboardController extends AbstractGeneralDashboardController
+abstract class AbstractUserDashboardController extends AbstractGeneralDashboardController implements UserControllerInterface
 {
     public function configureDashboard(): Dashboard
     {

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin\Abstract;
 
+use App\Controller\Admin\Interface\AdminControllerInterface;
 use App\Controller\General\Abstract\AbstractGeneralCrudController;
 
 /**
@@ -14,7 +15,7 @@ use App\Controller\General\Abstract\AbstractGeneralCrudController;
  *
  * @author Ucscode
  */
-abstract class AbstractAdminCrudController extends AbstractGeneralCrudController
+abstract class AbstractAdminCrudController extends AbstractGeneralCrudController implements AdminControllerInterface
 {
     //
 }

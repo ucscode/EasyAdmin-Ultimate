@@ -2,6 +2,7 @@
 
 namespace App\Controller\Auth;
 
+use App\Controller\Auth\Interface\AuthControllerInterface;
 use App\Entity\User;
 use App\Form\Auth\ChangePasswordFormType;
 use App\Form\Auth\ResetPasswordRequestFormType;
@@ -21,7 +22,7 @@ use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
 #[Route('/reset-password')]
-class ResetPasswordController extends AbstractController
+class ResetPasswordController extends AbstractController implements AuthControllerInterface
 {
     use ResetPasswordControllerTrait;
 

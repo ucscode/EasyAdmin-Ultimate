@@ -30,8 +30,8 @@ class CodeInfusionCrudController extends AbstractCrudController
             ->onlyOnForms()
         ;
 
-        yield ChoiceField::new('locations')
-            ->setFormTypeOption('choices', CodeInfusionUtils::getChoices('PANEL_'))
+        yield ChoiceField::new('targets')
+            ->setFormTypeOption('choices', CodeInfusionUtils::getChoices('TARGET_'))
             ->allowMultipleChoices()
             ->setHelp('In what panel should this code be available?')
             ->onlyOnForms()

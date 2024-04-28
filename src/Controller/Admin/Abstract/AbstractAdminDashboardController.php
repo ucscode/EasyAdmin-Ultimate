@@ -3,6 +3,8 @@
 namespace App\Controller\Admin\Abstract;
 
 use App\Controller\Admin\Crud\UserCrudController;
+use App\Controller\Admin\Interface\AdminControllerInterface;
+use App\Controller\Admin\Interface\AdminDashboardInterface;
 use App\Controller\General\Abstract\AbstractGeneralDashboardController;
 use App\Entity\CodeInfusion;
 use App\Entity\Configuration;
@@ -22,7 +24,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Ucscode
  */
-abstract class AbstractAdminDashboardController extends AbstractGeneralDashboardController
+abstract class AbstractAdminDashboardController extends AbstractGeneralDashboardController implements AdminControllerInterface
 {
     public function configureDashboard(): Dashboard
     {

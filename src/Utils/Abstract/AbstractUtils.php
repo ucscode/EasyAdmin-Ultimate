@@ -23,18 +23,24 @@ abstract class AbstractUtils
      *
      * @return array
      */
-    public static function getChoices(?string $prefix = null): array
+    public static function getChoices(?string $prefix = null, bool $displayKey = false): array
     {
         $constants = self::getConstants();
 
         if($prefix) {
             $regexp = sprintf("/^%s/", $prefix);
             $constants = array_filter($constants, fn ($constantValue) => preg_match($regexp, $constantValue), ARRAY_FILTER_USE_KEY);
-            $mapper = array_map(fn ($constantValue) => preg_replace($regexp, '', $constantValue), $constants);
+            $mapper = array_map(
+                fn ($constantValue) => preg_replace($regexp, '', $constantValue), 
+                $displayKey ? array_keys($constants) : array_values($constants)
+            );
         }
 
-        $mapper = array_map(fn ($value) => trim(str_replace('_', ' ', $value)), $mapper ?? $constants);
+        $mapper = array_map(
+            fn ($value) => trim(str_replace('_', ' ', $value)), 
+            $mapper ?? ($displayKey ? array_keys($constants) : array_values($constants))
+        );
 
-        return array_combine($mapper, $constants);
+        return array_combine($mapper, $constants); // Display Value => Submitted Value
     }
 }
