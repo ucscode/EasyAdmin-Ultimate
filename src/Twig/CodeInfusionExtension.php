@@ -18,15 +18,14 @@ class CodeInfusionExtension extends AbstractExtension
         CodeInfusionUtils::TARGET_ADMIN => AdminControllerInterface::class,
         CodeInfusionUtils::TARGET_USER => UserControllerInterface::class,
         CodeInfusionUtils::TARGET_AUTHENTICATION => AuthControllerInterface::class,
-        CodeInfusionUtils::TARGET_OTHERS => NULL,
+        CodeInfusionUtils::TARGET_OTHERS => null,
     ];
 
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected RequestStack $requestStack
-    )
-    {
-        
+    ) {
+
     }
 
     public function getFunctions()
@@ -57,9 +56,9 @@ class CodeInfusionExtension extends AbstractExtension
         $easyAdminContext = $this->requestStack->getCurrentRequest()->attributes->get('easyadmin_context');
 
         foreach($entities as $entityInstance) {
-            
+
             $implementations = $easyAdminContext ? class_implements($easyAdminContext->getDashboardControllerFqcn()) : [];
-                
+
             $contentStack[] = $this->codeInfusionValidation($entityInstance, $implementations ?: []);
         }
 
@@ -79,7 +78,7 @@ class CodeInfusionExtension extends AbstractExtension
 
         /**
          * Found a matching Interface. E.G:
-         * 
+         *
          * - AdminControllerInterface
          * - UserControllerInterface
          * - AuthControllerInterface
@@ -90,9 +89,9 @@ class CodeInfusionExtension extends AbstractExtension
 
         /**
          * No matching Interface? Then:
-         * 
+         *
          * - empty($implementations): Not within Easy Admin Range
-         * 
+         *
          * - null in $targets: `TARGET_OTHERS` is enabled
          */
         if(empty($implementations) && in_array(null, $targets, true)) {

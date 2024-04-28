@@ -31,13 +31,13 @@ abstract class AbstractUtils
             $regexp = sprintf("/^%s/", $prefix);
             $constants = array_filter($constants, fn ($constantValue) => preg_match($regexp, $constantValue), ARRAY_FILTER_USE_KEY);
             $mapper = array_map(
-                fn ($constantValue) => preg_replace($regexp, '', $constantValue), 
+                fn ($constantValue) => preg_replace($regexp, '', $constantValue),
                 $displayKey ? array_keys($constants) : array_values($constants)
             );
         }
 
         $mapper = array_map(
-            fn ($value) => trim(str_replace('_', ' ', $value)), 
+            fn ($value) => trim(str_replace('_', ' ', $value)),
             $mapper ?? ($displayKey ? array_keys($constants) : array_values($constants))
         );
 
