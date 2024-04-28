@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Utils;
+namespace App\Utils\Stateless;
 
-use App\Utils\Abstract\AbstractUtils;
+use App\Utils\Stateless\Abstract\AbstractUtils;
 
 final class RoleUtils extends AbstractUtils
 {

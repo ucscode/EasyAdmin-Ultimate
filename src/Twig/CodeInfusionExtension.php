@@ -90,9 +90,9 @@ class CodeInfusionExtension extends AbstractExtension
         /**
          * No matching Interface? Then:
          *
-         * - empty($implementations): Not within Easy Admin Range
+         * - empty($implementations) = Not within Easy Admin Range
          *
-         * - null in $targets: `TARGET_OTHERS` is enabled
+         * - null in $targets = `TARGET_OTHERS`
          */
         if(empty($implementations) && in_array(null, $targets, true)) {
             return $entityInstance->getContent();
