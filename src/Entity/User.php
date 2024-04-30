@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use App\Service\PrimaryTaskService;
-use App\Utils\RoleUtils;
+use App\Utils\Stateless\RoleUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -77,11 +77,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->notificationCollection = new ArrayCollection();
         $this->userProperties = new ArrayCollection();
-
-        $this->setUniqueId((new PrimaryTaskService())->keygen(7));
+        $this->setRegistrationTime(new \DateTime());
+        $this->setLastSeen(new \DateTime());
         $this->addRole(RoleUtils::ROLE_USER);
-        $this->setRegistrationTime(new \DateTimeImmutable());
-        $this->setLastSeen(new \DateTimeImmutable());
     }
 
     public function __toString()

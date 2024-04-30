@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller\General\Abstract;
+namespace App\Controller\Base\Abstract;
 
-use App\Controller\General\Trait\GeneralDashboardControllerTrait;
+use App\Controller\Base\Trait\BaseDashboardControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 /**
@@ -14,7 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
  *
  * @author Ucscode
  */
-abstract class AbstractGeneralCrudController extends AbstractCrudController
+abstract class AbstractBaseCrudController extends AbstractCrudController
 {
-    use GeneralDashboardControllerTrait;
+    use BaseDashboardControllerTrait;
 }

@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\Admin\Abstract\AbstractAdminDashboardController;
+use App\Service\ConfigurationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,6 +15,7 @@ class DashboardController extends AbstractAdminDashboardController
 {
     public function __construct(
         protected EntityManagerInterface $entityManager,
+        protected ConfigurationService $configurationService,
         protected ChartBuilderInterface $chartBuilder
     ) {
 

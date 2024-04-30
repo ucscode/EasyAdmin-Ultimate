@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Controller\General\Abstract;
+namespace App\Controller\Base\Abstract;
 
 use App\Constants\FilePathConstants;
-use App\Controller\General\Trait\GeneralDashboardControllerTrait;
-use App\Entity\Configuration;
+use App\Controller\Base\Trait\BaseDashboardControllerTrait;
 use App\Entity\User;
-use App\Immutable\SystemConfig;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -24,15 +22,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Ucscode
  */
-abstract class AbstractGeneralDashboardController extends AbstractDashboardController
+abstract class AbstractBaseDashboardController extends AbstractDashboardController
 {
-    use GeneralDashboardControllerTrait;
+    use BaseDashboardControllerTrait;
 
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
 
-            ->setTitle($this->getConfigurationValue('app.name'))
+            ->setTitle($this->configurationService->getConfigurationValue('app.name'))
 
             ->renderContentMaximized()
 

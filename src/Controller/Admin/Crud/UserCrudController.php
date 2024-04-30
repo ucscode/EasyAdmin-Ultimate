@@ -7,7 +7,9 @@ use App\Controller\Admin\Abstract\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Utils\RoleUtils;
+use App\Service\KeyGenerationService;
+use App\Utils\Stateless\RoleUtils;
+use App\Utils\Service\DateTimeUtils;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -55,7 +57,7 @@ class UserCrudController extends AbstractAdminCrudController
         yield DateTimeField::new('lastSeen')
             ->hideOnForm()
             ->formatValue(function (DateTimeInterface $value) {
-                return $this->primaryTaskService->relativeTime($value, true);
+                return (new DateTimeUtils($value))->getRelativeTime(true);
             })
         ;
 
@@ -121,13 +123,11 @@ class UserCrudController extends AbstractAdminCrudController
     public function createEntity(string $entityFqcn): User
     {
         /**
-         * Modify the entity instance or create associates entities
-         *
-         * Example: Your can add mandatory `UserProperty` to the entity instance
-         *
          * @var User
          */
         $entity = parent::createEntity($entityFqcn);
+        
+        $entity->setUniqueId((new KeyGenerationService())->generateKey(7));
 
         return $entity;
     }
@@ -137,6 +137,7 @@ class UserCrudController extends AbstractAdminCrudController
         $this->hashEntityPassword($entityInstance, $entityInstance->getPassword());
 
         /**
+         * Create an persist properties here
          * Make your custom modification here
          */
         parent::persistEntity($entityManager, $entityInstance);

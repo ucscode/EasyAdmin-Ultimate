@@ -5,6 +5,8 @@ namespace App\Command;
 use App\Entity\Configuration;
 use App\Enum\ModeEnum;
 use App\Immutable\SystemConfig;
+use App\Service\ConfigurationService;
+use App\Service\KeyGenerationService;
 use App\Service\PrimaryTaskService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -33,8 +35,9 @@ class InitCommand extends Command
 
     public function __construct(
         protected EntityManagerInterface $entityManager,
-        protected PrimaryTaskService $primaryTaskService,
-        protected KernelInterface $kernel
+        protected KernelInterface $kernel,
+        protected ConfigurationService $configurationService,
+        protected KeyGenerationService $keyGenerationService
     ) {
         parent::__construct();
     }
@@ -87,29 +90,30 @@ class InitCommand extends Command
 
     protected function overloadAdminConfiguration(): void
     {
-        $configurationRepository = $this->entityManager->getRepository(Configuration::class);
-
         $this->symfonyStyle->title('Updating admin configurations');
 
-        foreach(SystemConfig::getConfigurationStructure() as $key => $context) {
+        /**
+         * @var array $context
+         */
+        foreach($this->configurationService->getConfigurationStructure() as $metaKey => $context) {
 
-            $config = $configurationRepository->findOneBy(['metaKey' => $key]);
+            $configuration = $this->configurationService->getConfigurationInstance($metaKey);
 
-            if(!$config) {
+            if(!$configuration) {
 
-                $config = (new Configuration())
-                    ->setMetaKey($key)
+                $configuration = (new Configuration())
+                    ->setMetaKey($metaKey)
                     ->setMetaValue($context['value'])
                     ->setBitwiseMode($context['mode'])
                 ;
 
-                $this->entityManager->persist($config);
+                $this->entityManager->persist($configuration);
 
                 $this->symfonyStyle->text(
                     sprintf(
                         '[<info>%s</info>] = %s',
-                        $key,
-                        implode(' ⏎ ', array_map('trim', explode("\n", $config->getMetaValueAsString())))
+                        $metaKey,
+                        implode(' ⏎ ', array_map('trim', explode("\n", $configuration->getMetaValueAsString())))
                     ),
                 );
             }
@@ -142,10 +146,10 @@ class InitCommand extends Command
 
         if($this->isProductionEnvironment()) {
 
-            $secret = $this->primaryTaskService->keygen(32);
-            $result = shell_exec('sed -i -E "s/^APP_SECRET=.{32}$/APP_SECRET=' . $secret . '/" .env');
+            $secretKey = $this->keyGenerationService->generateKey(32);
+            $result = shell_exec('sed -i -E "s/^APP_SECRET=.{32}$/APP_SECRET=' . $secretKey . '/" .env');
 
-            $this->symfonyStyle->success('New APP_SECRET was generated: ' . $secret);
+            $this->symfonyStyle->success('New APP_SECRET was generated: ' . $secretKey);
 
             return;
         }

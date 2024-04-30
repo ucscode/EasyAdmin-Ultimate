@@ -4,8 +4,7 @@ namespace App\Controller\Admin\Abstract;
 
 use App\Controller\Admin\Crud\UserCrudController;
 use App\Controller\Admin\Interface\AdminControllerInterface;
-use App\Controller\Admin\Interface\AdminDashboardInterface;
-use App\Controller\General\Abstract\AbstractGeneralDashboardController;
+use App\Controller\Base\Abstract\AbstractBaseDashboardController;
 use App\Entity\CodeInfusion;
 use App\Entity\Configuration;
 use App\Entity\User;
@@ -18,13 +17,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Specialized controller for Admin Dashboard operations.
  *
- * This abstract class extends `AbstractGeneralDashboardController` to provide a consistent
+ * This abstract class extends `AbstractBaseDashboardController` to provide a consistent
  * interface specifically for the Admin Dashboard. It encapsulates the logic and functionalities
  * pertinent to the administrative side of the application, ensuring a focused and streamlined admin experience.
  *
  * @author Ucscode
  */
-abstract class AbstractAdminDashboardController extends AbstractGeneralDashboardController implements AdminControllerInterface
+abstract class AbstractAdminDashboardController extends AbstractBaseDashboardController implements AdminControllerInterface
 {
     public function configureDashboard(): Dashboard
     {

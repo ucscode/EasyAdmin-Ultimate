@@ -6,7 +6,7 @@ use App\Controller\Admin\Interface\AdminControllerInterface;
 use App\Controller\Auth\Interface\AuthControllerInterface;
 use App\Controller\User\Interface\UserControllerInterface;
 use App\Entity\CodeInfusion;
-use App\Utils\CodeInfusionUtils;
+use App\Utils\Stateless\CodeInfusionUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;

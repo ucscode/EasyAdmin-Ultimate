@@ -2,9 +2,8 @@
 
 namespace App\Controller\User\Abstract;
 
-use App\Controller\General\Abstract\AbstractGeneralDashboardController;
+use App\Controller\Base\Abstract\AbstractBaseDashboardController;
 use App\Controller\User\Crud\PasswordCrudController;
-use App\Controller\User\DashboardController;
 use App\Controller\User\Crud\ProfileCrudController;
 use App\Controller\User\Interface\UserControllerInterface;
 use App\Entity\User;
@@ -15,13 +14,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 /**
  * Specialized controller for User Dashboard operations.
  *
- * This abstract class extends `AbstractGeneralDashboardController` to provide a consistent
+ * This abstract class extends `AbstractBaseDashboardController` to provide a consistent
  * interface specifically for the User Dashboard. It encapsulates the logic and functionalities
  * pertinent to the user side of the application, ensuring a focused and streamlined user experience.
  *
  * @author Ucscode
  */
-abstract class AbstractUserDashboardController extends AbstractGeneralDashboardController implements UserControllerInterface
+abstract class AbstractUserDashboardController extends AbstractBaseDashboardController implements UserControllerInterface
 {
     public function configureDashboard(): Dashboard
     {
