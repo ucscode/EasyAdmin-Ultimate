@@ -23,7 +23,7 @@ class DateTimeUtils
 
         $this->dateTime = $this->harmonizeTime($dateTime);
     }
-    
+
     public function getRelativeTime(bool $verbose = false): string
     {
         $label = 'just now';

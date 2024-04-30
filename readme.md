@@ -30,8 +30,6 @@ php bin/console uea:init
 
 ## Documentation
 
-## Documentation
-
 For detailed usage instructions and documentation, please refer to the following resources:
 
 - [Symfony Documentation](https://symfony.com/doc/current/index.html): Official documentation for Symfony framework, providing comprehensive guides, tutorials, and references for Symfony development.
@@ -56,11 +54,7 @@ If you would like to contribute to the project, you can do so in several ways:
 
 Before contributing, please review the [contribution guidelines](CONTRIBUTING.md) for detailed information on how to contribute effectively and respectfully.
 
-Thank you for considering contributing to Symfony PowerPack! Together, we can make Symfony development even better.
-
-## Support
-
-If you encounter any issues or have questions regarding the usage of Symfony PowerPack, please feel free to [open an issue](https://github.com/ucscode/symfony-easyadmin-powerpack/issues) on GitHub.
+Thank you for considering contributing to Symfony EasyAdmin PowerPack!
 
 ## Disclaimer
 

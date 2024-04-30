@@ -70,7 +70,7 @@ class ConfigurationService
 
     /**
      * > For internal Use
-     * 
+     *
      * Normalize the context that should be added to the config list
      */
     final public function regulateConfigurationContext(string $name, array $context): array

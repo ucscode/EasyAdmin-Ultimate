@@ -28,8 +28,7 @@ class ConfigurationCrudController extends AbstractAdminCrudController
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected ConfigurationService $configurationService,
-    )
-    {
+    ) {
         // constructor
     }
 

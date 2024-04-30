@@ -130,7 +130,7 @@ class UserCrudController extends AbstractAdminCrudController
          * @var User
          */
         $entity = parent::createEntity($entityFqcn);
-        
+
         $entity->setUniqueId($this->keyGenerator->generateKey(7));
 
         return $entity;

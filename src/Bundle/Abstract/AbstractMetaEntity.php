@@ -6,6 +6,35 @@ use App\Enum\ModeEnum;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Abstract class representing a meta entity with key-value pairs, timestamp, and access mode.
+ *
+ * The AbstractMetaEntity class serves as a foundation for managing meta information associated
+ * with entities in a system. Meta information typically includes attributes such as key,
+ * value, timestamp, and access mode (permissions).
+ *
+ * Meta information is commonly used to store additional data or properties related to an
+ * entity that are not part of its core structure but provide supplementary context or
+ * configuration. Examples of meta information include settings, configurations, or
+ * annotations specific to an entity.
+ *
+ * Attributes:
+ * - id: The unique identifier of the meta entity.
+ * - metaKey: The key or name of the meta attribute.
+ * - metaValue: The value associated with the meta attribute.
+ * - metaTimestamp: The timestamp indicating when the meta information was created.
+ * - bitwiseMode: The bitwise mode representing access permissions for the meta entity.
+ *
+ * @see \App\Bundle\Abstract\AbstractBitwiseMode
+ *
+ * Concrete implementations of classes extending AbstractMetaEntity can define additional
+ * attributes or customize the behavior of meta management based on specific requirements
+ * of the system or application.
+ *
+ * @author Uchenna Ajah
+ *
+ * @link https://github.com/ucscode
+ */
 abstract class AbstractMetaEntity extends AbstractBitwiseMode
 {
     #[ORM\Id]
@@ -31,6 +60,7 @@ abstract class AbstractMetaEntity extends AbstractBitwiseMode
             $this->setMetaKey($key);
             $this->setMetaValue($value);
         }
+
         $this->setMetaTimestamp(new \DateTime());
         $this->addBitwiseMode($mode);
     }
