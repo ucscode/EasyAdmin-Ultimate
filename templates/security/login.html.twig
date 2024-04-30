@@ -1,11 +1,11 @@
 {# Easyadmin login page extends 'layout.html.twig'; refer to the file for indepth customization #}
-{% extends '@EasyAdmin/page/login.html.twig' %}
+{# {% extends '@EasyAdmin/page/login.html.twig' %} #}
 
-{# {% extends 'base.html.twig' %} #}
+{% extends 'base.html.twig' %} 
 
-{# {% block title %}Log in!{% endblock %} #}
+{% block title %}Log in!{% endblock %}
 
-{# {% block body %}
+{% block body %}
 
     <form method="post">
     
@@ -45,4 +45,4 @@
     <a href="{{ path('app_forgot_password_request') }}">Forgot your password?</a>
 
 
-{% endblock %} #}
+{% endblock %}

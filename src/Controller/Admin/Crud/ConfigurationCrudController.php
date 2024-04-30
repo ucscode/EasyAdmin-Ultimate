@@ -6,6 +6,7 @@ use App\Controller\Admin\Abstract\AbstractAdminCrudController;
 use App\Entity\Configuration;
 use App\Enum\ModeEnum;
 use App\Immutable\SystemConfig;
+use App\Service\ConfigurationService;
 use App\Service\PrimaryTaskService;
 use App\Utils\ConfigUtils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,7 +25,10 @@ use function Symfony\Component\String\u;
 
 class ConfigurationCrudController extends AbstractAdminCrudController
 {
-    public function __construct(protected EntityManagerInterface $entityManager)
+    public function __construct(
+        protected EntityManagerInterface $entityManager,
+        protected ConfigurationService $configurationService,
+    )
     {
         // constructor
     }
@@ -92,7 +96,7 @@ class ConfigurationCrudController extends AbstractAdminCrudController
         /**
          * @var array
          */
-        $structure = ConfigUtils::getConfigurationStructure($entity->getMetaKey());
+        $structure = $this->configurationService->getConfigurationStructure($entity->getMetaKey());
 
         return $structure['field'];
     }

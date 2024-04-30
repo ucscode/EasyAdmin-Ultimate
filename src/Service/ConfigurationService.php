@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Constants\FilePathConstants;
 use App\Entity\Configuration;
 use App\Enum\ModeEnum;
 use Doctrine\ORM\EntityManagerInterface;
@@ -55,16 +56,44 @@ class ConfigurationService
     }
 
     /**
-     * > For internal Use Only
+     * > For internal Use
      *
      * Add a new configuration context to the configuration structure
      *
      * @param string $metaKey - The meta key to add
      * @param array $context - The context to add
      */
-    private function addConfigurationContext(string $metaKey, array $context): void
+    final public function addConfigurationContext(string $metaKey, array $context): void
     {
         $this->configurationStructure[$metaKey] = $this->regulateConfigurationContext($metaKey, $context);
+    }
+
+    /**
+     * > For internal Use
+     * 
+     * Normalize the context that should be added to the config list
+     */
+    final public function regulateConfigurationContext(string $name, array $context): array
+    {
+        if(!is_array($context)) {
+            throw new \LogicException('Configuration context must have data of type array');
+        }
+
+        if(empty($context['field'])) {
+            $context['field'] = TextField::new(self::FIELD_NAME);
+        }
+
+        if(!is_integer($context['mode'] ?? null)) {
+            $context['mode'] = ModeEnum::READ->value | ModeEnum::WRITE->value;
+        }
+
+        if(empty($context['label'])) {
+            $context['label'] = ucwords(preg_replace('/[._]/', " ", $name));
+        }
+
+        $context['field']->setLabel($context['label']);
+
+        return $context;
     }
 
     /*
@@ -90,8 +119,8 @@ class ConfigurationService
         $this->addConfigurationContext('app.logo', [
             'value' => 'http://ucscode.com/common/images/origin.png',
             'field' => ImageField::new(self::FIELD_NAME)
-                ->setUploadDir('public/assets/images/system')
-                ->setBasePath('assets/images/system'),
+                ->setUploadDir(FilePathConstants::SYSTEM_IMAGE_UPLOAD_DIR)
+                ->setBasePath(FilePathConstants::SYSTEM_IMAGE_BASE_PATH),
         ]);
 
         $this->addConfigurationContext('app.slogan', [
@@ -125,28 +154,5 @@ class ConfigurationService
             'value' => false,
             'field' => BooleanField::new(self::FIELD_NAME),
         ]);
-    }
-
-    private function regulateConfigurationContext(string $name, array $context): array
-    {
-        if(!is_array($context)) {
-            throw new \LogicException('Each configuration structure must have data of type array');
-        }
-
-        if(empty($context['field'])) {
-            $context['field'] = TextField::new(self::FIELD_NAME);
-        }
-
-        if(!is_integer($context['mode'] ?? null)) {
-            $context['mode'] = ModeEnum::READ->value | ModeEnum::WRITE->value;
-        }
-
-        if(empty($context['label'])) {
-            $context['label'] = ucwords(preg_replace('/[._]/', " ", $name));
-        }
-
-        $context['field']->setLabel($context['label']);
-
-        return $context;
     }
 }

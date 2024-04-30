@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Crud;
 
-use App\Utils\CodeInfusionUtils;
+use App\Utils\Stateless\CodeInfusionUtils;
 use App\Entity\CodeInfusion;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
