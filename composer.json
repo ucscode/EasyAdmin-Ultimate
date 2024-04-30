@@ -1,6 +1,7 @@
 {
+    "name": "ucscode/symfony-easyadmin-powerpack",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
