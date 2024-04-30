@@ -7,7 +7,6 @@ use App\Controller\Admin\Abstract\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Service\KeyGenerationService;
 use App\Utils\Stateless\RoleUtils;
 use App\Utils\Service\DateTimeUtils;
 use DateTimeInterface;
@@ -115,8 +114,13 @@ class UserCrudController extends AbstractAdminCrudController
             );
         ;
 
+        $userNetworkAction = Action::new('userNetwork', 'Hierarchy')
+            ->linkToUrl('http://example.com')
+        ;
+
         return $actions
             ->add(Crud::PAGE_INDEX, $userPropertyAction)
+            ->add(Crud::PAGE_INDEX, $userNetworkAction)
         ;
     }
 
@@ -127,7 +131,7 @@ class UserCrudController extends AbstractAdminCrudController
          */
         $entity = parent::createEntity($entityFqcn);
         
-        $entity->setUniqueId((new KeyGenerationService())->generateKey(7));
+        $entity->setUniqueId($this->keyGenerator->generateKey(7));
 
         return $entity;
     }

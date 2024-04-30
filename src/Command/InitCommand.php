@@ -3,11 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Configuration;
-use App\Enum\ModeEnum;
-use App\Immutable\SystemConfig;
 use App\Service\ConfigurationService;
-use App\Service\KeyGenerationService;
-use App\Service\PrimaryTaskService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -18,6 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Ucscode\KeyGenerator\KeyGenerator;
 
 #[AsCommand(
     name: 'uss:initialize',
@@ -33,13 +30,15 @@ class InitCommand extends Command
     protected OutputInterface $output;
     protected SymfonyStyle $symfonyStyle;
 
+    protected KeyGenerator $keyGenerator;
+
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected KernelInterface $kernel,
-        protected ConfigurationService $configurationService,
-        protected KeyGenerationService $keyGenerationService
+        protected ConfigurationService $configurationService
     ) {
         parent::__construct();
+        $this->keyGenerator = new KeyGenerator();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -81,7 +80,7 @@ class InitCommand extends Command
 
     protected function updateComposerPackages(): void
     {
-        $this->symfonyStyle->title("Revising Composer Packages");
+        $this->symfonyStyle->title("Updating Composer Packages");
 
         $this->runSymfonyConsoleCommand(['composer', 'update']);
 
@@ -146,7 +145,7 @@ class InitCommand extends Command
 
         if($this->isProductionEnvironment()) {
 
-            $secretKey = $this->keyGenerationService->generateKey(32);
+            $secretKey = $this->keyGenerator->generateKey(32);
             $result = shell_exec('sed -i -E "s/^APP_SECRET=.{32}$/APP_SECRET=' . $secretKey . '/" .env');
 
             $this->symfonyStyle->success('New APP_SECRET was generated: ' . $secretKey);
