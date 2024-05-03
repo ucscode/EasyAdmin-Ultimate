@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Controller\Admin\Abstract\AbstractAdminDashboardController;
+use App\Controller\Admin\Abstracts\AbstractAdminDashboardController;
 use App\Service\ConfigurationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;

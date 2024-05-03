@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\Abstract;
+namespace App\Bundle\Abstracts;
 
 use App\Enum\ModeEnum;
 use Doctrine\DBAL\Types\Types;
@@ -25,14 +25,13 @@ use Doctrine\ORM\Mapping as ORM;
  * - metaTimestamp: The timestamp indicating when the meta information was created.
  * - bitwiseMode: The bitwise mode representing access permissions for the meta entity.
  *
- * @see \App\Bundle\Abstract\AbstractBitwiseMode
+ * @see \App\Bundle\Abstracts\AbstractBitwiseMode
  *
  * Concrete implementations of classes extending AbstractMetaEntity can define additional
  * attributes or customize the behavior of meta management based on specific requirements
  * of the system or application.
  *
  * @author Uchenna Ajah
- *
  * @link https://github.com/ucscode
  */
 abstract class AbstractMetaEntity extends AbstractBitwiseMode

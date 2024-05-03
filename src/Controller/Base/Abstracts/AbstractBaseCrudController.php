@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller\Base\Abstract;
+namespace App\Controller\Base\Abstracts;
 
-use App\Controller\Base\Trait\BaseDashboardControllerTrait;
+use App\Controller\Base\Traits\BaseDashboardControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 /**

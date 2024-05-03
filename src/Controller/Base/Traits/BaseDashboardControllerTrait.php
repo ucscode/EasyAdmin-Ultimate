@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Base\Trait;
+namespace App\Controller\Base\Traits;
 
 use App\Service\ConfigurationService;
 use Doctrine\ORM\EntityManagerInterface;

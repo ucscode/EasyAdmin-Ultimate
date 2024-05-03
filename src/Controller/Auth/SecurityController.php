@@ -2,7 +2,7 @@
 
 namespace App\Controller\Auth;
 
-use App\Controller\Auth\Interface\AuthControllerInterface;
+use App\Controller\Auth\Interfaces\AuthControllerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;

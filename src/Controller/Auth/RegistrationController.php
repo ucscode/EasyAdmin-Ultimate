@@ -2,7 +2,7 @@
 
 namespace App\Controller\Auth;
 
-use App\Controller\Auth\Interface\AuthControllerInterface;
+use App\Controller\Auth\Interfaces\AuthControllerInterface;
 use App\Entity\User;
 use App\Form\Auth\RegistrationFormType;
 use App\Repository\UserRepository;

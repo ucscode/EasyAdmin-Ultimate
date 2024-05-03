@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\Abstract;
+namespace App\Bundle\Abstracts;
 
 use App\Enum\ModeEnum;
 
@@ -29,7 +29,6 @@ use App\Enum\ModeEnum;
  * requirements of the system or application.
  *
  * @author Uchenna Ajah <Ucscode>
- *
  * @link https://github.com/ucscode
  */
 abstract class AbstractBitwiseMode

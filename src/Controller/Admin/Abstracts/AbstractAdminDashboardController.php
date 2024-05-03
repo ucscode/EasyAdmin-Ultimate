@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controller\Admin\Abstract;
+namespace App\Controller\Admin\Abstracts;
 
 use App\Controller\Admin\Crud\UserCrudController;
-use App\Controller\Admin\Interface\AdminControllerInterface;
-use App\Controller\Base\Abstract\AbstractBaseDashboardController;
+use App\Controller\Admin\Interfaces\AdminControllerInterface;
+use App\Controller\Base\Abstracts\AbstractBaseDashboardController;
 use App\Entity\CodeInfusion;
 use App\Entity\Configuration;
 use App\Entity\User;

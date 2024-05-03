@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller\User\Abstract;
+namespace App\Controller\User\Abstracts;
 
-use App\Controller\Base\Abstract\AbstractBaseDashboardController;
+use App\Controller\Base\Abstracts\AbstractBaseDashboardController;
 use App\Controller\User\Crud\PasswordCrudController;
 use App\Controller\User\Crud\ProfileCrudController;
-use App\Controller\User\Interface\UserControllerInterface;
+use App\Controller\User\Interfaces\UserControllerInterface;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;

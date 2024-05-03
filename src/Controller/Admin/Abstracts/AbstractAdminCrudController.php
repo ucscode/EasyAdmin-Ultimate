@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\Admin\Abstract;
+namespace App\Controller\Admin\Abstracts;
 
-use App\Controller\Admin\Interface\AdminControllerInterface;
-use App\Controller\Base\Abstract\AbstractBaseCrudController;
+use App\Controller\Admin\Interfaces\AdminControllerInterface;
+use App\Controller\Base\Abstracts\AbstractBaseCrudController;
 
 /**
  * Specialized CRUD controller for the Admin Dashboard.

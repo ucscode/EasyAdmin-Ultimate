@@ -3,7 +3,7 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Constants\FilePathConstants;
-use App\Controller\Admin\Abstract\AbstractAdminCrudController;
+use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User;
 use App\Repository\UserRepository;

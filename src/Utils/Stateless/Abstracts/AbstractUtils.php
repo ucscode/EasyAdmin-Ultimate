@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils\Stateless\Abstract;
+namespace App\Utils\Stateless\Abstracts;
 
 use ReflectionClass;
 

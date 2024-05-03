@@ -21,7 +21,7 @@ class DateTimeUtils
     public function __construct(DateTimeInterface|int|string $dateTime)
     {
 
-        $this->dateTime = $this->harmonizeTime($dateTime);
+        $this->dateTime = $this->normalizeTime($dateTime);
     }
 
     public function getRelativeTime(bool $verbose = false): string
@@ -46,7 +46,7 @@ class DateTimeUtils
         return $label;
     }
 
-    private function harmonizeTime(DateTimeInterface|int|string $dateTime): DateTimeInterface
+    private function normalizeTime(DateTimeInterface|int|string $dateTime): DateTimeInterface
     {
         if (!($dateTime instanceof DateTimeInterface)) {
             $dateTime = !is_numeric($dateTime) ? new DateTime($dateTime) : (new DateTime())->setTimestamp($dateTime);

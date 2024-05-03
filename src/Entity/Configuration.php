@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Bundle\Abstract\AbstractMetaEntity;
+use App\Bundle\Abstracts\AbstractMetaEntity;
 use App\Repository\ConfigurationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;

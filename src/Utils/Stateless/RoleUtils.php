@@ -2,7 +2,7 @@
 
 namespace App\Utils\Stateless;
 
-use App\Utils\Stateless\Abstract\AbstractUtils;
+use App\Utils\Stateless\Abstracts\AbstractUtils;
 
 final class RoleUtils extends AbstractUtils
 {

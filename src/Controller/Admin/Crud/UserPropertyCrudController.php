@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Crud;
 
-use App\Controller\Admin\Abstract\AbstractAdminCrudController;
+use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Entity\User;
 use App\Entity\UserProperty;
 use App\Enum\ModeEnum;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\User\Abstract;
+namespace App\Controller\User\Abstracts;
 
-use App\Controller\Base\Abstract\AbstractBaseCrudController;
-use App\Controller\User\Interface\UserControllerInterface;
+use App\Controller\Base\Abstracts\AbstractBaseCrudController;
+use App\Controller\User\Interfaces\UserControllerInterface;
 
 /**
  * Specialized CRUD controller for the User Dashboard.

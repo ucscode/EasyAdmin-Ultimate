@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Auth\Interface;
+namespace App\Controller\Auth\Interfaces;
 
 /**
  * This interface, is designed to be implemented by any controller considered in authentication section.

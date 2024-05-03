@@ -75,10 +75,6 @@ class ConfigurationService
      */
     final public function regulateConfigurationContext(string $name, array $context): array
     {
-        if(!is_array($context)) {
-            throw new \LogicException('Configuration context must have data of type array');
-        }
-
         if(empty($context['field'])) {
             $context['field'] = TextField::new(self::FIELD_NAME);
         }

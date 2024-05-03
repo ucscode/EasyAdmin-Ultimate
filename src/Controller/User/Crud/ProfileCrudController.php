@@ -3,7 +3,7 @@
 namespace App\Controller\User\Crud;
 
 use App\Constants\FilePathConstants;
-use App\Controller\User\Abstract\AbstractUserCrudController;
+use App\Controller\User\Abstracts\AbstractUserCrudController;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;

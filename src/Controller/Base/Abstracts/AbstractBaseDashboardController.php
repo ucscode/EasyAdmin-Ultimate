@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\Base\Abstract;
+namespace App\Controller\Base\Abstracts;
 
 use App\Constants\FilePathConstants;
-use App\Controller\Base\Trait\BaseDashboardControllerTrait;
+use App\Controller\Base\Traits\BaseDashboardControllerTrait;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;

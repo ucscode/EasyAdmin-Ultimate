@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Crud;
 
-use App\Controller\Admin\Abstract\AbstractAdminCrudController;
+use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Entity\Configuration;
 use App\Enum\ModeEnum;
 use App\Immutable\SystemConfig;
