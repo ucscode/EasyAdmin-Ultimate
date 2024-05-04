@@ -47,7 +47,9 @@ class CodeInfusionExtension extends AbstractExtension
                 'slot' => $slot,
                 'enabled' => true,
             ],
-            ['sort' => 'ASC'], // orderBy
+            [
+                'sort' => 'ASC'
+            ],
         );
 
         /**
