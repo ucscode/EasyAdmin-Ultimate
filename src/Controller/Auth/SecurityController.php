@@ -2,21 +2,24 @@
 
 namespace App\Controller\Auth;
 
+use App\Constants\FilePathConstants;
 use App\Controller\Auth\Abstracts\AbstractAuth;
 use App\Service\ConfigurationService;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Asset\PathPackage;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractAuth
 {
+    protected ConfigurationService $configurationService;
+
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        $configurationService = $this->container->get(ConfigurationService::class);
-        
+        $this->configurationService = $this->container->get(ConfigurationService::class);
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -29,11 +32,11 @@ class SecurityController extends AbstractAuth
             'error' => $error,
             'csrf_token_intention' => 'authenticate',
 
-            'page_title' => $configurationService->getConfigurationValue('app.name') . ' Login',
-            'favicon_path' => $configurationService->getConfigurationValue('app.logo') ?: 'https://static.thenounproject.com/png/5265761-200.png',
+            'page_title' => $this->configurationService->getConfigurationValue('app.name') . ' Login',
+            'favicon_path' => $this->getConfigurationLogo('https://static.thenounproject.com/png/5265761-200.png'),
 
             'header_title' => 'Login Now',
-            'header_logo' => $configurationService->getConfigurationValue('app.logo'),
+            'header_logo' => $this->getConfigurationLogo(),
 
             'username_label' => 'Email',
             'password_label' => 'Password',
@@ -54,5 +57,17 @@ class SecurityController extends AbstractAuth
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+    protected function getConfigurationLogo(?string $default = null): ?string
+    {
+        $logo = $this->configurationService->getConfigurationValue('app.logo');
+
+        if(!empty($logo)) {
+            $pathPackage = new PathPackage(FilePathConstants::SYSTEM_IMAGE_BASE_PATH, new EmptyVersionStrategy());
+            return $pathPackage->getUrl($logo);
+        }
+
+        return $default;
     }
 }

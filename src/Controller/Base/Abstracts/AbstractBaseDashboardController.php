@@ -68,7 +68,7 @@ abstract class AbstractBaseDashboardController extends AbstractDashboardControll
     {
         return parent::configureAssets()
 
-            ->addAssetMapperEntry('app')
+            ->addAssetMapperEntry(Asset::new('app'))
 
             ->addCssFile(Asset::new(FilePathConstants::SYSTEM_CSS_FILE))
 
