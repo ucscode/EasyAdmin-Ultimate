@@ -2,16 +2,16 @@
 
 namespace App\Controller\Admin\Crud;
 
+use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Utils\Stateless\CodeInfusionUtils;
 use App\Entity\CodeInfusion;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class CodeInfusionCrudController extends AbstractCrudController
+class CodeInfusionCrudController extends AbstractAdminCrudController
 {
     public static function getEntityFqcn(): string
     {

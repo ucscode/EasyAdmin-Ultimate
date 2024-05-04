@@ -5,10 +5,7 @@ namespace App\Controller\Admin\Crud;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Entity\Configuration;
 use App\Enum\ModeEnum;
-use App\Immutable\SystemConfig;
 use App\Service\ConfigurationService;
-use App\Service\PrimaryTaskService;
-use App\Utils\ConfigUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -25,10 +22,7 @@ use function Symfony\Component\String\u;
 
 class ConfigurationCrudController extends AbstractAdminCrudController
 {
-    public function __construct(
-        protected EntityManagerInterface $entityManager,
-        protected ConfigurationService $configurationService,
-    ) {
+    public function __construct(protected EntityManagerInterface $entityManager) {
         // constructor
     }
 
@@ -93,9 +87,11 @@ class ConfigurationCrudController extends AbstractAdminCrudController
         }
 
         /**
-         * @var array
+         * @var \App\Service\ConfigurationService
          */
-        $structure = $this->configurationService->getConfigurationStructure($entity->getMetaKey());
+        $configurationService = $this->container->get(ConfigurationService::class);
+
+        $structure = $configurationService->getConfigurationStructure($entity->getMetaKey());
 
         return $structure['field'];
     }

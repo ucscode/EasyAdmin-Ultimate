@@ -6,6 +6,7 @@ use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Entity\User;
 use App\Entity\UserProperty;
 use App\Enum\ModeEnum;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use Doctrine\ORM\QueryBuilder;
@@ -23,6 +24,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 class UserPropertyCrudController extends AbstractAdminCrudController
 {
     public const PROPERTY_KEY = 'metaValue';
+
+    public function __construct(protected EntityManagerInterface $entityManager)
+    {
+        
+    }
 
     public static function getEntityFqcn(): string
     {

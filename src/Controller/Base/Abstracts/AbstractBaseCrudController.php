@@ -2,7 +2,7 @@
 
 namespace App\Controller\Base\Abstracts;
 
-use App\Controller\Base\Traits\BaseDashboardControllerTrait;
+use App\Controller\Base\Traits\BaseControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 /**
@@ -16,5 +16,5 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
  */
 abstract class AbstractBaseCrudController extends AbstractCrudController
 {
-    use BaseDashboardControllerTrait;
+    use BaseControllerTrait;
 }

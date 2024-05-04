@@ -2,23 +2,19 @@
 
 namespace App\Controller\Auth;
 
-use App\Controller\Auth\Interfaces\AuthControllerInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use App\Controller\Auth\Abstracts\AbstractAuth;
+use App\Service\ConfigurationService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class SecurityController extends AbstractDashboardController implements AuthControllerInterface
+class SecurityController extends AbstractAuth
 {
-    public function __construct(protected EntityManagerInterface $entityManager)
-    {
-
-    }
-
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        $configurationService = $this->container->get(ConfigurationService::class);
+        
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -26,22 +22,13 @@ class SecurityController extends AbstractDashboardController implements AuthCont
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', [
+
             'last_username' => $lastUsername,
             'error' => $error,
-        ] + $this->easyAdminConfig());
-    }
+            'csrf_token_intention' => 'authenticate',
 
-    #[Route(path: '/logout', name: 'app_logout')]
-    public function logout(): void
-    {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-    }
-
-    protected function easyAdminConfig(): array
-    {
-        return [
-            'page_title' => 'Uss Login',
-            'favicon_path' => 'https://static.thenounproject.com/png/5265761-200.png',
+            'page_title' => $configurationService->getConfigurationValue('app.name') . ' Login',
+            'favicon_path' => $configurationService->getConfigurationValue('app.logo') ?: 'https://static.thenounproject.com/png/5265761-200.png',
 
             'username_label' => 'Email',
             'password_label' => 'Password',
@@ -54,6 +41,13 @@ class SecurityController extends AbstractDashboardController implements AuthCont
             'remember_me_enabled' => false,
             'remember_me_checked' => false,
             'remember_me_label' => 'Remember me',
-        ];
+
+        ]);
+    }
+
+    #[Route(path: '/logout', name: 'app_logout')]
+    public function logout(): void
+    {
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

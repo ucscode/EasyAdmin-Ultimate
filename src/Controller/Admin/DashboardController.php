@@ -3,25 +3,18 @@
 namespace App\Controller\Admin;
 
 use App\Controller\Admin\Abstracts\AbstractAdminDashboardController;
-use App\Service\ConfigurationService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 
 class DashboardController extends AbstractAdminDashboardController
 {
-    public function __construct(
-        protected EntityManagerInterface $entityManager,
-        protected ConfigurationService $configurationService,
-        protected ChartBuilderInterface $chartBuilder
-    ) {
+    public function __construct(protected ChartBuilderInterface $chartBuilder) 
+    {
 
     }
 
-    // #[IsGranted(UserRole::ROLE_ADMIN)]
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {

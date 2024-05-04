@@ -2,19 +2,23 @@
 
 namespace App\Controller\User\Crud;
 
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Constraints\PasswordStrength;
 use Symfony\Component\Validator\Context\ExecutionContext;
 
 class PasswordCrudController extends ProfileCrudController
 {
     protected string $actionLabel = 'Update Password';
+
+    public function __construct(protected UserPasswordHasherInterface $userPasswordHasher)
+    {
+        
+    }
 
     public function configureCrud(Crud $crud): Crud
     {

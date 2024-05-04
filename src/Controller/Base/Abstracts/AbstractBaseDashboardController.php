@@ -3,8 +3,10 @@
 namespace App\Controller\Base\Abstracts;
 
 use App\Constants\FilePathConstants;
+use App\Controller\Base\Traits\BaseControllerTrait;
 use App\Controller\Base\Traits\BaseDashboardControllerTrait;
 use App\Entity\User;
+use App\Service\ConfigurationService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -24,13 +26,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 abstract class AbstractBaseDashboardController extends AbstractDashboardController
 {
-    use BaseDashboardControllerTrait;
+    use BaseControllerTrait;
 
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
 
-            ->setTitle($this->configurationService->getConfigurationValue('app.name'))
+            ->setTitle($this->container->get(configurationService::class)->getConfigurationValue('app.name'))
 
             ->renderContentMaximized()
 

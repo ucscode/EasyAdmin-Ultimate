@@ -2,14 +2,13 @@
 
 namespace App\Controller\Auth;
 
-use App\Controller\Auth\Interfaces\AuthControllerInterface;
+use App\Controller\Auth\Abstracts\AbstractAuth;
 use App\Entity\User;
 use App\Form\Auth\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
@@ -18,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
-class RegistrationController extends AbstractController implements AuthControllerInterface
+class RegistrationController extends AbstractAuth
 {
     public function __construct(private EmailVerifier $emailVerifier)
     {

@@ -22,9 +22,22 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Ucscode\KeyGenerator\KeyGenerator;
 
 class UserCrudController extends AbstractAdminCrudController
 {
+    protected KeyGenerator $keyGenerator;
+
+    public function __construct(
+        protected AdminUrlGenerator $adminUrlGenerator,
+        protected UserPasswordHasherInterface $userPasswordHasher
+    )
+    {
+        $this->keyGenerator = new KeyGenerator();
+    }
+    
     public static function getEntityFqcn(): string
     {
         return User::class;
