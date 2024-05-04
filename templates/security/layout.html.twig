@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block wrapper_wrapper %}
-
+    
     {% set page_title = block('page_title') %}
     {% set _username_label = username_label is defined ? username_label|trans : 'login_page.username'|trans({}, 'EasyAdminBundle') %}
     {% set _password_label = password_label is defined ? password_label|trans : 'login_page.password'|trans({}, 'EasyAdminBundle') %}

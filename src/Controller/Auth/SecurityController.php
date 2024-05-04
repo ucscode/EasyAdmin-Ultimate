@@ -4,6 +4,8 @@ namespace App\Controller\Auth;
 
 use App\Controller\Auth\Abstracts\AbstractAuth;
 use App\Service\ConfigurationService;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;

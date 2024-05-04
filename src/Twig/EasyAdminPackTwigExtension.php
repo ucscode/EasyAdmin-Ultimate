@@ -5,10 +5,10 @@ namespace App\Twig;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
-class BaseTwigExtension extends AbstractExtension implements GlobalsInterface
+class EasyAdminPackTwigExtension extends AbstractExtension implements GlobalsInterface
 {
     public function getGlobals(): array
     {
-        return [];
+        return ['ea_pack' => 'welcome to easyadmin pack'];
     }
 }
