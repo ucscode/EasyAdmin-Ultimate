@@ -97,7 +97,7 @@ abstract class AbstractMetaEntity extends AbstractBitwiseMode
     {
         $value = $this->getMetaValue();
 
-        if(!is_scalar($value)) {
+        if(!is_scalar($value) && !is_null($value)) {
             $value = sprintf("[%s]", gettype($value));
         }
 
@@ -105,7 +105,7 @@ abstract class AbstractMetaEntity extends AbstractBitwiseMode
             $value = $value ? 'On' : 'Off';
         }
 
-        return $value;
+        return $value ?? '';
     }
 
     public function setMetaTimestamp(?\DateTimeInterface $timestamp): static

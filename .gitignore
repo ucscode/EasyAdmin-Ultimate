@@ -27,3 +27,8 @@
 ###> symfony/php-cs-fixer ###
 .php-cs-fixer.cache
 ###< symfony/php-cs-fixer ###
+
+###> public ###
+/public/resource/images/**
+!/public/resource/images/**/.gitkeep
+###< public ###

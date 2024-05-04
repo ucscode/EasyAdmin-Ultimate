@@ -28,21 +28,26 @@
     <div class="login-wrapper">
 
         <header class="main-header">
-            <div id="header-logo">
-                {% block header_logo %}
-                    {% if page_title %}
-                        {% if ea is defined %}
-                            <a class="logo {{ page_title|length > 14 ? 'logo-long' }}" title="{{ page_title|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
-                                {{ page_title|raw }}
-                            </a>
-                        {% else %}
-                            <div class="logo {{ page_title|length > 14 ? 'logo-long' }}">
-                                {{ page_title|raw }}
-                            </div>
-                        {% endif %}
+
+            {% block header_logo %}
+                <div id="header-logo">
+                    {% if header_logo is not empty %}
+                        <img class="img-fluid logo" src="{{ header_logo }}">
                     {% endif %}
-                {% endblock header_logo %}
-            </div>
+                </div>
+            {% endblock header_logo %}
+
+            {% block header_title %}
+                <div id="header-title">
+                    {% set header_title = header_title|default(page_title) %}
+                    {% if header_title is not empty %}
+                        <h5 class="h5 logo {{ header_title|length > 14 ? 'logo-long' }}" title="{{ header_title|striptags }}">
+                            {{ header_title|raw }}
+                        </h5>
+                    {% endif %}
+                </div>
+            {% endblock %}
+
         </header>
 
         <section class="content">

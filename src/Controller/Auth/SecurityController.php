@@ -32,6 +32,9 @@ class SecurityController extends AbstractAuth
             'page_title' => $configurationService->getConfigurationValue('app.name') . ' Login',
             'favicon_path' => $configurationService->getConfigurationValue('app.logo') ?: 'https://static.thenounproject.com/png/5265761-200.png',
 
+            'header_title' => 'Login Now',
+            'header_logo' => $configurationService->getConfigurationValue('app.logo'),
+
             'username_label' => 'Email',
             'password_label' => 'Password',
             'sign_in_label' => 'Log in',

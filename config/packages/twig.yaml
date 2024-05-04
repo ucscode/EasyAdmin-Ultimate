@@ -1,6 +1,21 @@
 twig:
     file_name_pattern: '*.twig'
 
+    globals:
+    
+        # Use a different admin layout instead of the default "@EasyAdmin/layout.html.twig"
+        #
+        # theme_layout: "EXAMPLE"
+        #
+        # This will use "bundles/Themes/EXAMPLE/layout.html.twig"
+        #
+        # Please note that if are extending the EasyAdmin base layout from a custom theme (template) layout,
+        # you should use the exclamation mark to avoid recursion. Example:
+        #
+        # extends '@!EasyAdmin/layout.html.twig'
+
+        theme_layout: ''
+
 when@test:
     twig:
         strict_variables: true

@@ -1,4 +1,4 @@
-{% extends '@!EasyAdmin/layout.html.twig' %}
+{% extends theme_layout is not empty ? 'bundles/Themes/' ~ theme_layout ~ '/layout.html.twig': '@!EasyAdmin/layout.html.twig' %}
 
 {% block head_javascript %}
     {{ parent() }}
