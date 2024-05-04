@@ -8,6 +8,7 @@ use App\Controller\User\Interfaces\UserControllerInterface;
 use App\Entity\CodeInfusion;
 use App\Utils\Stateless\CodeInfusionUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -39,23 +40,20 @@ class CodeInfusionExtension extends AbstractExtension
     {
         $contentStack = [];
 
+        $criteria =  [
+            'slot' => $slot,
+            'enabled' => true,
+        ];
+
         /**
          * @var array<\App\Entity\CodeInfusion>
          */
-        $entities = $this->entityManager->getRepository(CodeInfusion::class)->findBy(
-            [
-                'slot' => $slot,
-                'enabled' => true,
-            ],
-            [
-                'sort' => 'ASC'
-            ],
-        );
+        $entities = $this->entityManager->getRepository(CodeInfusion::class)->findBy($criteria, ['sort' => 'ASC']);
 
         /**
          * @var \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext|null
          */
-        $easyAdminContext = $this->requestStack->getCurrentRequest()->attributes->get('easyadmin_context');
+        $easyAdminContext = $this->requestStack->getCurrentRequest()->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
 
         foreach($entities as $entityInstance) {
 
