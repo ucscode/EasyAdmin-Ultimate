@@ -57,10 +57,7 @@ class ConfigurationService
     {
         if($metaKey !== null) {
             $configurationContext = $this->configurationStructure[$metaKey] ?? null;
-            if($configurationContext && !empty($index)) {
-                return $configurationContext[$index] ?? null;
-            }
-            return $configurationContext;
+            return ($configurationContext && !empty($index)) ? ($configurationContext[$index] ?? null) : $configurationContext;
         }
 
         return $this->configurationStructure;
@@ -88,6 +85,7 @@ class ConfigurationService
     {
         $context['field'] ??= TextField::new(self::FIELD_NAME);
         $context['label'] ??= ucwords(preg_replace('/[._]/', " ", $name));
+        
         $context['field']
             ->setLabel($context['label'])
             ->setHelp($context['help'] ??= '')
