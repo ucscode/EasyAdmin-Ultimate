@@ -1,11 +1,28 @@
-{% extends 'base.html.twig' %}
+{% extends ea.templatePath('layout') %}
 
-{% block title %}Password Reset Email Sent{% endblock %}
+{% block body_class 'bg-light' %}
 
-{% block body %}
-    <p>
-        If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
-        This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
-    </p>
-    <p>If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p>
+{% block wrapper_wrapper %}
+    <div class="container col-xxl-8 px-4 py-5">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+            <div class="col-10 col-sm-8 col-lg-6">
+                <img src="https://cdn-icons-png.flaticon.com/512/3645/3645810.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+            </div>
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Check Your Inbox</h1>
+                <p class="lead">
+                    If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password. <br>
+                    This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+                </p>
+                <p class="lead">
+                    If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>
+                </p>
+                <div class="py-2">
+                    <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg px-4 me-md-2 w-100 p-2">
+                        Back To Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

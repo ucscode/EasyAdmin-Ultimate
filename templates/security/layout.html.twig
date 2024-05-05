@@ -27,14 +27,14 @@
         {% include '@EasyAdmin/flash_messages.html.twig' %}
     {% endblock %}
 
-    <div class="login-wrapper">
+    <div class="{% block login_wrapper_class 'login-wrapper' %}">
 
         {% block login_header %}
             <header class="main-header text-center mb-2">
 
                 {% block header_logo %}
                     <div id="header-logo" class='header-logo mb-2'>
-                        {% if header_logo is not empty %}
+                        {% if header_logo|default(false) is not empty %}
                             <img class="img-fluid logo" src="{{ header_logo }}">
                         {% endif %}
                     </div>
@@ -73,61 +73,66 @@
                     {% endif %}
                 {% endblock %}
 
-                <form method="post" action="{{ action|default('') }}">
-                    {% if csrf_token_intention|default(false) %}
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token(csrf_token_intention) }}">
-                    {% endif %}
+                {% block login_form %}
+                    <form method="post" action="{{ action|default('') }}">
+                        {% if csrf_token_intention|default(false) %}
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token(csrf_token_intention) }}">
+                        {% endif %}
 
-                    <input type="hidden" name="{{ target_path_parameter|default('_target_path') }}" value="{{ target_path|default(ea is defined ? path(ea.dashboardRouteName) : '/') }}" />
+                        <input type="hidden" name="{{ target_path_parameter|default('_target_path') }}" value="{{ target_path|default(ea is defined ? path(ea.dashboardRouteName) : '/') }}" />
 
-                    {% block form_content %}
+                        {% block form_content %}
 
-                        {% block field_username %}
-                            <div class="form-group">
-                                <label class="form-control-label required" for="username">{{ _username_label }}</label>
-                                <div class="form-widget">
-                                    <input type="text" id="username" name="{{ username_parameter|default('_username') }}" class="form-control" value="{{ last_username|default('') }}" required autofocus autocomplete="username">
-                                </div>
-                            </div>
-                        {% endblock %}
-
-                        {% block field_password %}
-                            <div class="form-group">
-                                <label class="form-control-label required" for="password">{{ _password_label }}</label>
-                                <div class="form-widget">
-                                    <input type="password" id="password" name="{{ password_parameter|default('_password') }}" class="form-control" required autocomplete="current-password">
-                                </div>
-                                {% block hyperlink_forgot_password %}
-                                    {% if forgot_password_enabled|default(false) %}
-                                        <div class="form-text">
-                                            <a href="{{ forgot_password_path|default('#') }}">{{ _forgot_password_label }}</a>
-                                        </div>
-                                    {% endif %}
-                                {% endblock %}
-                            </div>
-                        {% endblock %}
-
-                        {% block field_remember_me %}
-                            {% if remember_me_enabled|default(false) %}
+                            {% block field_username %}
                                 <div class="form-group">
-                                    <input class="form-check-input" type="checkbox" id="remember_me" name="{{ remember_me_parameter|default('_remember_me') }}" {{ remember_me_checked|default(false) ? 'checked' }}>
-                                    <label class="form-check-label" for="remember_me">
-                                        {{ _remember_me_label }}
-                                    </label>
+                                    <label class="form-control-label required" for="username">{{ _username_label }}</label>
+                                    <div class="form-widget">
+                                        <input type="text" id="username" name="{{ username_parameter|default('_username') }}" class="form-control" value="{{ last_username|default('') }}" required autofocus autocomplete="username">
+                                    </div>
                                 </div>
-                            {% endif %}
-                        {% endblock %}
+                            {% endblock %}
 
-                        {% block field_submit %}
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">{{ _sign_in_label }}</button>
-                        {% endblock %}
+                            {% block field_password %}
+                                <div class="form-group">
+                                    <label class="form-control-label required" for="password">{{ _password_label }}</label>
+                                    <div class="form-widget">
+                                        <input type="password" id="password" name="{{ password_parameter|default('_password') }}" class="form-control" required autocomplete="current-password">
+                                    </div>
+                                    {% block hyperlink_forgot_password %}
+                                        {% if forgot_password_enabled|default(false) %}
+                                            <div class="form-text">
+                                                <a href="{{ forgot_password_path|default('#') }}">{{ _forgot_password_label }}</a>
+                                            </div>
+                                        {% endif %}
+                                    {% endblock %}
+                                </div>
+                            {% endblock %}
 
-                    {% endblock form_content %}
-                </form>
+                            {% block field_remember_me %}
+                                {% if remember_me_enabled|default(false) %}
+                                    <div class="form-group">
+                                        <input class="form-check-input" type="checkbox" id="remember_me" name="{{ remember_me_parameter|default('_remember_me') }}" {{ remember_me_checked|default(false) ? 'checked' }}>
+                                        <label class="form-check-label" for="remember_me">
+                                            {{ _remember_me_label }}
+                                        </label>
+                                    </div>
+                                {% endif %}
+                            {% endblock %}
 
-                <script src="{{ asset('login.js', constant('EasyCorp\\Bundle\\EasyAdminBundle\\Asset\\AssetPackage::PACKAGE_NAME')) }}"></script>
+                            {% block field_submit %}
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">{{ _sign_in_label }}</button>
+                            {% endblock %}
+
+                        {% endblock form_content %}
+                    </form>
+                {% endblock login_form %}
+                    
+                {% block login_form_javascript %}
+                    <script src="{{ asset('login.js', constant('EasyCorp\\Bundle\\EasyAdminBundle\\Asset\\AssetPackage::PACKAGE_NAME')) }}"></script>
+                {% endblock %}
+
             </section>
-        {% endblock %}
+        {% endblock login_body %}
 
         {% block login_footer %}
             <footer class="main-footer">

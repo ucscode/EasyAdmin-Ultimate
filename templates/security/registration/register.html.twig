@@ -1,13 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends 'security/layout.html.twig' %}
 
-{% block title %}Register{% endblock %}
-
-{% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-
-    <h1>Register</h1>
+{% block login_form %}
 
     {{ form_errors(registrationForm) }}
 
@@ -21,6 +14,10 @@
         <button type="submit" class="btn">Register</button>
     {{ form_end(registrationForm) }}
 
-    <a href="{{ path('app_login') }}">Back to login</a>
+{% endblock %}
 
+{% block login_footer %}
+    {% block hyperlink_login %}
+        <a href="{{ path('app_login') }}">Back to login</a>
+    {% endblock %}
 {% endblock %}

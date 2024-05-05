@@ -6,6 +6,7 @@ use App\Controller\Auth\Abstracts\AbstractAuth;
 use App\Entity\User;
 use App\Form\Auth\ChangePasswordFormType;
 use App\Form\Auth\ResetPasswordRequestFormType;
+use App\Service\ConfigurationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,7 +28,8 @@ class ResetPasswordController extends AbstractAuth
 
     public function __construct(
         protected ResetPasswordHelperInterface $resetPasswordHelper,
-        protected EntityManagerInterface $entityManager
+        protected EntityManagerInterface $entityManager,
+        protected ConfigurationService $configurationService
     ) {
     }
 
@@ -50,6 +52,12 @@ class ResetPasswordController extends AbstractAuth
 
         return $this->render('security/reset_password/request.html.twig', [
             'requestForm' => $form,
+            
+            'page_title' => $this->configurationService->getConfigurationValue('app.name') . ' | Reset Password',
+            'favicon_path' => $this->getConfigurationLogo('https://static.thenounproject.com/png/5265761-200.png'),
+            
+            'header_title' => 'Reset Your Password',
+            'header_logo' => $this->getConfigurationLogo(),
         ]);
     }
 

@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\Auth\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use App\Service\ConfigurationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,11 +17,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use Ucscode\KeyGenerator\KeyGenerator;
 
 class RegistrationController extends AbstractAuth
 {
-    public function __construct(private EmailVerifier $emailVerifier)
+    protected KeyGenerator $keyGenerator;
+
+    public function __construct(private EmailVerifier $emailVerifier, protected ConfigurationService $configurationService)
     {
+        $this->keyGenerator = new KeyGenerator();
     }
 
     #[Route('/register', name: 'app_register')]
@@ -38,6 +43,9 @@ class RegistrationController extends AbstractAuth
                     $form->get('plainPassword')->getData()
                 )
             );
+
+            // Generate Uniqid
+            $user->setUniqueId($this->keyGenerator->generateKey(7));
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -60,6 +68,12 @@ class RegistrationController extends AbstractAuth
 
         return $this->render('security/registration/register.html.twig', [
             'registrationForm' => $form,
+            
+            'page_title' => $this->configurationService->getConfigurationValue('app.name') . ' Registeration',
+            'favicon_path' => $this->getConfigurationLogo('https://static.thenounproject.com/png/5265761-200.png'),
+
+            'header_title' => 'Register Now',
+            'header_logo' => $this->getConfigurationLogo(),
         ]);
     }
 
