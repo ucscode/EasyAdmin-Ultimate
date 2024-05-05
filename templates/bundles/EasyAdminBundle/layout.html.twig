@@ -1,4 +1,7 @@
-{% extends theme_layout is not empty ? 'bundles/Themes/' ~ theme_layout ~ '/layout.html.twig': '@!EasyAdmin/layout.html.twig' %}
+{# All theme layout must extend from the original EasyAdmin Bundle template #}
+{# Else, an infinite loop will occur #}
+
+{% extends theme_layout ? ea_pack.themeLayout(theme_layout) : ea_pack.baseTemplate('layout', true) %}
 
 {% block head_javascript %}
     {{ parent() }}

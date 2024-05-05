@@ -45,11 +45,24 @@ However, you must use a special syntax inside extends to avoid an infinite loop:
 {# DO THIS: the '!' symbol tells Symfony to extend from the original template #}
 {% extends '@!EasyAdmin/layout.html.twig' %}
 
+{# Since you installed the EasyAdmin PowerPack, you can also do this #}
+{% extends ea_pack.baseTemplate('layout', true) %}
+
 {% block sidebar %}
     {# ... #}
 {% endblock %}
 ```
 
+```twig
+{# DON'T DO THIS: it will cause infinite loop #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{# DO THIS: #}
+{% extends '@!EasyAdmin/page/content.html.twig' %}
+
+{# Since you installed the EasyAdmin PowerPack, you can also do this #}
+{% extends ea_pack.baseTemplate('page/content', true) %}
+```
 ---
 
 More info @ [Easyadmin Design](https://symfony.com/bundles/EasyAdminBundle/current/design.html)
