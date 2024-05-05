@@ -1,11 +1,24 @@
-<h1>Hi! Please confirm your email!</h1>
+{% extends 'security/email_layout.html.twig' %}
 
-<p>
-    Please confirm your email address by clicking the following link: <br><br>
-    <a href="{{ signedUrl|raw }}">Confirm my Email</a>.
-    This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
-</p>
+{% block email_body %}
 
-<p>
-    Cheers!
-</p>
+    <h5 class="email-body">
+        <strong>Hi there,</strong>
+    </h5>
+
+    <p class="email-body">
+        {% if app_name|default(false) %} Welcome to {{ app_name }}! {% endif %} We are delighted to have you join our community. <br>
+        To complete your registration and verify your email address, please click the link below.
+    </p>
+
+    <p class="email-body">
+        <a href="{{ signedUrl|raw }}" class="email-button">Confirm my Email</a>.
+    </p>
+        
+    <p class="email-body">
+        This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+    </p>
+
+    {{ parent() }}
+
+{% endblock %}

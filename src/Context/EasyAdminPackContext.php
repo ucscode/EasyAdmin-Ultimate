@@ -34,6 +34,6 @@ class EasyAdminPackContext
      */
     public function getThemeLayout(string $dirname, string $layout = 'layout.html.twig'): string
     {
-        return sprintf('bundles/Themes/%s/%s', $dirname, $layout);
+        return sprintf('themes/%s/%s', $dirname, $layout);
     }
 }

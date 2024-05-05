@@ -26,11 +26,15 @@ class ResetPasswordController extends AbstractAuth
 {
     use ResetPasswordControllerTrait;
 
+    protected string $appName;
+
     public function __construct(
         protected ResetPasswordHelperInterface $resetPasswordHelper,
         protected EntityManagerInterface $entityManager,
         protected ConfigurationService $configurationService
-    ) {
+    ) 
+    {
+        $this->appName = $this->configurationService->getConfigurationValue('app.name');
     }
 
     /**
@@ -50,15 +54,11 @@ class ResetPasswordController extends AbstractAuth
             );
         }
 
-        return $this->render('security/reset_password/request.html.twig', [
-            'requestForm' => $form,
-            
-            'page_title' => $this->configurationService->getConfigurationValue('app.name') . ' | Reset Password',
-            'favicon_path' => $this->getConfigurationLogo('https://static.thenounproject.com/png/5265761-200.png'),
-            
+        return $this->render('security/reset_password/request.html.twig', array_merge($this->getTemplateContext(), [
+            'requestForm' => $form,            
+            'page_title' => sprintf('%s | %s', $this->appName, 'Reset Password'),
             'header_title' => 'Reset Your Password',
-            'header_logo' => $this->getConfigurationLogo(),
-        ]);
+        ]));
     }
 
     /**
@@ -73,9 +73,10 @@ class ResetPasswordController extends AbstractAuth
             $resetToken = $this->resetPasswordHelper->generateFakeResetToken();
         }
 
-        return $this->render('security/reset_password/check_email.html.twig', [
+        return $this->render('security/reset_password/check_email.html.twig', array_merge($this->getTemplateContext(), [
             'resetToken' => $resetToken,
-        ]);
+            'page_title' => sprintf('%s | %s', $this->appName, 'Check Email')
+        ]));
     }
 
     /**
@@ -133,9 +134,11 @@ class ResetPasswordController extends AbstractAuth
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/reset_password/reset.html.twig', [
+        return $this->render('security/reset_password/reset.html.twig', array_merge($this->getTemplateContext(), [
             'resetForm' => $form,
-        ]);
+            'page_title' => sprintf('%s | %s', $this->appName, 'Reset Password'),
+            'header_title' => 'Reset Password',
+        ]));
     }
 
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
@@ -170,9 +173,9 @@ class ResetPasswordController extends AbstractAuth
             ->to($user->getEmail())
             ->subject('Your password reset request')
             ->htmlTemplate('security/reset_password/email.html.twig')
-            ->context([
+            ->context(array_merge($this->getTemplateContext(), [
                 'resetToken' => $resetToken,
-            ])
+            ]))
         ;
 
         $mailer->send($email);
@@ -181,5 +184,14 @@ class ResetPasswordController extends AbstractAuth
         $this->setTokenObjectInSession($resetToken);
 
         return $this->redirectToRoute('app_check_email');
+    }
+
+    private function getTemplateContext(): array
+    {
+        return [
+            'app_name' => $this->appName,
+            'favicon_path' => $this->getConfigurationLogo('https://static.thenounproject.com/png/5265761-200.png'),
+            'header_logo' => $this->getConfigurationLogo(),
+        ];
     }
 }

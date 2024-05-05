@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f6f6f6;
+        }
+        .email-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px 50px;
+            background-color: #ffffff;
+            box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            word-wrap: break-word;
+        }
+        .email-header {
+            text-align: center;
+            padding: 8px 0;
+            color: #4a4a4a;
+            text-decoration: underline;
+        }
+        .email-body {
+            color: #4a4a4a;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .email-footer {
+            text-align: center;
+            color: #888888;
+            font-size: 14px;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .email-button {
+            background-color: #ffffff;
+            border: solid 2px #0867ec;
+            border-radius: 4px;
+            box-sizing: border-box;
+            color: #0867ec;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+            padding: 12px 24px;
+            text-decoration: none;
+            text-transform: capitalize;
+        }
+        .email-body-container {
+            border-bottom: 1px solid grey;
+            margin-bottom: 3px;
+            padding-bottom: 3px;
+        }
+        .email-footer-container {
+            padding-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        {% block email_content %}
+
+            <div class="email-body-container">
+                {% block email_body %}
+
+                    <p class="email-body">
+                        <strong>Best Regards!</strong>
+                    </p>
+
+                    {% if app_name|default(false) %}
+                        <p class="email-body">
+                            <strong>{{ app_name }} Team</strong>
+                        </p>
+                    {% endif %}
+
+                {% endblock %}
+            </div>
+
+            <div class='email-footer-container'>
+                {% block email_footer %}
+                    <p class="email-footer">
+                        If you encounter any issues or have any questions, please do not hesitate to contact our support team.
+                    </p>
+                {% endblock %}
+            </div>
+
+        {% endblock %}
+    </div>
+</body>
+</html>

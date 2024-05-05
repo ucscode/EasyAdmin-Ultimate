@@ -1,9 +1,30 @@
-<h1>Hi!</h1>
+{% extends 'security/email_layout.html.twig' %}
 
-<p>To reset your password, please visit the following link</p>
+{% block email_body %}
 
-<a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+    <h2 class="email-header">Password Reset Request</h2>
 
-<p>This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+    <p class="email-body">
+        We received a request to reset your password for your account {% if app_name|default(false) %} at {{ app_name }} {% endif %}.
+    </p> 
+        
+    <p class="email-body">To complete the password reset process, please click the link below:</p>
 
-<p>Cheers!</p>
+    <p class="email-body">
+        <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">
+            {{ url('app_reset_password', {token: resetToken.token}) }}
+        </a>
+    </p>
+
+    <p class="email-body">
+        Please note, this link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+    </p>
+
+    <p class="email-body">
+        If you did not initiate this request or believe this is an error, please this email. <br>
+        For security reasons, please do not share this link with anyone.
+    </p>
+
+    {{ parent() }}
+
+{% endblock %}

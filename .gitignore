@@ -29,6 +29,11 @@
 ###< symfony/php-cs-fixer ###
 
 ###> public ###
+# Ignore everything in the images directory
 /public/resource/images/**
+
+# Except for the following:
 !/public/resource/images/**/.gitkeep
+!/public/resource/images/system/check-png.webp
+
 ###< public ###
