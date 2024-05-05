@@ -22,7 +22,10 @@ use function Symfony\Component\String\u;
 
 class ConfigurationCrudController extends AbstractAdminCrudController
 {
-    public function __construct(protected EntityManagerInterface $entityManager) {
+    public function __construct(
+        protected EntityManagerInterface $entityManager, 
+        protected ConfigurationService $configurationService
+    ) {
         // constructor
     }
 
@@ -50,13 +53,17 @@ class ConfigurationCrudController extends AbstractAdminCrudController
 
             yield TextField::new('metaKey', 'Name')
                 ->formatValue(function ($value) {
-                    return ucwords(str_replace('.', " ", $value));
+                    $split = array_map(function ($value) {
+                        return ucwords(preg_replace("/[_\-]/", " ", $value));
+                    }, explode(".", $value));
+                    $split[0] = sprintf('<span class="fw-semibold text-info">%s</span>', strtoupper($split[0]));
+                    return implode('<i class="fas fa-caret-right mx-1"></i>', $split);
                 });
 
-            yield TextField::new('metaValueAsString', 'value')
-                ->formatValue(function ($value, $entity) {
-                    // return your formated value here
-                    return u($value)->truncate(71, '&hellip;');
+            yield TextField::new('metaValueAsString', 'Value')
+                ->formatValue(function (string $value, Configuration $entity) {
+                    $context = $this->configurationService->getConfigurationStructure($entity->getMetaKey(), 'format');
+                    return $context ? call_user_func($context, $entity) : u($value)->truncate(71, '&hellip;');
                 })
             ;
 
@@ -86,12 +93,7 @@ class ConfigurationCrudController extends AbstractAdminCrudController
             throw new \Exception(sprintf('`%s` configuration is readonly and cannot be modified from GUI', $entity->getMetaKey()));
         }
 
-        /**
-         * @var \App\Service\ConfigurationService
-         */
-        $configurationService = $this->container->get(ConfigurationService::class);
-
-        $structure = $configurationService->getConfigurationStructure($entity->getMetaKey());
+        $structure = $this->configurationService->getConfigurationStructure($entity->getMetaKey());
 
         return $structure['field'];
     }
