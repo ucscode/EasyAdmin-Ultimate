@@ -171,7 +171,7 @@ class ResetPasswordController extends AbstractAuth
         $email = (new TemplatedEmail())
             ->from(new Address('email@example.com', 'Mailer Service'))
             ->to($user->getEmail())
-            ->subject('Your password reset request')
+            ->subject('Password reset request')
             ->htmlTemplate('security/reset_password/email.html.twig')
             ->context(array_merge($this->getTemplateContext(), [
                 'resetToken' => $resetToken,

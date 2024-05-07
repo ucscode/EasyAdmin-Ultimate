@@ -52,14 +52,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastSeen = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $avatar = null;
+
     /**
      * @var Collection<int, UserNotification>
      */
     #[ORM\OneToMany(targetEntity: UserNotification::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'])]
     private Collection $notificationCollection;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $avatar = null;
 
     /**
      * @var Collection<int, UserProperty>

@@ -69,7 +69,7 @@ class RegistrationController extends AbstractAuth
         return $this->render('security/registration/register.html.twig', [
             'registrationForm' => $form,
             
-            'page_title' => $this->configurationService->getConfigurationValue('app.name') . ' Registeration',
+            'page_title' => sprintf('%s | %s', $this->configurationService->getConfigurationValue('app.name'), 'Registeration'),
             'favicon_path' => $this->getConfigurationLogo('https://static.thenounproject.com/png/5265761-200.png'),
 
             'header_title' => 'Register Now',
