@@ -36,7 +36,7 @@ abstract class AbstractAuth extends AbstractDashboardController implements AuthC
          */
         $configurationService = $this->container->get(ConfigurationService::class);
 
-        $logo = $configurationService->getConfigurationValue('app.logo');
+        $logo = $configurationService->get('app.logo');
 
         if(!empty($logo)) {
             $pathPackage = new PathPackage(FilePathConstants::SYSTEM_IMAGE_BASE_PATH, new EmptyVersionStrategy());

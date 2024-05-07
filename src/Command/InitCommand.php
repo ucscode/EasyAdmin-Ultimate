@@ -2,8 +2,6 @@
 
 namespace App\Command;
 
-use App\Entity\Configuration;
-use App\Service\ConfigurationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -34,8 +32,7 @@ class InitCommand extends Command
 
     public function __construct(
         protected EntityManagerInterface $entityManager,
-        protected KernelInterface $kernel,
-        protected ConfigurationService $configurationService
+        protected KernelInterface $kernel
     ) {
         parent::__construct();
         $this->keyGenerator = new KeyGenerator();
@@ -54,7 +51,6 @@ class InitCommand extends Command
             }
 
             $this->updateComposerPackages();
-            $this->overloadAdminConfiguration();
             $this->computeAssetMapperResource();
             $this->generateSecretKey();
 
@@ -85,42 +81,6 @@ class InitCommand extends Command
         $this->runSymfonyConsoleCommand(['composer', 'update']);
 
         $this->symfonyStyle->success("Composer Packages Revised");
-    }
-
-    protected function overloadAdminConfiguration(): void
-    {
-        $this->symfonyStyle->title('Updating admin configurations');
-
-        /**
-         * @var array $context
-         */
-        foreach($this->configurationService->getConfigurationStructure() as $metaKey => $context) {
-
-            $configuration = $this->configurationService->getConfigurationInstance($metaKey);
-
-            if(!$configuration) {
-
-                $configuration = (new Configuration())
-                    ->setMetaKey($metaKey)
-                    ->setMetaValue($context['value'])
-                    ->setBitwiseMode($context['mode'])
-                ;
-
-                $this->entityManager->persist($configuration);
-
-                $this->symfonyStyle->text(
-                    sprintf(
-                        '[<info>%s</info>] = %s',
-                        $metaKey,
-                        implode(' ⏎ ', array_map('trim', explode("\n", $configuration->getMetaValueAsString())))
-                    ),
-                );
-            }
-        }
-
-        $this->entityManager->flush();
-
-        $this->symfonyStyle->success('Admin configuration updated');
     }
 
     protected function computeAssetMapperResource(): void

@@ -34,7 +34,7 @@ class ResetPasswordController extends AbstractAuth
         protected ConfigurationService $configurationService
     ) 
     {
-        $this->appName = $this->configurationService->getConfigurationValue('app.name');
+        $this->appName = $this->configurationService->get('app.name');
     }
 
     /**

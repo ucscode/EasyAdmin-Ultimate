@@ -1,0 +1,57 @@
+###> Basic User Synthetics Configuration
+app:
+
+  name: 'User Synthetics' 
+
+  logo: 'http://ucscode.com/common/images/origin.png'
+
+  slogan: 'Empower Your Admin Experience with User Synthetics'
+
+  description: >
+    Introducing User Synthetics, your ultimate companion for effortlessly crafting sleek and powerful admin dashboards! 
+    With User Synthetics, developers can bid farewell to tedious coding and welcome a seamless, intuitive framework 
+    designed to streamline the entire dashboard development process
+
+###> Administrative contact information
+
+office:
+
+  # Primary email address for administrative contact.
+  email: 'sample@email.com'
+
+  # Contact phone number.
+  phone: '+2234904994'
+
+  address: >
+    123 Main Street
+    Anytown, CA 12345 
+    United States
+
+###> User-related configurations
+
+user:
+
+  email:
+
+    # Whether to send an email validation link upon registration.
+    send_validation_link: true
+
+    # If true, users cannot change their email address.
+    prevent_update: true
+    
+    # If true, users must reconfirm their email after any change.
+    reconfirm_on_update: true
+  
+  account:
+
+    # Users must validate their email before they can log in.
+    login_only_if_validated: true
+
+    # If true, accounts inactive for a specified duration will be deleted.
+    delete_if_inactive: true
+
+     # Number of days after registration when an inactive account will be deleted.
+    inactive_account_expiration_days: 7
+      
+
+  

@@ -31,7 +31,7 @@ class SecurityController extends AbstractAuth
             
             'csrf_token_intention' => 'authenticate',
 
-            'page_title' => sprintf('%s | %s', $this->configurationService->getConfigurationValue('app.name'), 'Login'),
+            'page_title' => sprintf('%s | %s', $this->configurationService->get('app.name'), 'Login'),
             'favicon_path' => $this->getConfigurationLogo('https://static.thenounproject.com/png/5265761-200.png'),
 
             'header_title' => 'Login Now',

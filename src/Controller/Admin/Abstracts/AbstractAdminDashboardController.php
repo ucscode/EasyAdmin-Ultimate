@@ -6,7 +6,6 @@ use App\Controller\Admin\Crud\UserCrudController;
 use App\Controller\Admin\Interfaces\AdminControllerInterface;
 use App\Controller\Base\Abstracts\AbstractBaseDashboardController;
 use App\Entity\CodeInfusion;
-use App\Entity\Configuration;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -47,13 +46,7 @@ abstract class AbstractAdminDashboardController extends AbstractBaseDashboardCon
             ->setController(UserCrudController::class)
             ->setAction(Crud::PAGE_NEW);
 
-        // yield MenuItem::linkToCrud('Properties', 'fa fa-infinity', UserProperty::class);
-        // yield MenuItem::linkToCrud('Notifications', 'fa fa-bell', UserNotification::class);
-
-        yield MenuItem::section('settings');
-
-        yield MenuItem::linkToCrud('Configuration', 'fas fa-wrench', Configuration::class);
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+        // yield MenuItem::section('settings');
 
         yield MenuItem::section('Misc');
 

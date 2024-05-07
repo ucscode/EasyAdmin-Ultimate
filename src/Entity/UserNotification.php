@@ -47,7 +47,7 @@ class UserNotification
 
     public function __construct()
     {
-        $this->setCategory('DEFAULT');
+        $this->setCategory('misc');
         $this->setCreatedAt(new \DateTime());
         $this->setSeenByUser(false);
     }

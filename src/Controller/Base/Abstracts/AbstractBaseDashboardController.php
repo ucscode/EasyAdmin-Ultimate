@@ -4,7 +4,6 @@ namespace App\Controller\Base\Abstracts;
 
 use App\Constants\FilePathConstants;
 use App\Controller\Base\Traits\BaseControllerTrait;
-use App\Controller\Base\Traits\BaseDashboardControllerTrait;
 use App\Entity\User;
 use App\Service\ConfigurationService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
@@ -32,7 +31,7 @@ abstract class AbstractBaseDashboardController extends AbstractDashboardControll
     {
         return Dashboard::new()
 
-            ->setTitle($this->container->get(configurationService::class)->getConfigurationValue('app.name'))
+            ->setTitle($this->container->get(configurationService::class)->get('app.name'))
 
             ->renderContentMaximized()
 
