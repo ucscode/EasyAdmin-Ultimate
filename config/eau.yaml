@@ -54,11 +54,12 @@ user:
   
   account:
 
-    # Users must validate their email before they can log in.
-    login_only_if_validated: true
+    # Users must verify their email before they can log in.
+    login_only_if_verified: true
 
     # If true, accounts inactive for a specified duration will be deleted.
     delete_if_inactive: true
 
-     # Number of days after registration when an inactive account will be deleted.
+    # Number of days after registration when an inactive account will be deleted.
+    # > This option will not take effect if "delete_if_inactive" is set to false
     inactive_account_expiration_days: 7

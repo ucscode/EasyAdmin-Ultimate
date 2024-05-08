@@ -25,7 +25,7 @@ class UssGenerateSecretKeyCommand extends Command
     public function __construct(protected KernelInterface $kernel)
     {
         parent::__construct();
-        
+
         $this->keyGenerator = new KeyGenerator();
     }
 
@@ -40,9 +40,9 @@ class UssGenerateSecretKeyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        
+
         try {
-            $this->generateSecretKey($io, $input->getArgument('envFilename') ?? '.env'); 
+            $this->generateSecretKey($io, $input->getArgument('envFilename') ?? '.env');
         } catch(Exception $e) {
             $io->error(sprintf('%s on %s:%s', $e->getMessage(), $e->getFile(), $e->getLine()));
             return Command::FAILURE;
@@ -66,10 +66,10 @@ class UssGenerateSecretKeyCommand extends Command
 
         $envPath = sprintf('%s/%s', $this->kernel->getProjectDir(), $envFilename);
         $envContent = file_get_contents($envPath);
-        
+
         $pattern = sprintf('/^%s=.*/m', preg_quote('APP_SECRET', '/'));
         $replacement = sprintf('%s="%s"', 'APP_SECRET', $secretKey);
-        
+
         $newEnvContent = preg_replace($pattern, $replacement, $envContent);
 
         file_put_contents($envPath, $newEnvContent);

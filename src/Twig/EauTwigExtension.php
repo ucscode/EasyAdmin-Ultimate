@@ -17,7 +17,7 @@ class EauTwigExtension extends AbstractExtension implements GlobalsInterface
     public function getGlobals(): array
     {
         return [
-            'ea_pack' => new EauContext($this->configurationService)
+            'eau' => new EauContext($this->configurationService)
         ];
     }
 }

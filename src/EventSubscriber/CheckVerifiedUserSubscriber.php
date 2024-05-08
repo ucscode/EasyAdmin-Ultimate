@@ -2,12 +2,18 @@
 
 namespace App\EventSubscriber;
 
+use App\Service\ConfigurationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 
 class CheckVerifiedUserSubscriber implements EventSubscriberInterface
 {
+    public function __construct(protected ConfigurationService $configurationService)
+    {
+
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
@@ -23,10 +29,12 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface
          */
         $user = $passport->getUser();
 
-        if(!$user->getIsVerified()) {
-            throw new CustomUserMessageAuthenticationException(
-                'Please verify your account email to login'
-            );
+        if($this->configurationService->get('user.account.login_only_if_verified')) {
+            if(!$user->getIsVerified()) {
+                throw new CustomUserMessageAuthenticationException(
+                    'Please verify your account email to login'
+                );
+            }
         }
     }
 }
