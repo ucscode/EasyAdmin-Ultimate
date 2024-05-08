@@ -27,7 +27,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
 
     public function __construct(protected EntityManagerInterface $entityManager)
     {
-        
+
     }
 
     public static function getEntityFqcn(): string

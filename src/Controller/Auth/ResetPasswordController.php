@@ -32,8 +32,7 @@ class ResetPasswordController extends AbstractAuth
         protected ResetPasswordHelperInterface $resetPasswordHelper,
         protected EntityManagerInterface $entityManager,
         protected ConfigurationService $configurationService
-    ) 
-    {
+    ) {
         $this->appName = $this->configurationService->get('app.name');
     }
 
@@ -55,7 +54,7 @@ class ResetPasswordController extends AbstractAuth
         }
 
         return $this->render('security/reset_password/request.html.twig', array_merge($this->getTemplateContext(), [
-            'requestForm' => $form,            
+            'requestForm' => $form,
             'page_title' => sprintf('%s | %s', $this->appName, 'Reset Password'),
             'header_title' => 'Reset Your Password',
         ]));

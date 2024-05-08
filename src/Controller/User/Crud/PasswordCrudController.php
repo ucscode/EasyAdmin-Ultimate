@@ -17,7 +17,7 @@ class PasswordCrudController extends ProfileCrudController
 
     public function __construct(protected UserPasswordHasherInterface $userPasswordHasher)
     {
-        
+
     }
 
     public function configureCrud(Crud $crud): Crud

@@ -1,11 +1,21 @@
-###> Basic User Synthetics Configuration
+# This YAML file contains custom configuration settings for the application.
+# Values enclosed within %env()% or %param% placeholders can be dynamically 
+# substituted with environment variables or parameters defined elsewhere in 
+# the Symfony application.
+
+# Example:
+#   env_value: '%env(MY_ENV_VAR)%'
+#   param_value: '%param(my_parameter)%'
+
 app:
 
-  name: 'User Synthetics' 
+  title: 'zap %env(APP_ENV)%'
 
-  logo: 'http://ucscode.com/common/images/origin.png'
+  name: 'User Synthetics %self(app.title)%'
 
-  slogan: 'Empower Your Admin Experience with User Synthetics'
+  logo: '/resource/images/system/golden-logo-template-free-png.webp'
+
+  slogan: 'Empower Your Admin Experience with %self(app.name)%'
 
   description: >
     Introducing User Synthetics, your ultimate companion for effortlessly crafting sleek and powerful admin dashboards! 

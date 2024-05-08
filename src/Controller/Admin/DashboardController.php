@@ -10,7 +10,7 @@ use Symfony\UX\Chartjs\Model\Chart;
 
 class DashboardController extends AbstractAdminDashboardController
 {
-    public function __construct(protected ChartBuilderInterface $chartBuilder) 
+    public function __construct(protected ChartBuilderInterface $chartBuilder)
     {
 
     }

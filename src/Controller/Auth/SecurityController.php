@@ -12,7 +12,7 @@ class SecurityController extends AbstractAuth
 {
     public function __construct(protected ConfigurationService $configurationService)
     {
-        
+
     }
 
     #[Route(path: '/login', name: 'app_login')]
@@ -28,14 +28,14 @@ class SecurityController extends AbstractAuth
 
             'last_username' => $lastUsername,
             'error' => $error,
-            
+
             'csrf_token_intention' => 'authenticate',
 
             'page_title' => sprintf('%s | %s', $this->configurationService->get('app.name'), 'Login'),
-            'favicon_path' => $this->getConfigurationLogo('https://static.thenounproject.com/png/5265761-200.png'),
+            'favicon_path' => $this->configurationService->get('app.logo', 'https://static.thenounproject.com/png/5265761-200.png'),
 
             'header_title' => 'Login Now',
-            'header_logo' => $this->getConfigurationLogo(),
+            'header_logo' => $this->configurationService->get('app.logo'),
 
             'username_label' => 'Email',
             'password_label' => 'Password',

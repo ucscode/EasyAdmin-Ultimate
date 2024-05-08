@@ -33,11 +33,10 @@ class UserCrudController extends AbstractAdminCrudController
     public function __construct(
         protected AdminUrlGenerator $adminUrlGenerator,
         protected UserPasswordHasherInterface $userPasswordHasher
-    )
-    {
+    ) {
         $this->keyGenerator = new KeyGenerator();
     }
-    
+
     public static function getEntityFqcn(): string
     {
         return User::class;

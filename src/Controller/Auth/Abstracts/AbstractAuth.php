@@ -42,7 +42,7 @@ abstract class AbstractAuth extends AbstractDashboardController implements AuthC
             $pathPackage = new PathPackage(FilePathConstants::SYSTEM_IMAGE_BASE_PATH, new EmptyVersionStrategy());
             return $pathPackage->getUrl($logo);
         }
-        
+
         return $default;
     }
 }
