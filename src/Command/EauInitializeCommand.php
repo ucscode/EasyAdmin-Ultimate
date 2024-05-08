@@ -15,11 +15,11 @@ use Symfony\Component\Process\Process;
 use Ucscode\KeyGenerator\KeyGenerator;
 
 #[AsCommand(
-    name: 'uss:initialize',
+    name: 'eau:initialize',
     description: 'Initialize User Synthetics Application',
     hidden: false,
 )]
-class InitCommand extends Command
+class UssInitializeCommand extends Command
 {
     public const ENV_PROD = 'prod';
     public const ENV_DEV = 'dev';
@@ -28,14 +28,11 @@ class InitCommand extends Command
     protected OutputInterface $output;
     protected SymfonyStyle $symfonyStyle;
 
-    protected KeyGenerator $keyGenerator;
-
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected KernelInterface $kernel
     ) {
         parent::__construct();
-        $this->keyGenerator = new KeyGenerator();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -52,7 +49,6 @@ class InitCommand extends Command
 
             $this->updateComposerPackages();
             $this->computeAssetMapperResource();
-            $this->generateSecretKey();
 
         } catch(Exception $exception) {
 
@@ -97,23 +93,6 @@ class InitCommand extends Command
         };
 
         $this->symfonyStyle->success('Asset Mapper Initialized');
-    }
-
-    protected function generateSecretKey(): void
-    {
-        $this->symfonyStyle->title('Generating APP_SECRET');
-
-        if($this->isProductionEnvironment()) {
-
-            $secretKey = $this->keyGenerator->generateKey(32);
-            $result = shell_exec('sed -i -E "s/^APP_SECRET=.{32}$/APP_SECRET=' . $secretKey . '/" .env');
-
-            $this->symfonyStyle->success('New APP_SECRET was generated: ' . $secretKey);
-
-            return;
-        }
-
-        $this->symfonyStyle->warning('APP_SECRET not generated! Skipped in "dev" environment');
     }
 
     private function runSymfonyConsoleCommand(array $command): void

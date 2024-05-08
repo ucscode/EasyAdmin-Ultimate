@@ -2,12 +2,12 @@
 
 namespace App\Twig;
 
-use App\Context\EasyAdminPackContext;
+use App\Context\EauContext;
 use App\Service\ConfigurationService;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
-class EasyAdminPackTwigExtension extends AbstractExtension implements GlobalsInterface
+class EauTwigExtension extends AbstractExtension implements GlobalsInterface
 {
     public function __construct(protected ConfigurationService $configurationService)
     {
@@ -16,6 +16,8 @@ class EasyAdminPackTwigExtension extends AbstractExtension implements GlobalsInt
 
     public function getGlobals(): array
     {
-        return ['ea_pack' => new EasyAdminPackContext($this->configurationService)];
+        return [
+            'ea_pack' => new EauContext($this->configurationService)
+        ];
     }
 }

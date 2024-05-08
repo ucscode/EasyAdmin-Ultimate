@@ -14,9 +14,9 @@ class ConfigurationService
     protected array $configuration;
     protected PropertyAccessor $propertyAccessor;
 
-    public function __construct(KernelInterface $kernel, protected ParameterBagInterface $parameterBag)
+    public function __construct(protected KernelInterface $kernel, protected ParameterBagInterface $parameterBag)
     {
-        $configurationPath = $kernel->getProjectDir() . '/config/uss.ea.yaml';
+        $configurationPath = $this->kernel->getProjectDir() . '/config/eau.yaml';
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
         $this->configuration = Yaml::parseFile($configurationPath);
         $this->preprocessConfiguration();
@@ -26,9 +26,15 @@ class ConfigurationService
     {
         $value = $this->accessPropertyValue($key);
 
-        $value = !is_string($value) ? $value : $this->preprocessor($value, [
-            'self\\(%s\\)' => fn (string $key) => $this->get($key)
-        ]);
+        if(is_string($value)) {
+            $value = $this->preprocessor(trim($value), [
+                'self\\(%s\\)' => fn (string $key) => $this->get($key)
+            ]);
+
+            if($value === '' && $default !== null) {
+                $value = $default;
+            }
+        }
 
         return $value ?? $default;
     }

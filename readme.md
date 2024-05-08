@@ -1,6 +1,6 @@
-# Symfony EasyAdmin PowerPack
+# EasyAdmin Ultimate
 
-Symfony EasyAdmin PowerPack is a comprehensive enhancement package built on top of the Symfony framework and integrates the EasyAdmin bundle, providing a rich set of tools, components, utilities, and additional features. It’s designed to simplify development workflows and accelerate project delivery.
+EasyAdmin Ultimate is a comprehensive enhancement package built on top of the Symfony framework and integrates the EasyAdmin bundle, providing a rich set of tools, components, utilities, and additional features. It’s designed to simplify development workflows and accelerate project delivery.
 
 ## Features
 
@@ -16,7 +16,7 @@ Symfony EasyAdmin PowerPack is a comprehensive enhancement package built on top 
 
 ## Installation
 
-You can install Symfony EasyAdmin PowerPack via Composer. Run the following command:
+You can install EasyAdmin Ultimate via Composer. Run the following command:
 
 ```bash
 composer require ucscode/symfony-easyadmin-powerpack
@@ -36,7 +36,7 @@ For detailed usage instructions and documentation, please refer to the following
 
 - [EasyAdmin Documentation](https://symfony.com/doc/current/bundles/EasyAdminBundle/index.html): Official documentation for EasyAdmin bundle, offering detailed documentation on installation, configuration, and usage of EasyAdmin for Symfony applications.
 
-You can also explore the features and components included in Symfony EasyAdmin PowerPack and start leveraging them in your Symfony projects to facilitate development workflows.
+You can also explore the features and components included in EasyAdmin Ultimate and start leveraging them in your Symfony projects to facilitate development workflows.
 
 ## License
 
@@ -50,17 +50,17 @@ If you would like to contribute to the project, you can do so in several ways:
 
 - **Submit Pull Requests**: If you would like to contribute code enhancements, bug fixes, or new features, please fork the repository, make your changes, and submit a pull request. Make sure to follow the coding standards and include relevant tests and documentation for your changes.
 
-- **Spread the Word**: If you find Symfony EasyAdmin PowerPack useful, consider sharing it with others, giving it a star on GitHub, or tweeting about it. Your support helps us grow the community and improve the project.
+- **Spread the Word**: If you find EasyAdmin Ultimate useful, consider sharing it with others, giving it a star on GitHub, or tweeting about it. Your support helps us grow the community and improve the project.
 
 Before contributing, please review the [contribution guidelines](CONTRIBUTING.md) for detailed information on how to contribute effectively and respectfully.
 
-Thank you for considering contributing to Symfony EasyAdmin PowerPack!
+Thank you for considering contributing to EasyAdmin Ultimate!
 
 ## Disclaimer
 
 Symfony PowerPack is a personal project created by [Uchenna Ajah](http://ucscode.com) and is not affiliated with, endorsed by, or sponsored by the Symfony team. Symfony and EasyAdmin are trademarks of their respective owners. This project is not an official product or package from the Symfony team and should not be misconstrued as such.
 
-Please note that while Symfony EasyAdmin PowerPack leverages Symfony and EasyAdmin components, it is a standalone project with its own goals and objectives. Any opinions expressed within this project are solely those of the project creator and contributors and do not necessarily reflect the views or opinions of the Symfony team or its affiliates.
+Please note that while EasyAdmin Ultimate leverages Symfony and EasyAdmin components, it is a standalone project with its own goals and objectives. Any opinions expressed within this project are solely those of the project creator and contributors and do not necessarily reflect the views or opinions of the Symfony team or its affiliates.
 
 For official information and resources related to Symfony framework and EasyAdmin bundle, please refer to the [Symfony Documentation](https://symfony.com/doc/current/index.html) and [EasyAdmin Documentation](https://symfony.com/doc/current/bundles/EasyAdminBundle/index.html) respectively.
 

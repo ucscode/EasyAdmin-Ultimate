@@ -4,7 +4,7 @@ namespace App\Context;
 
 use App\Service\ConfigurationService;
 
-class EasyAdminPackContext
+class EauContext
 {
     public function __construct(protected ConfigurationService $configurationService)
     {

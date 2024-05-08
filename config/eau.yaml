@@ -62,6 +62,3 @@ user:
 
      # Number of days after registration when an inactive account will be deleted.
     inactive_account_expiration_days: 7
-      
-
-  
