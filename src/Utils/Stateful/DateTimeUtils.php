@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils\Service;
+namespace App\Utils\Stateful;
 
 use DateTime;
 use DateTimeInterface;

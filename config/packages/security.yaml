@@ -8,7 +8,9 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: email
+                    # App user is now being provided by "\App\Repository\UserRepository::loadUserByIdentifier()"
+                    # Therefore, do not uncomment the `property: email` line below
+                # property: email
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         dev:

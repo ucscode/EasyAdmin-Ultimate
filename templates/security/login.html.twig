@@ -1,8 +1,12 @@
 {# login.html.twig extends 'layout.html.twig' #}
+{# Edit this page to meet your project requirement #}
 {% extends 'security/layout.html.twig' %}
 
 {% block footer_content %}
-    {% block hyperlink_create_account %}
-        <div>Don't have an account? <a href="{{ path('app_register') }}">Create an account</a></div>
-    {% endblock %}
+    {% if not app.user %}
+        {# if user is not logged in, show a create account link #}
+        {% block hyperlink_create_account %}
+            <div>Don't have an account? <a href="{{ path('app_register') }}">Create an account</a></div>
+        {% endblock %}
+    {% endif %}
 {% endblock %}

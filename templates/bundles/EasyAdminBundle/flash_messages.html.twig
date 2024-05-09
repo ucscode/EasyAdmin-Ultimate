@@ -1,0 +1,59 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# This template checks for 'ea' variable existence because it can
+   be used in a EasyAdmin Dashboard controller, where 'ea' is defined
+   or from any other Symfony controller, where 'ea' is not defined #}
+{% trans_default_domain ea is defined ? ea.i18n.translationDomain : (translation_domain is defined ? translation_domain ?? 'messages') %}
+
+{% set flash_messages = app.flashes %}
+
+{% set alert_types = {
+    'success': 'fas fa-check-circle', 
+    'danger': 'fas fa-exclamation-circle', 
+    'warning': 'fas fa-exclamation-triangle', 
+    'info': 'fas fa-info', 
+    'primary': null, 
+    'secondary': null
+} %}
+
+{% if flash_messages|length > 0 %}
+
+    <div id="flash-messages" class="eau-flash">
+
+        {% block flashes %} 
+
+            {# iterate over the flashes #}
+            {% for offset, messages in flash_messages %}
+
+                {# 
+                    Flashes are session messages that appear once. 
+                    Each flash message must be a string and follow the key pattern:
+                    "success.my_key" for success messages and "danger.custom_key" for error messages.
+                    Any flash not adhering to this pattern won't be rendered, indicating it's a custom or non-string message type. 
+                #}
+                {% set type = offset|split('.')[0] %}
+
+                {% if type in alert_types|keys %}
+
+                    {% for message in messages %}
+                    
+                        <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <div class="d-flex align-items-baseline">
+                                {% if alert_types[type] %}
+                                    <i class="{{ alert_types[type] }} me-2"></i>
+                                {% endif %}
+                                <div class="alert-message">{{ message|trans|raw }}</div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endfor %}
+
+        {% endblock %}
+        
+    </div>
+
+{% endif %}

@@ -2,7 +2,7 @@
 {% extends ea.templatePath('layout') %}
 {% trans_default_domain ea.i18n.translationDomain %}
 
-{% block body_class 'page-login' %}
+{# {% block body_class 'page-login' %} #}
 
 {% block page_title %}{{ page_title is defined ? page_title|raw : (ea is defined ? ea.dashboardTitle|raw : '') }}{% endblock %}
 
@@ -27,7 +27,9 @@
         {% include '@EasyAdmin/flash_messages.html.twig' %}
     {% endblock %}
 
-    <div class="{% block login_wrapper_class 'login-wrapper' %}">
+    <section class="{% block login_section_class 'page-login' %}">
+
+        <div class="{% block login_wrapper_class 'login-wrapper eau-login-wrapper' %}">
 
         {% block login_header %}
             <header class="main-header text-center mb-2">
@@ -59,7 +61,7 @@
                 {% block login_error %}
                     {% if error|default(false) %}
                         <div class="w-100 alert alert-danger rounded mb-3">
-                            <i class="fas fa-times-circle mr-1"></i>
+                            <i class="fas fa-times-circle me-1"></i>
                             {{ error.messageKey|trans(error.messageData, 'security') }}
                         </div>
                     {% endif %}
@@ -68,6 +70,7 @@
                 {% block login_info %}
                     {% if app.user %}
                         <div class="mb-3 alert alert-info rounded">
+                            <i class="fas fa-info-circle me-1"></i>
                             You are currently logged in as {{ app.user.email }}, <a href="{{ path('app_logout') }}">Logout</a>
                         </div>
                     {% endif %}
@@ -99,7 +102,7 @@
                                         <input type="password" id="password" name="{{ password_parameter|default('_password') }}" class="form-control" required autocomplete="current-password">
                                     </div>
                                     {% block hyperlink_forgot_password %}
-                                        {% if forgot_password_enabled|default(false) %}
+                                        {% if forgot_password_enabled|default(false) and not app.user %}
                                             <div class="form-text">
                                                 <a href="{{ forgot_password_path|default('#') }}">{{ _forgot_password_label }}</a>
                                             </div>
@@ -140,6 +143,8 @@
             </footer>
         {% endblock %}
 
-    </div>
+        </div>
+
+    </section>
     
 {% endblock %}
