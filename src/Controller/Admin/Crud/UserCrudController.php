@@ -8,7 +8,7 @@ use App\Controller\Admin\DashboardController;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Utils\Stateless\RoleUtils;
-use App\Utils\Service\DateTimeUtils;
+use App\Utils\Stateful\DateTimeUtils;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;

@@ -27,17 +27,21 @@ abstract class AbstractBaseDashboardController extends AbstractDashboardControll
 {
     use BaseControllerTrait;
 
+    protected ConfigurationService $configurationService;
+
     public function configureDashboard(): Dashboard
     {
+        $this->configurationService = $this->container->get(configurationService::class);
+
         return Dashboard::new()
 
-            ->setTitle($this->container->get(configurationService::class)->get('app.name'))
+            ->setTitle($this->configurationService->get('app.name'))
+
+            ->setFaviconPath($this->configurationService->get('app.logo'))
 
             ->renderContentMaximized()
 
             ->disableDarkMode()
-
-            // ->renderSidebarMinimized()
 
             /**
              * IMPORTANT: the locale feature won't work unless you add the {_locale} parameter
