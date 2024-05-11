@@ -39,13 +39,14 @@
 {% set has_multiple_buttons = modalButtons|length > 1 %}
 
 <div 
-    class="modal {{ modalClass|default('fade') }}" 
+    class="modal eau-modal {{ modalClass|default('fade') }}" 
     id="{{ modalId|default('') }}" 
     tabindex="-1" 
     aria-labelledby="{{ modalName|default('undefined') }}" 
     aria-hidden="true"
-    data-bs-backdrop="{{ modalBackdrop|default(has_multiple_buttons ? 'static' : '') }}"
-    data-bs-keyboard="{{ modalKeyboard|default(false) }}"
+    data-bs-backdrop="{{ modalBackdrop|default(has_multiple_buttons ? 'static' : '')|bool_string }}"
+    data-bs-keyboard="{{ modalKeyboard|default(false)|bool_string }}"
+    data-bs-show="{{ modalShow|default(false)|bool_string }}"
 >
 
     <div class="modal-dialog {{ modalDialogClass|default('') }}">
@@ -59,7 +60,7 @@
                                 {{ modalTitle }}
                             {% endblock %}
                         </h1>
-                        {% if closeButtonVisible|default(not has_multiple_buttons) %}
+                        {% if modalCloseButtonHidden|default(not has_multiple_buttons) %}
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         {% endif %}
                     </div>
@@ -76,8 +77,8 @@
                 {% if modalFooter|default(modalButtons|length) %}
                     <div class="modal-footer {{ modalFooterClass|default('') }}">
                         {% for button in modalButtons %}
-                            {% if button is iterable and button.attributes|default(false)|is_array %}
-                                <button {{ button.attributes|html_attributes }}>
+                            {% if not button|is_scalar and button.attributes|default(false)|is_array %}
+                                <button {{ button.attributes|html_attributes|raw }}>
                                     {{ button.label|default('No Label!') }}
                                 </button>
                             {% endif %}

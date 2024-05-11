@@ -27,6 +27,11 @@ class EauTwigExtension extends AbstractExtension implements GlobalsInterface
             new TwigFilter('html_attributes', fn (iterable $item) => $this->iterableToHtmlAttributes($item)),
             new TwigFilter('is_array', fn ($item) => is_array($item)),
             new TwigFilter('is_object', fn ($item) => is_object($item)),
+            new TwigFilter('is_boolean', fn ($item) => is_bool($item)),
+            new TwigFilter('is_int', fn ($item) => is_int($item)),
+            new TwigFilter('is_float', fn ($item) => is_float($item)),
+            new TwigFilter('is_scalar', fn ($item) => is_scalar($item)),
+            new TwigFilter('bool_string', fn ($item) => is_bool($item) ? ($item ? 'true' : 'false') : $item),
         ];
     }
 

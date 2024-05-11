@@ -2,10 +2,12 @@
 
 namespace App\Controller\Auth;
 
+use App\Context\EauContext;
 use App\Controller\Auth\Abstracts\AbstractAuth;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\ConfigurationService;
+use App\Utils\Stateful\BsModal\BsModal;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +25,8 @@ class LoginController extends AbstractAuth
     public function __construct(
         protected ConfigurationService $configurationService, 
         protected EmailVerifier $emailVerifier,
-        protected RequestStack $requestStack
+        protected RequestStack $requestStack,
+        protected EauContext $eauContext
     )
     {
 
@@ -34,6 +37,8 @@ class LoginController extends AbstractAuth
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
+
+        $this->eauContext->addModal(new BsModal('Sample Logic', true));
 
         return $this->render('security/login.html.twig', [
 

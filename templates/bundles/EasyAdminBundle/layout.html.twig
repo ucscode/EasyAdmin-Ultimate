@@ -8,6 +8,17 @@
     {{ codeInfusion(constant('App\\Utils\\Stateless\\CodeInfusionUtils::SLOT_HEADER'))|raw }}
 {% endblock %}
 
+{% block wrapper_wrapper %}
+    {{ parent() }}
+
+    {% block modal_wrapper %}
+        {% if eau.modals|length %}
+            {% include 'utils/modal/modals-wrapper.html.twig' %}
+        {% endif %}
+    {% endblock %}
+
+{% endblock %}
+
 {% block body_javascript %}
     {{ parent() }}
     {{ codeInfusion(constant('App\\Utils\\Stateless\\CodeInfusionUtils::SLOT_FOOTER'))|raw }}

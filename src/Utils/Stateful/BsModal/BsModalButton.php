@@ -4,8 +4,33 @@ namespace App\Utils\Stateful\BsModal;
 
 class BsModalButton
 {
-    protected array $attributes = [];
-    protected ?string $label = 'Close';
+    protected ?string $name;
+    protected array $attributes;
+    protected ?string $label;
+
+    public function __construct(?string $name = null, array $attributes = [])
+    {
+        $this->name = $name;
+        $this->label = $name ?? 'Close';
+        
+        $this->attributes = $attributes + [
+            'type' => 'button',
+            'class' => 'btn btn-primary',
+            'data-bs-dismiss' => 'modal',
+        ];
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
 
     public function setAttributes(array $attributes): static
     {
@@ -14,11 +39,9 @@ class BsModalButton
         return $this;
     }
 
-    public function clearAttributes(): static
+    public function getAttributes(): array
     {
-        $this->attributes = [];
-
-        return $this;
+        return $this->attributes;
     }
 
     public function addAttribute(string $key, mixed $value): static

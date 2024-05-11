@@ -1,0 +1,21 @@
+<div class="modal-wrapper">
+
+    {% for bs_modal in eau.modals %}
+
+        {% include 'utils/modal/item.html.twig' with {
+            'modalClass': bs_modal.modalClassName,
+            'modalId': bs_modal.id,
+            'modalName': bs_modal.name,
+            'modalBackdrop': bs_modal.backdrop,
+            'modalKeyboard': bs_modal.keyboardEnabled,
+            'modalDialogClass': bs_modal.dialogClassName,
+            'modalTitle': bs_modal.title,
+            'modalCloseButtonHidden': bs_modal.closeButtonHidden,
+            'modalContent': bs_modal.content,
+            'modalButtons': bs_modal.buttons,
+            'modalShow': bs_modal.show
+        } %}
+
+    {% endfor %}
+
+</div>

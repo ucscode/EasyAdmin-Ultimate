@@ -44,7 +44,7 @@ user:
   email:
 
     # Whether to send an email validation link upon registration.
-    send_validation_link: true
+    send_validation_link: false
 
     # If true, users cannot change their email address.
     prevent_update: true

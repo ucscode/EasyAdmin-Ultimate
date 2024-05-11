@@ -10,9 +10,17 @@ class BsModal
     protected ?string $content = null;
     protected string|bool $backdrop = true;
     protected bool $keyboardEnabled = true;
-    protected bool $closeButtonVisible = true;
+    protected bool $closeButtonHidden = false;
     protected array $buttons = [];
     protected array $htmlClassNames = [];
+    protected bool $show = false;
+
+    public function __construct(?string $content = null, bool $show = false)
+    {
+        $this->content = $content;
+        $this->show = $show;
+        $this->addButton(new BsModalButton('default'));
+    }
 
     public function setId(?string $id): static
     {
@@ -50,16 +58,16 @@ class BsModal
         return $this->title;
     }
 
-    public function setCloseButtonVisible(bool $closeButtonVisible): static
+    public function setCloseButtonHidden(bool $closeButtonHidden): static
     {
-        $this->closeButtonVisible = $closeButtonVisible;
+        $this->closeButtonHidden = $closeButtonHidden;
 
         return $this;
     }
 
-    public function isCloseButtonVisible(): bool
+    public function isCloseButtonHidden(): bool
     {
-        return $this->closeButtonVisible;
+        return $this->closeButtonHidden;
     }
 
     public function setContent(?string $content): static
@@ -158,5 +166,17 @@ class BsModal
     public function getDialogClassName(): ?string
     {
         return $this->htmlClassNames['dialog'] ?? null;
+    }
+
+    public function setShow(bool $show): static
+    {
+        $this->show = $show;
+
+        return $this;
+    }
+
+    public function getShow(): bool
+    {
+        return $this->show;
     }
 }

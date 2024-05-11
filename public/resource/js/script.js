@@ -5,6 +5,9 @@
  */
 'use strict';
 
-import bootbox from 'bootbox'
-
-// $(() => bootbox.alert('Hello! <br> This is a bootbox modal example'))
+$(function() {
+    $(".eau-modal[data-bs-show]").each(function() {
+        const show = $(this).attr('data-bs-show');
+        if(show === 'true') new bootstrap.Modal(this).show();
+    });
+});
