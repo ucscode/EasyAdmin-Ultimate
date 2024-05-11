@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\ConfigurationService;
 use App\Utils\Stateful\BsModal\BsModal;
+use App\Utils\Stateful\BsModal\BsModalButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,9 +38,7 @@ class LoginController extends AbstractAuth
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
-
-        $this->eauContext->addModal(new BsModal('Sample Logic', true));
-
+        
         return $this->render('security/login.html.twig', [
 
             'last_username' => $lastUsername,

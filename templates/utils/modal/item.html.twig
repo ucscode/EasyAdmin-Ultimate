@@ -37,6 +37,7 @@
 {# @var array modalButtons #}
 {% set modalButtons = modalButtons|is_array ? modalButtons : [] %}
 {% set has_multiple_buttons = modalButtons|length > 1 %}
+{% set modalBackdrop = has_multiple_buttons ? 'static' : modalBodyClass|default(true) %}
 
 <div 
     class="modal eau-modal {{ modalClass|default('fade') }}" 
@@ -44,7 +45,7 @@
     tabindex="-1" 
     aria-labelledby="{{ modalName|default('undefined') }}" 
     aria-hidden="true"
-    data-bs-backdrop="{{ modalBackdrop|default(has_multiple_buttons ? 'static' : '')|bool_string }}"
+    data-bs-backdrop="{{ modalBackdrop|bool_string }}"
     data-bs-keyboard="{{ modalKeyboard|default(false)|bool_string }}"
     data-bs-show="{{ modalShow|default(false)|bool_string }}"
 >
