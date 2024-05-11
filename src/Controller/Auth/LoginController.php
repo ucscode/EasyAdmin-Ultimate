@@ -44,7 +44,7 @@ class LoginController extends AbstractAuth
             'csrf_token_intention' => 'authenticate',
 
             'page_title' => sprintf('%s | %s', $this->configurationService->get('app.name'), 'Login'),
-            'favicon_path' => $this->configurationService->get('app.logo', 'https://static.thenounproject.com/png/5265761-200.png'),
+            'favicon_path' => $this->configurationService->get('app.logo', $this->favicon),
 
             'header_title' => 'Login Now',
             'header_logo' => $this->configurationService->get('app.logo'),
@@ -86,7 +86,7 @@ class LoginController extends AbstractAuth
             }
 
             $session->remove('user.email.token');
-
+            
             /**
              * @var null|\App\Entity\User
              */

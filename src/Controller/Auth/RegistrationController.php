@@ -54,7 +54,7 @@ class RegistrationController extends AbstractAuth
             $this->emailVerifier->sendRegistrationVerificationEmail($user);
 
             // do anything else you need here, like send an email
-
+            
             return $this->redirectToRoute('app_login');
         }
 
@@ -62,10 +62,10 @@ class RegistrationController extends AbstractAuth
             'registrationForm' => $form,
 
             'page_title' => sprintf('%s | %s', $this->configurationService->get('app.name'), 'Registeration'),
-            'favicon_path' => $this->getConfigurationLogo('https://static.thenounproject.com/png/5265761-200.png'),
+            'favicon_path' => $this->configurationService->get('app.logo', $this->favicon),
 
             'header_title' => 'Register Now',
-            'header_logo' => $this->getConfigurationLogo(),
+            'header_logo' => $this->configurationService->get('app.logo'),
         ]);
     }
 

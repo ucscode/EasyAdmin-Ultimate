@@ -189,8 +189,8 @@ class ResetPasswordController extends AbstractAuth
     {
         return [
             'app_name' => $this->appName,
-            'favicon_path' => $this->getConfigurationLogo('https://static.thenounproject.com/png/5265761-200.png'),
-            'header_logo' => $this->getConfigurationLogo(),
+            'favicon_path' => $this->configurationService->get('app.logo', $this->favicon),
+            'header_logo' => $this->configurationService->get('app.logo'),
         ];
     }
 }
