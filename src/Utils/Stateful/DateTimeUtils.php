@@ -20,7 +20,6 @@ class DateTimeUtils
 
     public function __construct(DateTimeInterface|int|string $dateTime)
     {
-
         $this->dateTime = $this->normalizeTime($dateTime);
     }
 

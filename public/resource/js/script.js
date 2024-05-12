@@ -6,8 +6,8 @@
 'use strict';
 
 $(function() {
-    $(".eau-modal[data-bs-show]").each(function() {
-        const show = $(this).attr('data-bs-show');
-        if(show === 'true') new bootstrap.Modal(this).show();
+    $(".eau-modal[data-bs-visible]").each(function() {
+        const render = $(this).attr('data-bs-visible');
+        if(render === 'true') new bootstrap.Modal(this).show();
     });
 });

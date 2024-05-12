@@ -1,6 +1,8 @@
 <div class="modal-wrapper">
 
-    {% for bs_modal in eau.modals %}
+    {# clear all modals after accessing them #}
+
+    {% for bs_modal in eau.modals(true) %}
 
         {% include 'utils/modal/item.html.twig' with {
             'modalClass': bs_modal.modalClassName,
@@ -13,7 +15,7 @@
             'modalCloseButtonHidden': bs_modal.closeButtonHidden,
             'modalContent': bs_modal.content,
             'modalButtons': bs_modal.buttons,
-            'modalShow': bs_modal.show
+            'modalVisible': bs_modal.visible
         } %}
 
     {% endfor %}

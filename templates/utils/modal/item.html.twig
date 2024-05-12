@@ -24,43 +24,42 @@
     {% endembed %} 
 #}
 
-{% set modalButtons = modalButtons|default([{
+{% set modalButtons = modalButtons is defined ? modalButtons : [{
     'attributes': {
         'type': 'button',
         'class': 'btn btn-secondary',
         'data-bs-dismiss': 'modal'
     },
     'label': 'Close'
-}]) %}
+}] %}
 
 {# |is_array is a custom filter by eau #}
-{# @var array modalButtons #}
 {% set modalButtons = modalButtons|is_array ? modalButtons : [] %}
 {% set has_multiple_buttons = modalButtons|length > 1 %}
-{% set modalBackdrop = has_multiple_buttons ? 'static' : modalBodyClass|default(true) %}
+{% set modalBackdrop = has_multiple_buttons ? 'static' : modalBackdrop|default(true) %}
 
 <div 
-    class="modal eau-modal {{ modalClass|default('fade') }}" 
+    class="modal fade eau-modal {{ modalClass|default('') }}" 
     id="{{ modalId|default('') }}" 
     tabindex="-1" 
     aria-labelledby="{{ modalName|default('undefined') }}" 
     aria-hidden="true"
     data-bs-backdrop="{{ modalBackdrop|bool_string }}"
     data-bs-keyboard="{{ modalKeyboard|default(false)|bool_string }}"
-    data-bs-show="{{ modalShow|default(false)|bool_string }}"
+    data-bs-visible="{{ modalVisible|default(false)|bool_string }}"
 >
 
     <div class="modal-dialog {{ modalDialogClass|default('') }}">
         <div class="modal-content">
 
             {% block modalHeader %}
-                {% if modalHeader|default(false) %}
-                    <div class="modal-header {{ modalHeaderClass|default('') }}">
-                        <h1 class="modal-title">
+                {% if modalTitle|default(false) or not modalCloseButtonHidden %}
+                    <div class="modal-header">
+                        <h5 class="modal-title">
                             {% block modalTitle %}
                                 {{ modalTitle }}
                             {% endblock %}
-                        </h1>
+                        </h5>
                         {% if modalCloseButtonHidden|default(not has_multiple_buttons) %}
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         {% endif %}
@@ -68,15 +67,15 @@
                 {% endif %}
             {% endblock %}
             
-            <div class="modal-body {{ modalBodyClass|default('') }}">
+            <div class="modal-body">
                 {% block modalContent %}
                     {{ modalContent }}
                 {% endblock %}
             </div>
 
             {% block modalFooter %}
-                {% if modalFooter|default(modalButtons|length) %}
-                    <div class="modal-footer {{ modalFooterClass|default('') }}">
+                {% if modalButtons|length %}
+                    <div class="modal-footer">
                         {% for button in modalButtons %}
                             {% if not button|is_scalar and button.attributes|default(false)|is_array %}
                                 <button {{ button.attributes|html_attributes|raw }}>

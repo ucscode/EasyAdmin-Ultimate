@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils\Stateful\BsModal;
+namespace App\Model\BsModal;
 
 class BsModal
 {
@@ -10,16 +10,17 @@ class BsModal
     protected ?string $content = null;
     protected string|bool $backdrop = true;
     protected bool $keyboardEnabled = true;
-    protected bool $closeButtonHidden = false;
+    protected bool $closeButtonHidden = true;
     protected array $buttons = [];
     protected array $htmlClassNames = [];
-    protected bool $show = false;
+    protected bool $visible = false;
 
-    public function __construct(?string $content = null, bool $show = false)
+    public function __construct(?string $content = null, ?string $id = null, bool $visible = false)
     {
         $this->content = $content;
-        $this->show = $show;
-        $this->addButton(new BsModalButton('default'));
+        $this->id = $id;
+        $this->visible = $visible;
+        $this->addButton(new BsModalButton('close'));
     }
 
     public function setId(?string $id): static
@@ -82,25 +83,20 @@ class BsModal
         return $this->content;
     }
 
-    public function addButton(BsModalButton $button): static
+    public function addButton(?BsModalButton $button): static
     {
-        if(!in_array($button, $this->buttons)) {
+        if($button && !in_array($button, $this->buttons)) {
             $this->buttons[] = $button;
         }
 
         return $this;
     }
 
-    public function getButton(int $index): ?BsModalButton
-    {
-        return $this->buttons[$index] ?? null;
-    }
-
-    public function removeButton(BsModalButton $button): static
+    public function removeButton(?BsModalButton $button): static
     {
         $index = array_search($button, $this->buttons, true);
 
-        if($index !== false) {
+        if($button && $index !== false) {
             unset($this->buttons[$index]);
             $this->buttons = array_values($this->buttons);
         }
@@ -113,10 +109,24 @@ class BsModal
         return $this->buttons;
     }
 
+    public function getButton(int $index): ?BsModalButton
+    {
+        return $this->buttons[$index] ?? null;
+    }
+
     public function sortButtons(callable $callback): static
     {
         usort($this->buttons, $callback);
         
+        return $this;
+    }
+
+    public function iterateButtons(callable $callback): static
+    {
+        foreach($this->buttons as $button) {
+            call_user_func($callback, $button);
+        }
+
         return $this;
     }
 
@@ -168,15 +178,15 @@ class BsModal
         return $this->htmlClassNames['dialog'] ?? null;
     }
 
-    public function setShow(bool $show): static
+    public function setVisible(bool $visible): static
     {
-        $this->show = $show;
+        $this->visible = $visible;
 
         return $this;
     }
 
-    public function getShow(): bool
+    public function isVisible(): bool
     {
-        return $this->show;
+        return $this->visible;
     }
 }

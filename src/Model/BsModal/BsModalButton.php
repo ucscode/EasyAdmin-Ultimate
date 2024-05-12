@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils\Stateful\BsModal;
+namespace App\Model\BsModal;
 
 class BsModalButton
 {
@@ -11,12 +11,13 @@ class BsModalButton
     public function __construct(?string $name = null, array $attributes = [])
     {
         $this->name = $name;
-        $this->label = $name ?? 'Close';
+        $this->label = $name ?? 'close';
         
         $this->attributes = $attributes + [
             'type' => 'button',
-            'class' => 'btn btn-primary',
+            'class' => 'btn btn-primary text-capitalize',
             'data-bs-dismiss' => 'modal',
+            'data-bs-toggle' => 'modal',
         ];
     }
 

@@ -3,15 +3,11 @@
 namespace App\Context;
 
 use App\Service\ConfigurationService;
-use App\Utils\Stateful\BsModal\BsModal;
-use Symfony\Component\HttpFoundation\RequestStack;
+use App\Service\ModalService;
 
 final class EauContext
 {
-    private const FLASH_MODALS_OFFSET = 'flash.modals';
-    private array $modals = [];
-
-    public function __construct(protected RequestStack $requestStack, protected ConfigurationService $configurationService)
+    public function __construct(protected ConfigurationService $configurationService, protected ModalService $modalService)
     {
     }
 
@@ -58,70 +54,17 @@ final class EauContext
         return $this->configurationService->get($name);
     }
 
-    public function addModal(BsModal $modal, bool $flash = false): static
+    /**
+     * @return \App\Model\BsModal\BsModal[]
+     */
+    public function getModals(bool $clearAfterAccess = false): array
     {
-        if(!in_array($modal, $this->modals)) {
-            $this->modals[] = $modal;
-        }
-
-        $session = $this->requestStack->getSession();
-        /**
-         * @var \App\Utils\Stateful\BsModal\BsModal[]
-         */
-        $sessionModals = $session->get(self::FLASH_MODALS_OFFSET) ?? [];
-
-        if ($flash && !in_array($modal, $sessionModals)) {
-            $sessionModals[] = $modal;
-            $session->set(self::FLASH_MODALS_OFFSET, $sessionModals);
-            return $this;
+        $modalContainer = $this->modalService->getModals();
+        
+        if($clearAfterAccess) {
+            $this->modalService->clearModals();
         }
         
-        return $this->discardModalFromSession($modal);
-    }
-
-    public function removeModal(BsModal $modal): static
-    {
-        if(false !== ($index = array_search($modal, $this->modals))) {
-            unset($this->modals[$index]);
-            $this->modals = array_values($this->modals);
-            $this->discardModalFromSession($modal);
-        }
-
-        return $this;
-    }
-
-    public function getModals(): array
-    {
-        $session = $this->requestStack->getSession();
-        /**
-         * @var array
-         */
-        $sessionModals = $session->get(self::FLASH_MODALS_OFFSET) ?? [];
-        $entireModals = array_merge($this->modals, $sessionModals);
-
-        foreach($entireModals as $modal) {
-            $this->discardModalFromSession($modal);
-        }
-
-        return $entireModals;
-    }
-
-    private function discardModalFromSession(BsModal $modal): static
-    {
-        $session = $this->requestStack->getSession();
-        /**
-         * @var \App\Utils\Stateful\BsModal\BsModal[]
-         */
-        $sessionModals = $session->get(self::FLASH_MODALS_OFFSET) ?? [];
-
-        $index = array_search($modal, $sessionModals);
-
-        if($index !== false) {
-            unset($sessionModals[$index]);
-        }
-
-        $this->requestStack->getSession()->set(self::FLASH_MODALS_OFFSET, array_values(array_unique($sessionModals)));
-
-        return $this;
+        return $modalContainer;
     }
 }

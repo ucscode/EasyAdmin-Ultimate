@@ -2,13 +2,13 @@
 
 namespace App\Controller\Auth;
 
-use App\Context\EauContext;
 use App\Controller\Auth\Abstracts\AbstractAuth;
+use App\Model\BsModal\BsModal;
+use App\Model\BsModal\BsModalButton;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\ConfigurationService;
-use App\Utils\Stateful\BsModal\BsModal;
-use App\Utils\Stateful\BsModal\BsModalButton;
+use App\Service\ModalService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +27,7 @@ class LoginController extends AbstractAuth
         protected ConfigurationService $configurationService, 
         protected EmailVerifier $emailVerifier,
         protected RequestStack $requestStack,
-        protected EauContext $eauContext
+        protected ModalService $modalService
     )
     {
 

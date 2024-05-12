@@ -2,14 +2,14 @@
 
 namespace App\Controller\Auth;
 
-use App\Context\EauContext;
 use App\Controller\Auth\Abstracts\AbstractAuth;
 use App\Entity\User;
 use App\Form\Auth\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\ConfigurationService;
-use App\Utils\Stateful\BsModal\BsModal;
+use App\Service\ModalService;
+use App\Model\BsModal\BsModal;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,11 @@ class RegistrationController extends AbstractAuth
 {
     protected KeyGenerator $keyGenerator;
 
-    public function __construct(private EmailVerifier $emailVerifier, protected ConfigurationService $configurationService, protected EauContext $eauContext)
+    public function __construct(
+        private EmailVerifier $emailVerifier, 
+        protected ConfigurationService $configurationService, 
+        protected ModalService $modalService
+    )
     {
         $this->keyGenerator = new KeyGenerator();
     }
@@ -56,7 +60,7 @@ class RegistrationController extends AbstractAuth
             }
 
             // do anything else you need here, like send an email
-            $this->eauContext->addModal(new BsModal('Your registration was successful'), true);
+            $this->modalService->addModal(new BsModal('Your registration was successful', true));
             
             return $this->redirectToRoute('app_login');
         }
