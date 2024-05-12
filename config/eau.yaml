@@ -1,11 +1,15 @@
 # This YAML file contains custom configuration settings for the application.
-# Values enclosed within %env()% or %param% placeholders can be dynamically 
-# substituted with environment variables or parameters defined elsewhere in 
-# the Symfony application.
+# Values enclosed within placeholders %env()% or %param% placeholders can be dynamically 
+# substituted with variables defined elsewhere in the Symfony application.
+# 
+# %env()% - replace with environmental variables (.env)
+# %self()% - replace with values within this file (eau.yaml)
+# %params% - replace with symfony parameters (services.yaml)
 
 # Example:
 #   env_value: '%env(MY_ENV_VAR)%'
-#   param_value: '%param(my_parameter)%'
+#   self_value: '%self(app.name)%'
+#   parameters: '%params%'
 
 app:
 
@@ -13,6 +17,7 @@ app:
 
   name: 'User Synthetics %self(app.title)%'
 
+  # if not using cdn or external link, logo must reside inside public/ directory
   logo: '/resource/images/system/golden-logo-template-free-png.webp'
 
   slogan: 'Empower Your Admin Experience with %self(app.name)%'

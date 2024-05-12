@@ -60,7 +60,7 @@ class RegistrationController extends AbstractAuth
             }
 
             // do anything else you need here, like send an email
-            $this->modalService->addModal(new BsModal('Your registration was successful', true));
+            $this->addFlash('success.registration', 'Your registration was successful');
             
             return $this->redirectToRoute('app_login');
         }

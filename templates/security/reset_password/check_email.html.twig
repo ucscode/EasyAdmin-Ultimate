@@ -4,25 +4,22 @@
 
 {% block wrapper_wrapper %}
 
-    <div class="container col-xxl-7 px-4 py-5">
-        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+    <div class="container col-xxl-7 px-4">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5 min-vh-100">
 
             <div class="col-lg-7 mx-auto">
 
-                <h1 class="display-6 fw-semibold text-body-emphasis lh-1 mb-3 text-center">
+                <h4 class="fw-semibold text-body-emphasis lh-1 mb-4 text-center">
                     <u>Check Your Inbox</u>
-                </h1>
+                </h4>
 
-                <figure class="py-3 text-center">
-                    <img src="{{ asset(constant('App\\Constants\\FilePathConstants::SYSTEM_IMAGE_BASE_PATH') ~ '/check-png.webp') }}" alt="Bootstrap Themes" height="90" loading="lazy">
-                </figure>
+                <div class="fs-6 text-center mb-3">
+                    If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password. 
+                    <hr/>
+                    The link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+                </div>
 
-                <p class="lead">
-                    If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password. <br>
-                    This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
-                </p>
-
-                <p class="fs-5 border p-4 rounded border-3">
+                <p class="fs-6 border p-3 text-center rounded border-3">
                     If you don't receive an email, please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>
                 </p>
 
