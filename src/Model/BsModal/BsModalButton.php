@@ -12,7 +12,7 @@ class BsModalButton
     {
         $this->name = $name;
         $this->label = $name ?? 'close';
-        
+
         $this->attributes = $attributes + [
             'type' => 'button',
             'class' => 'btn btn-primary text-capitalize',

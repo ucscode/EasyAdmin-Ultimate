@@ -48,7 +48,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $queryBuilder->where('u.email = :identifier') :
             $queryBuilder->where('u.username IS NOT NULL AND u.username = :identifier')
         ;
-        
+
         return $queryBuilder
             ->setParameter('identifier', $identifier)
             ->getQuery()

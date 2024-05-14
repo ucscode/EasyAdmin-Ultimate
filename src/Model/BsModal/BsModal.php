@@ -117,7 +117,7 @@ class BsModal
     public function sortButtons(callable $callback): static
     {
         usort($this->buttons, $callback);
-        
+
         return $this;
     }
 

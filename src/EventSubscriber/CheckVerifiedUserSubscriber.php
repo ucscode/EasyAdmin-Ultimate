@@ -13,11 +13,10 @@ use Ucscode\KeyGenerator\KeyGenerator;
 class CheckVerifiedUserSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        protected RequestStack $requestStack, 
+        protected RequestStack $requestStack,
         protected ConfigurationService $configurationService,
         protected UrlGeneratorInterface $urlGenerator,
-    )
-    {
+    ) {
 
     }
 
@@ -52,7 +51,7 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface
                         'token' => $token,
                     ])
                 );
-                
+
                 $session->set('user.email.token', $token); // set session
                 $session->getFlashBag()->add('info.is_unverified', $verificationMessage); // add flash message
 

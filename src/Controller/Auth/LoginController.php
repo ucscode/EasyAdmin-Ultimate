@@ -23,14 +23,13 @@ class LoginController extends AbstractAuth
 {
     protected const EMAIL_VERIFICATION_ERROR = 'Verification email could not be sent.';
     protected const EMAIL_TOKEN_ERROR = 'Authentication token has changed or expired.';
-    
+
     public function __construct(
-        protected ConfigurationService $configurationService, 
+        protected ConfigurationService $configurationService,
         protected EmailVerifier $emailVerifier,
         protected RequestStack $requestStack,
         protected ModalService $modalService
-    )
-    {
+    ) {
 
     }
 
@@ -41,11 +40,11 @@ class LoginController extends AbstractAuth
         $lastUsername = $authenticationUtils->getLastUsername();
 
         $form = $this->createForm(LoginFormType::class);
-        
+
         return $this->render('security/login.html.twig', [
 
             'loginForm' => $form,
-            
+
             'last_username' => $lastUsername,
             'error' => $error,
             'is_unverified' => false,
@@ -95,7 +94,7 @@ class LoginController extends AbstractAuth
             }
 
             $session->remove('user.email.token');
-            
+
             /**
              * @var null|\App\Entity\User
              */
@@ -106,7 +105,7 @@ class LoginController extends AbstractAuth
             }
 
             $this->emailVerifier->sendRegistrationVerificationEmail($user);
-            
+
             $session->getFlashBag()->add('success.email_reconfirm', 'A verification link has been sent to your email');
 
         } catch (AuthenticationException $e) {

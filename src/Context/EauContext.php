@@ -45,7 +45,7 @@ final class EauContext
 
     /**
      * Get a configuration value defined in /config/eau.yaml
-     * 
+     *
      * @param string $name  The configuration key (chained with dot)
      * @return mixed        The configuration value
      */
@@ -60,11 +60,11 @@ final class EauContext
     public function getModals(bool $clearAfterAccess = false): array
     {
         $modalContainer = $this->modalService->getModals();
-        
+
         if($clearAfterAccess) {
             $this->modalService->clearModals();
         }
-        
+
         return $modalContainer;
     }
 }

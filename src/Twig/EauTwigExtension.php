@@ -25,7 +25,7 @@ class EauTwigExtension extends AbstractExtension implements GlobalsInterface
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('_simple_widget_concat_context', fn($value) => $this->simpleWidgetConcatContext($value)),
+            new TwigFunction('_simple_widget_concat_context', fn ($value) => $this->simpleWidgetConcatContext($value)),
         ];
     }
 
@@ -61,20 +61,20 @@ class EauTwigExtension extends AbstractExtension implements GlobalsInterface
         if (!is_array($item)) {
             $item = ['value' => is_scalar($item) && !is_bool($item) ? $item : null];
         }
-    
+
         $item['type'] = strtolower($item['type'] ?? 'text');
-    
+
         if ($item['value'] === null) {
             return null;
         }
-        
+
         switch ($item['type']) {
             case 'button':
                 $value = is_scalar($item['value']) ? ['label' => $item['value']] : $item['value'];
                 $value['icon'] ??= null;
                 $value['label'] ??= ($value['icon'] ? null : 'BUTTON');
                 $value['attributes'] = ($value['attributes'] ?? []) + [
-                    'type' => 'button', 
+                    'type' => 'button',
                     'class' => 'btn btn-secondary'
                 ];
                 $item['value'] = $value;
@@ -82,8 +82,8 @@ class EauTwigExtension extends AbstractExtension implements GlobalsInterface
             default:
                 $item['value'] = is_scalar($item['value']) && !is_bool($item['value']) ? $item['value'] : null;
         };
-        
+
         return $item['value'] !== null ? $item : null;
     }
-    
+
 }

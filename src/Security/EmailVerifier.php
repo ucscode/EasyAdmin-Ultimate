@@ -61,7 +61,7 @@ class EmailVerifier
         $this->entityManager->flush();
     }
 
-    public function sendRegistrationVerificationEmail(User $user): void 
+    public function sendRegistrationVerificationEmail(User $user): void
     {
         $senderEmail = $this->configurationService->get('office.email');
         $senderName = $this->configurationService->get('app.name');
@@ -72,7 +72,7 @@ class EmailVerifier
             ->subject('Please Confirm your Email')
             ->htmlTemplate('security/registration/confirmation_email.html.twig')
         ;
-        
+
         $this->sendEmailConfirmation('app_verify_email', $user, $email);
     }
 }

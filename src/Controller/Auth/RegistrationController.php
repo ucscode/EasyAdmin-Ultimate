@@ -24,11 +24,10 @@ class RegistrationController extends AbstractAuth
     protected KeyGenerator $keyGenerator;
 
     public function __construct(
-        private EmailVerifier $emailVerifier, 
-        protected ConfigurationService $configurationService, 
+        private EmailVerifier $emailVerifier,
+        protected ConfigurationService $configurationService,
         protected ModalService $modalService
-    )
-    {
+    ) {
         $this->keyGenerator = new KeyGenerator();
     }
 
@@ -61,7 +60,7 @@ class RegistrationController extends AbstractAuth
 
             // do anything else you need here, like send an email
             $this->addFlash('success.registration', 'Your registration was successful');
-            
+
             return $this->redirectToRoute('app_login');
         }
 
