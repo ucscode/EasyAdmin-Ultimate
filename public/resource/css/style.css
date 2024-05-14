@@ -57,6 +57,10 @@ body {
     height: calc(var(--input-addon-height) + 2px);
 }
 
+.login-wrapper .content {
+    padding: 3rem;
+}
+
 .input-group > .input-group-prepend > .btn {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -69,6 +73,10 @@ body {
 
 input[type="text"] ~ .btn[data-password-toggle] > i::before {
     content: "\f070";
+}
+
+.form-widget .form-check {
+    display: flex;
 }
 
 @media (min-width: 992px) {

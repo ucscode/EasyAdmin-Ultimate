@@ -1,6 +1,6 @@
 {% extends 'security/layout.html.twig' %}
 
-{% block login_form %}
+{% block security_form %}
 
     {{ form_errors(registrationForm) }}
 
@@ -15,13 +15,17 @@
 
         {{ form_row(registrationForm.agreeTerms) }}
 
-        {{ form_row(registrationForm.submit) }}
+        {{ form_row(registrationForm.submit, {
+            attr: {
+                'class': 'w-100 btn btn-primary btn-lg'
+            }
+        }) }}
 
     {{ form_end(registrationForm) }}
 
 {% endblock %}
 
-{% block login_footer %}
+{% block security_footer %}
     {% block hyperlink_login %}
         <div>Have an account? <a href="{{ path('app_login') }}">Back to login</a></div>
     {% endblock %}

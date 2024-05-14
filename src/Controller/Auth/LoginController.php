@@ -65,7 +65,7 @@ class LoginController extends AbstractAuth
             'forgot_password_path' => $this->generateUrl('app_forgot_password_request'),
             'forgot_password_label' => 'Forgot your password?',
 
-            'remember_me_enabled' => false,
+            'remember_me_enabled' => true,
             'remember_me_checked' => false,
             'remember_me_label' => 'Remember me',
 

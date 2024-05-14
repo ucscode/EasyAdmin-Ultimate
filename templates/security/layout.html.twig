@@ -2,8 +2,6 @@
 {% extends ea.templatePath('layout') %}
 {% trans_default_domain ea.i18n.translationDomain %}
 
-{# {% block body_class 'page-login' %} #}
-
 {% block page_title %}{{ page_title is defined ? page_title|raw : (ea is defined ? ea.dashboardTitle|raw : '') }}{% endblock %}
 
 {% block head_favicon %}
@@ -15,24 +13,17 @@
 {% endblock %}
 
 {% block wrapper_wrapper %}
-    
-    {% set header_title = header_title|default(block('page_title')) %}
-    {% set _username_label = username_label is defined ? username_label|trans : 'login_page.username'|trans({}, 'EasyAdminBundle') %}
-    {% set _password_label = password_label is defined ? password_label|trans : 'login_page.password'|trans({}, 'EasyAdminBundle') %}
-    {% set _forgot_password_label = forgot_password_label is defined ? forgot_password_label|trans : 'login_page.forgot_password'|trans({}, 'EasyAdminBundle') %}
-    {% set _remember_me_label = remember_me_label is defined ? remember_me_label|trans : 'login_page.remember_me'|trans({}, 'EasyAdminBundle') %}
-    {% set _sign_in_label = sign_in_label is defined ? sign_in_label|trans : 'login_page.sign_in'|trans({}, 'EasyAdminBundle') %}
 
     {% block flash_messages %}
         {% include '@EasyAdmin/flash_messages.html.twig' %}
     {% endblock %}
 
-    <section class="{% block login_section_class 'page-login' %}">
+    <section class="{% block security_section_class 'page-login' %}">
 
-        <div class="{% block login_wrapper_class 'login-wrapper eau-login-wrapper' %}">
+        <div class="{% block security_wrapper_class 'login-wrapper eau-login-wrapper' %}">
 
-        {% block login_header %}
-            <header class="main-header text-center mb-2">
+        {% block security_header %}
+            <header class="main-header {% block security_header_class 'text-center mb-2' %}">
 
                 {% block header_logo %}
                     <div id="header-logo" class='header-logo mb-2'>
@@ -55,10 +46,10 @@
             </header>
         {% endblock %}
 
-        {% block login_body %}
-            <section class="content mb-3">
+        {% block security_body %}
+            <section class="content {% block security_body_class 'mb-3' %}">
 
-                {% block login_error %}
+                {% block security_error %}
                     {% if error|default(false) %}
                         <div class="w-100 alert alert-danger rounded mb-3">
                             <i class="fas fa-times-circle me-1"></i>
@@ -67,7 +58,7 @@
                     {% endif %}
                 {% endblock %}
 
-                {% block login_info %}
+                {% block security_info %}
                     {% if app.user %}
                         <div class="mb-3 alert alert-info rounded">
                             <i class="fas fa-info-circle me-1"></i>
@@ -76,69 +67,15 @@
                     {% endif %}
                 {% endblock %}
 
-                {% block login_form %}
-                    <form method="post" action="{{ action|default('') }}">
-                        {% if csrf_token_intention|default(false) %}
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token(csrf_token_intention) }}">
-                        {% endif %}
-
-                        <input type="hidden" name="{{ target_path_parameter|default('_target_path') }}" value="{{ target_path|default(ea is defined ? path(ea.dashboardRouteName) : '/') }}" />
-
-                        {% block form_content %}
-
-                            {% block field_username %}
-                                <div class="form-group">
-                                    <label class="form-control-label required" for="username">{{ _username_label }}</label>
-                                    <div class="form-widget">
-                                        <input type="text" id="username" name="{{ username_parameter|default('_username') }}" class="form-control" value="{{ last_username|default('') }}" required autofocus autocomplete="username">
-                                    </div>
-                                </div>
-                            {% endblock %}
-
-                            {% block field_password %}
-                                <div class="form-group">
-                                    <label class="form-control-label required" for="password">{{ _password_label }}</label>
-                                    <div class="form-widget">
-                                        <input type="password" id="password" name="{{ password_parameter|default('_password') }}" class="form-control" required autocomplete="current-password">
-                                    </div>
-                                    {% block hyperlink_forgot_password %}
-                                        {% if forgot_password_enabled|default(false) and not app.user %}
-                                            <div class="form-text">
-                                                <a href="{{ forgot_password_path|default('#') }}">{{ _forgot_password_label }}</a>
-                                            </div>
-                                        {% endif %}
-                                    {% endblock %}
-                                </div>
-                            {% endblock %}
-
-                            {% block field_remember_me %}
-                                {% if remember_me_enabled|default(false) %}
-                                    <div class="form-group">
-                                        <input class="form-check-input" type="checkbox" id="remember_me" name="{{ remember_me_parameter|default('_remember_me') }}" {{ remember_me_checked|default(false) ? 'checked' }}>
-                                        <label class="form-check-label" for="remember_me">
-                                            {{ _remember_me_label }}
-                                        </label>
-                                    </div>
-                                {% endif %}
-                            {% endblock %}
-
-                            {% block field_submit %}
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">{{ _sign_in_label }}</button>
-                            {% endblock %}
-
-                        {% endblock form_content %}
-                    </form>
-                {% endblock login_form %}
-                    
-                {% block login_form_javascript %}
-                    <script src="{{ asset('login.js', constant('EasyCorp\\Bundle\\EasyAdminBundle\\Asset\\AssetPackage::PACKAGE_NAME')) }}"></script>
-                {% endblock %}
+                {% block security_form %}
+                    {# Render your form tag and elements here #}
+                {% endblock security_form %}
 
             </section>
-        {% endblock login_body %}
+        {% endblock security_body %}
 
-        {% block login_footer %}
-            <footer class="main-footer">
+        {% block security_footer %}
+            <footer class="main-footer {% block security_footer_class 'w-100 text-center' %}">
                 {% block footer_content %}{% endblock %}
             </footer>
         {% endblock %}

@@ -12,13 +12,13 @@ class LegalityController extends AbstractController
     public function termsOfService(): Response
     {
         // return $this->render('your-terms-template.html.twig');
-        return new Response('Info: please render a template to write your <strong>terms and condition</strong>');
+        return new Response('Write your <strong>terms and condition</strong> and render your template here');
     }
 
     #[Route('/privacy-policy', name: 'privacy_policy')]
     public function privacyPolicy(): Response
     {
         // return $this->render('your-privacy-template.html.twig');
-        return new Response('Info: please render a template to write your <strong>privacy policy</strong>');
+        return new Response('Write your <strong>privacy policy</strong> and render your template here');
     }
 }
