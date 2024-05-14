@@ -10,6 +10,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ProfileCrudController extends AbstractUserCrudController
@@ -45,6 +47,11 @@ class ProfileCrudController extends AbstractUserCrudController
             ->setDisabled(!empty($user->getUsername()));
 
         yield EmailField::new('email');
+
+        yield MoneyField::new('id')
+            ->setFormTypeOption('mapped', false)
+            ->setCurrency('USD')
+        ;
     }
 
     public function configureActions(Actions $actions): Actions

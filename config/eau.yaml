@@ -1,21 +1,17 @@
-# This YAML file contains custom configuration settings for the application.
-# Values enclosed within placeholders %env()% or %param% placeholders can be dynamically 
-# substituted with variables defined elsewhere in the Symfony application.
-# 
-# %env()% - replace with environmental variables (.env)
-# %self()% - replace with values within this file (eau.yaml)
-# %params% - replace with symfony parameters (services.yaml)
+# This YAML file contains custom application configuration settings, with placeholders for dynamic substitution:
 
-# Example:
-#   env_value: '%env(MY_ENV_VAR)%'
-#   self_value: '%self(app.name)%'
-#   parameters: '%params%'
+# - %env()% for environmental variables from .env
+# - %self()% for values within this file
+# - %params% for Symfony parameters from services.yaml.
+
+# Warning: Avoid circular references when using %self()% placeholders to prevent recursion. For Example:
+
+# app.name: '%self(app.title)%'
+# app.title: '%self(app.name)%' -> This will cause a recursion
 
 app:
 
-  title: 'zap %env(APP_ENV)%'
-
-  name: 'User Synthetics %self(app.title)%'
+  name: 'User Synthetics'
 
   # if not using cdn or external link, logo must reside inside public/ directory
   logo: '/resource/images/system/golden-logo-template-free-png.webp'
@@ -23,18 +19,17 @@ app:
   slogan: 'Empower Your Admin Experience with %self(app.name)%'
 
   description: >
-    Introducing User Synthetics, your ultimate companion for effortlessly crafting sleek and powerful admin dashboards! 
-    With User Synthetics, developers can bid farewell to tedious coding and welcome a seamless, intuitive framework 
+    Introducing %self(app.name)%, your ultimate companion for effortlessly crafting sleek and powerful admin dashboards! 
+    With %self(app.name)%, developers can bid farewell to tedious coding and welcome a seamless, intuitive framework 
     designed to streamline the entire dashboard development process
 
-###> Administrative contact information
+# Administrative Contact Information
+# This section provides essential details for administrative inquiries and correspondence.
 
-office:
+contact:
 
-  # Primary email address for administrative contact.
   email: 'sample@email.com'
 
-  # Contact phone number.
   phone: '+2234904994'
 
   address: >
@@ -42,7 +37,8 @@ office:
     Anytown, CA 12345 
     United States
 
-###> User-related configurations
+# User-related configurations
+# This section encompasses settings pertinent to user-related functionalities.
 
 user:
 
@@ -68,3 +64,6 @@ user:
     # Number of days after registration when an inactive account will be deleted.
     # > This option will not take effect if "delete_if_inactive" is set to false
     inactive_account_expiration_days: 7
+
+# Custom Configurations
+# You can add and manager your own custom configuration and access them easily via the ConfigurationService provided by Easyadmin Ultimate

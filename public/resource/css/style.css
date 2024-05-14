@@ -43,6 +43,34 @@ body {
     z-index: 1000;
 }
 
+.login-wrapper .form-widget input[type=checkbox] {
+    background-color: var(--bs-primary);
+    height: 15px;
+}
+
+.login-wrapper .input-group .btn {
+    --input-addon-height: 36px;
+    height: var(--input-addon-height);
+}
+
+.login-wrapper .input-group .input-group-text {
+    height: calc(var(--input-addon-height) + 2px);
+}
+
+.input-group > .input-group-prepend > .btn {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group .input-group-append > .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+input[type="text"] ~ .btn[data-password-toggle] > i::before {
+    content: "\f070";
+}
+
 @media (min-width: 992px) {
     .eau-login-wrapper {
         margin: auto;

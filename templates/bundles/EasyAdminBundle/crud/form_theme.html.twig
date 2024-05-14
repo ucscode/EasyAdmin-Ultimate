@@ -1,0 +1,51 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{% extends eau.baseTemplate('crud/form_theme', true) %}
+
+{%- macro widget_aside(context) -%}
+    {%- if context.type == 'button' %}
+        <button {{ context.value.attributes|html_attributes|raw }}>
+            {% if context.value.label is not null %}
+                {{ context.value.label|raw }}
+            {% else %}
+                <i class="{{ context.value.icon }}"></i>
+            {% endif %}
+        </button>
+    {% else %}
+        <span class="input-group-text">
+            {% if context.type == 'icon' %}
+                <i class="{{ context.value }}"></i>
+            {% else %}
+                {{ context.value }}
+            {% endif %}
+        </span>
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- block form_widget_simple -%}
+    {% set prepend = _simple_widget_concat_context(prepend|default(null)) %}
+    {% set append = _simple_widget_concat_context(append|default(null)) %}
+    {%- if prepend or append -%}
+        <div class="input-group">
+            {{- prepend ? _self.widget_aside(prepend) -}}
+            {{- parent() -}}
+            {{- append ? _self.widget_aside(append) -}}
+        </div>
+    {%- else -%}
+        {{ parent() }}
+    {% endif %}
+{%- endblock form_widget_simple -%}
+
+{%- block password_widget -%}
+    {%- if togglePassword|default(false) -%}
+        {% set append = {
+            type: 'button',
+            value: {
+                'icon': "fas fa-eye",
+                'attributes': {
+                    'data-password-toggle': '#' ~ id
+                }
+            }
+        } %}
+    {% endif %}
+    {{- parent() -}}
+{%- endblock password_widget -%}

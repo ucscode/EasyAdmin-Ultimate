@@ -1,7 +1,9 @@
 twig:
     file_name_pattern: '*.twig'
-    form_themes: 
-        - '@EasyAdmin/symfony-form-themes/bootstrap_5_layout.html.twig'
+
+    form_themes:
+        - '@EasyAdmin/crud/form_theme.html.twig'
+        
     globals:
         # Use a different admin layout instead of the default "@EasyAdmin/layout.html.twig"
         # theme_layout: "_sample"
