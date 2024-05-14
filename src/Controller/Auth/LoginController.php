@@ -3,6 +3,7 @@
 namespace App\Controller\Auth;
 
 use App\Controller\Auth\Abstracts\AbstractAuth;
+use App\Form\Auth\LoginFormType;
 use App\Model\BsModal\BsModal;
 use App\Model\BsModal\BsModalButton;
 use App\Repository\UserRepository;
@@ -38,9 +39,13 @@ class LoginController extends AbstractAuth
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
+
+        $form = $this->createForm(LoginFormType::class);
         
         return $this->render('security/login.html.twig', [
 
+            'loginForm' => $form,
+            
             'last_username' => $lastUsername,
             'error' => $error,
             'is_unverified' => false,
