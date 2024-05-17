@@ -4,6 +4,8 @@
 
     {{ form_start(requestForm) }}
         
+        {{ block('security_csrf') }}
+        
         {{ form_row(requestForm.email) }}
 
     {{ form_end(requestForm) }}

@@ -6,6 +6,8 @@
 
     {{ form_start(registrationForm) }}
 
+        {{ block('security_csrf') }}
+        
         {{ form_row(registrationForm.email) }}
 
         {{ form_row(registrationForm.plainPassword, {

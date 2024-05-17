@@ -11,13 +11,13 @@
 
 {% block security_form %}
 
+    {# Route Redirection #}
+    
     {% set form_start_attrs = {attr: {action: action|default('')}} %}
 
     {{ form_start(loginForm, form_start_attrs) }}
 
-        {% if csrf_token_intention|default(false) %}
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token(csrf_token_intention) }}">
-        {% endif %}
+        {{ block('security_csrf') }}
 
         <input type="hidden" name="{{ target_path_parameter|default('_target_path') }}" value="{{ target_path|default(ea is defined ? path(ea.dashboardRouteName) : '/') }}" />
 

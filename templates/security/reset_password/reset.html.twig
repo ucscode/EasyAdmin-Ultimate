@@ -4,9 +4,11 @@
 
     {{ form_start(resetForm) }}
 
+        {{ block('security_csrf') }}
+        
         {{ form_row(resetForm.plainPassword) }}
 
-        <button class="btn btn-primary">Reset password</button>
+        {{ form_row(resetForm.submit)}}
 
     {{ form_end(resetForm) }}
 
