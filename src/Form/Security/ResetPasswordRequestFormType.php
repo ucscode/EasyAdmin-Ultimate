@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Auth;
+namespace App\Form\Security;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;

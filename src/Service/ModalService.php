@@ -2,7 +2,8 @@
 
 namespace App\Service;
 
-use App\Model\BsModal\BsModal;
+use App\Model\Modal\Modal;
+use App\Utils\Stateless\Constraint;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class ModalService
@@ -11,10 +12,9 @@ class ModalService
 
     public function __construct(protected RequestStack $requestStack)
     {
-
     }
 
-    public function addModal(BsModal $modal): static
+    public function addModal(Modal $modal): static
     {
         $modalContainer = $this->getModals();
 
@@ -26,7 +26,7 @@ class ModalService
         return $this;
     }
 
-    public function removeModal(BsModal $modal): static
+    public function removeModal(Modal $modal): static
     {
         $modalContainer = $this->getModals();
 
@@ -39,7 +39,7 @@ class ModalService
     }
 
     /**
-     * @return \App\Model\BsModal\BsModal[]
+     * @return Modal[]
      */
     public function getModals(): array
     {
@@ -52,10 +52,12 @@ class ModalService
     }
 
     /**
-     * @param \App\Model\BsModal\BsModal[] $modalContainer
+     * @param Modal[] $modalContainer
      */
     protected function setModals(array $modalContainer): static
     {
+        Constraint::assertIsArrayOf($modalContainer, Modal::class);
+
         $this->requestStack->getSession()->set(self::SESSION_KEY, $modalContainer);
 
         return $this;

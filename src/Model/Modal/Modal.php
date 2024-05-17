@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Model\BsModal;
+namespace App\Model\Modal;
 
-class BsModal
+class Modal
 {
     protected ?string $id = null;
     protected ?string $name = null;
@@ -11,16 +11,16 @@ class BsModal
     protected string|bool $backdrop = true;
     protected bool $keyboardEnabled = true;
     protected bool $closeButtonHidden = true;
+    protected bool $visible = false;
     protected array $buttons = [];
     protected array $htmlClassNames = [];
-    protected bool $visible = false;
 
     public function __construct(?string $content = null, ?string $id = null, bool $visible = false)
     {
         $this->content = $content;
         $this->id = $id;
         $this->visible = $visible;
-        $this->addButton(new BsModalButton('close'));
+        $this->addButton(new ModalButton('close'));
     }
 
     public function setId(?string $id): static
@@ -83,20 +83,18 @@ class BsModal
         return $this->content;
     }
 
-    public function addButton(?BsModalButton $button): static
+    public function addButton(?ModalButton $button): static
     {
-        if($button && !in_array($button, $this->buttons)) {
+        if($button && !in_array($button, $this->buttons, true)) {
             $this->buttons[] = $button;
         }
 
         return $this;
     }
 
-    public function removeButton(?BsModalButton $button): static
+    public function removeButton(?ModalButton $button): static
     {
-        $index = array_search($button, $this->buttons, true);
-
-        if($button && $index !== false) {
+        if(false !== ($index = array_search($button, $this->buttons, true))) {
             unset($this->buttons[$index]);
             $this->buttons = array_values($this->buttons);
         }
@@ -109,7 +107,7 @@ class BsModal
         return $this->buttons;
     }
 
-    public function getButton(int $index): ?BsModalButton
+    public function getButton(int $index): ?ModalButton
     {
         return $this->buttons[$index] ?? null;
     }

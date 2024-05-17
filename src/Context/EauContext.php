@@ -55,7 +55,7 @@ final class EauContext
     }
 
     /**
-     * @return \App\Model\BsModal\BsModal[]
+     * @return \App\Model\Modal\Modal[]
      */
     public function getModals(bool $clearAfterAccess = false): array
     {

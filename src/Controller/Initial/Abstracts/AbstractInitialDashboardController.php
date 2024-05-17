@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\Base\Abstracts;
+namespace App\Controller\Initial\Abstracts;
 
 use App\Constants\FilePathConstants;
-use App\Controller\Base\Traits\BaseControllerTrait;
+use App\Controller\Initial\Traits\InitialControllerTrait;
 use App\Entity\User;
 use App\Service\ConfigurationService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
@@ -23,9 +23,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Ucscode
  */
-abstract class AbstractBaseDashboardController extends AbstractDashboardController
+abstract class AbstractInitialDashboardController extends AbstractDashboardController
 {
-    use BaseControllerTrait;
+    use InitialControllerTrait;
 
     protected ConfigurationService $configurationService;
 

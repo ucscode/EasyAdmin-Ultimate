@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Controller\Auth;
+namespace App\Controller\Security;
 
-use App\Controller\Auth\Abstracts\AbstractAuth;
+use App\Controller\Security\Abstracts\AbstractSecurityController;
 use App\Entity\User;
-use App\Form\Auth\RegistrationFormType;
+use App\Form\Security\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\ConfigurationService;
 use App\Service\ModalService;
-use App\Model\BsModal\BsModal;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +18,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Ucscode\KeyGenerator\KeyGenerator;
 
-class RegistrationController extends AbstractAuth
+class RegistrationController extends AbstractSecurityController
 {
     protected KeyGenerator $keyGenerator;
 

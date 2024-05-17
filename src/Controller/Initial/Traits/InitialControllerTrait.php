@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controller\Base\Traits;
+namespace App\Controller\Initial\Traits;
 
 use App\Context\EauContext;
 use App\Service\ConfigurationService;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-trait BaseControllerTrait
+trait InitialControllerTrait
 {
     protected string $favicon = 'https://static.thenounproject.com/png/5265761-200.png';
 

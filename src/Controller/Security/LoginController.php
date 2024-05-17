@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Controller\Auth;
+namespace App\Controller\Security;
 
-use App\Controller\Auth\Abstracts\AbstractAuth;
-use App\Form\Auth\LoginFormType;
-use App\Model\BsModal\BsModal;
-use App\Model\BsModal\BsModalButton;
+use App\Controller\Security\Abstracts\AbstractSecurityController;
+use App\Form\Security\LoginFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\ConfigurationService;
@@ -19,7 +17,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class LoginController extends AbstractAuth
+class LoginController extends AbstractSecurityController
 {
     protected const EMAIL_VERIFICATION_ERROR = 'Verification email could not be sent.';
     protected const EMAIL_TOKEN_ERROR = 'Authentication token has changed or expired.';

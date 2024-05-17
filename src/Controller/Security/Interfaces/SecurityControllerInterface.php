@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Auth\Interfaces;
+namespace App\Controller\Security\Interfaces;
 
 /**
  * This interface, is designed to be implemented by any controller considered in authentication section.
@@ -12,6 +12,6 @@ namespace App\Controller\Auth\Interfaces;
  * - ResetPasswordControllerInterface
  */
 
-interface AuthControllerInterface
+interface SecurityControllerInterface
 {
 }

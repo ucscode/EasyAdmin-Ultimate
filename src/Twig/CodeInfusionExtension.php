@@ -3,7 +3,7 @@
 namespace App\Twig;
 
 use App\Controller\Admin\Interfaces\AdminControllerInterface;
-use App\Controller\Auth\Interfaces\AuthControllerInterface;
+use App\Controller\Security\Interfaces\SecurityControllerInterface;
 use App\Controller\User\Interfaces\UserControllerInterface;
 use App\Entity\CodeInfusion;
 use App\Utils\Stateless\CodeInfusionUtils;
@@ -18,7 +18,7 @@ class CodeInfusionExtension extends AbstractExtension
     public const TARGET_MAPPER = [
         CodeInfusionUtils::TARGET_ADMIN => AdminControllerInterface::class,
         CodeInfusionUtils::TARGET_USER => UserControllerInterface::class,
-        CodeInfusionUtils::TARGET_AUTHENTICATION => AuthControllerInterface::class,
+        CodeInfusionUtils::TARGET_AUTHENTICATION => SecurityControllerInterface::class,
         CodeInfusionUtils::TARGET_OTHERS => null,
     ];
 
@@ -81,7 +81,7 @@ class CodeInfusionExtension extends AbstractExtension
          *
          * - AdminControllerInterface
          * - UserControllerInterface
-         * - AuthControllerInterface
+         * - SecurityControllerInterface
          */
         if(!empty($targetIntersection)) {
             return $entityInstance->getContent();

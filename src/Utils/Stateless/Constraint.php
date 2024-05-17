@@ -9,7 +9,7 @@ class Constraint
     /**
      * @param array $array                  The array to test
      * @param string|object $expectedType   The expected element that each object must contain
-     * 
+     *
      * @return bool                         if all elements are of the same type
      */
     public static function isArrayOf(array $array, string|object $expectedType): bool
@@ -25,7 +25,7 @@ class Constraint
 
     /**
      * Same as isArrayOf but throws exception rather than return a value
-     * 
+     *
      * @throws InvalidArrayValueException  if array contain invalid element
      */
     public static function assertIsArrayOf(array $array, string|object $expectedType): void

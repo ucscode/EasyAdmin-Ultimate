@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller\Auth;
+namespace App\Controller\Security;
 
-use App\Controller\Auth\Abstracts\AbstractAuth;
+use App\Controller\Security\Abstracts\AbstractSecurityController;
 use App\Entity\User;
-use App\Form\Auth\ChangePasswordFormType;
-use App\Form\Auth\ResetPasswordRequestFormType;
+use App\Form\Security\ChangePasswordFormType;
+use App\Form\Security\ResetPasswordRequestFormType;
 use App\Service\ConfigurationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -22,7 +22,7 @@ use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
 #[Route('/reset-password')]
-class ResetPasswordController extends AbstractAuth
+class ResetPasswordController extends AbstractSecurityController
 {
     use ResetPasswordControllerTrait;
 

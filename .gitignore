@@ -36,4 +36,6 @@
 !/public/resource/images/**/.gitkeep
 !/public/resource/images/system/check-png.webp
 
-###< public ###
+###< JetBrains ###
+/.idea
+###< JetBrains ###

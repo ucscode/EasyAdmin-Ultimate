@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Model\BsModal;
+namespace App\Model\Modal;
 
-class BsModalButton
+class ModalButton
 {
     protected ?string $name;
     protected array $attributes;

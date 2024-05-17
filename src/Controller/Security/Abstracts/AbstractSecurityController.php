@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Controller\Auth\Abstracts;
+namespace App\Controller\Security\Abstracts;
 
 use App\Constants\FilePathConstants;
-use App\Controller\Auth\Interfaces\AuthControllerInterface;
-use App\Controller\Base\Traits\BaseControllerTrait;
+use App\Controller\Security\Interfaces\SecurityControllerInterface;
+use App\Controller\Initial\Traits\InitialControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
-abstract class AbstractAuth extends AbstractDashboardController implements AuthControllerInterface
+abstract class AbstractSecurityController extends AbstractDashboardController implements SecurityControllerInterface
 {
-    use BaseControllerTrait;
+    use InitialControllerTrait;
 
     public function configureAssets(): Assets
     {

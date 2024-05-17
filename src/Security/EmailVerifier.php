@@ -63,7 +63,7 @@ class EmailVerifier
 
     public function sendRegistrationVerificationEmail(User $user): void
     {
-        $senderEmail = $this->configurationService->get('office.email');
+        $senderEmail = $this->configurationService->get('contact.email');
         $senderName = $this->configurationService->get('app.name');
 
         $email = (new TemplatedEmail())

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller\Auth;
+namespace App\Controller\Security;
 
-use App\Controller\Auth\Abstracts\AbstractAuth;
+use App\Controller\Security\Abstracts\AbstractSecurityController;
 use Symfony\Component\Routing\Attribute\Route;
 
-class LogoutController extends AbstractAuth
+class LogoutController extends AbstractSecurityController
 {
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void

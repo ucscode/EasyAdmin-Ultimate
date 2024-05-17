@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller\Base\Abstracts;
+namespace App\Controller\Initial\Abstracts;
 
-use App\Controller\Base\Traits\BaseControllerTrait;
+use App\Controller\Initial\Traits\InitialControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 /**
@@ -14,7 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
  *
  * @author Ucscode
  */
-abstract class AbstractBaseCrudController extends AbstractCrudController
+abstract class AbstractInitialCrudController extends AbstractCrudController
 {
-    use BaseControllerTrait;
+    use InitialControllerTrait;
 }
