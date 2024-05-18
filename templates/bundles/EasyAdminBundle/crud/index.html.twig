@@ -1,2 +1,5 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var eau \App\Context\EauContext #}
+
 {# extends '@!EasyAdmin/crud/index.html.twig' #}
-{% extends eau.baseTemplate('crud/index', true) %}
+{% extends eau.templatePath('crud/index', true) %}

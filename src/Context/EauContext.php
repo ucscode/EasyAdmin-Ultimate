@@ -4,10 +4,15 @@ namespace App\Context;
 
 use App\Service\ConfigurationService;
 use App\Service\ModalService;
+use Twig\Environment;
 
 final class EauContext
 {
-    public function __construct(protected ConfigurationService $configurationService, protected ModalService $modalService)
+    public function __construct(
+        protected ConfigurationService $configurationService, 
+        protected ModalService $modalService,
+        protected Environment $twig
+    )
     {
     }
 
@@ -22,7 +27,7 @@ final class EauContext
      * template within the EasyAdmin bundle, bypassing any local overrides. This prevents
      * recursion issues and allows seamless extension of the original template.
      */
-    public function getBaseTemplate(string $name, bool $original = false): string
+    public function getTemplatePath(string $name, bool $original = false): string
     {
         return sprintf('%s/%s.html.twig', $original ? '@!EasyAdmin' : '@EasyAdmin', $name);
     }
@@ -38,7 +43,7 @@ final class EauContext
      * @param string $layout    The filename of the layout template (default is 'layout.html.twig').
      * @return string           The path to the specified theme layout.
      */
-    public function getThemeLayout(string $dirname, string $layout = 'layout.html.twig'): string
+    public function getThemePath(string $dirname, string $layout = 'layout.html.twig'): string
     {
         return sprintf('themes/%s/%s', $dirname, $layout);
     }

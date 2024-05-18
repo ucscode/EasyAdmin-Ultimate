@@ -83,7 +83,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
                 return $action
                     ->displayIf(function (UserProperty $entity) {
                         // Write your condition to hide edit button
-                        return $entity->hasBitwiseMode(ModeEnum::WRITE->value);
+                        return $entity->hasMode(ModeEnum::WRITE->value);
                     });
             })
         ;
@@ -128,7 +128,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
 
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
             ->andWhere('entity.user = :user')
-            ->andWhere('entity.bitwiseMode >= :mode')
+            ->andWhere('entity.mode >= :mode')
             ->setParameter('user', $userEntity)
             ->setParameter('mode', ModeEnum::READ->value)
         ;
@@ -141,7 +141,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
          * */
         $entity = $this->getContext()->getEntity()?->getInstance();
 
-        if(!$entity->hasBitwiseMode(ModeEnum::WRITE)) {
+        if(!$entity->hasMode(ModeEnum::WRITE)) {
             throw new \RuntimeException(sprintf(
                 'The user property "%s" is readonly and cannot be modified from GUI',
                 $entity->getMetaKey()

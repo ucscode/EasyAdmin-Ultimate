@@ -1,3 +1,6 @@
 {# Theme layout must always override the original EasyAdmin Bundle Template to avoid infinite recursion #}
 {# Therefore, must use extends '@!EasyAdmin/...' (with exclamation) #}
-{% extends eau.baseTemplate('layout', true) %}
+
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var eau \App\Context\EauContext #}
+{% extends eau.templatePath('layout', true) %}

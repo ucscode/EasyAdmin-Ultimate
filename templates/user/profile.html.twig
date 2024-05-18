@@ -1,4 +1,6 @@
-{% extends '@!EasyAdmin/crud/edit.html.twig' %}
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var eau \App\Context\EauContext #}
+{% extends eau.templatePath('crud/edit', true) %}
 
 {% block edit_form %} 
 

@@ -10,7 +10,7 @@
 {% set _sign_in_label = sign_in_label is defined ? sign_in_label|trans : 'login_page.sign_in'|trans({}, 'EasyAdminBundle') %}
 
 {% block security_form %}
-
+    
     {# Route Redirection #}
     
     {% set form_start_attrs = {attr: {action: action|default('')}} %}

@@ -26,6 +26,7 @@ class EauTwigExtension extends AbstractExtension implements GlobalsInterface
     {
         return [
             new TwigFunction('_simple_widget_concat_context', fn ($value) => $this->simpleWidgetConcatContext($value)),
+            new TwigFunction('dirname', fn (string $path, int $levels = 1) => dirname($path, $levels)),
         ];
     }
 

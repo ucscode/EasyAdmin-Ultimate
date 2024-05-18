@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Bundle\Abstracts;
+namespace App\Component\Abstracts;
 
 use App\Enum\ModeEnum;
 
 /**
  * Abstract class representing a bitwise mode for granting permissions.
  *
- * The AbstractBitwiseMode class serves as a foundation for implementing bitwise mode
+ * The AbstractPermission class serves as a foundation for implementing bitwise mode
  * representations used to grant permissions such as read, write, and execute on various
  * resources or entities within a system. The bitwise mode is represented as an integer
  * value where each bit corresponds to a specific permission.
@@ -24,59 +24,59 @@ use App\Enum\ModeEnum;
  * - Read and Write Permissions: 6 (binary 110)
  * - Read, Write, and Execute Permissions: 7 (binary 111)
  *
- * Concrete implementations of classes extending AbstractBitwiseMode can define additional
+ * Concrete implementations of classes extending AbstractPermission can define additional
  * permission modes or customize the behavior of permission handling based on specific
  * requirements of the system or application.
  *
  * @author Uchenna Ajah <Ucscode>
  * @link https://github.com/ucscode
  */
-abstract class AbstractBitwiseMode
+abstract class AbstractPermission
 {
-    protected int $bitwiseMode = 0;
+    protected int $mode = 0;
 
-    public function getBitwiseMode(): int
+    public function getMode(): int
     {
-        return $this->bitwiseMode;
+        return $this->mode;
     }
 
-    public function setBitwiseMode(int|ModeEnum $mode): static
+    public function setMode(int|ModeEnum $mode): static
     {
-        $this->bitwiseMode = $this->normalizeMode($mode);
+        $this->mode = $this->normalizeMode($mode);
 
         return $this;
     }
 
-    public function addBitwiseMode(int|ModeEnum $mode): static
+    public function addMode(int|ModeEnum $mode): static
     {
-        $this->bitwiseMode |= $this->normalizeMode($mode);
+        $this->mode |= $this->normalizeMode($mode);
         return $this;
     }
 
-    public function removeBitwiseMode(int|ModeEnum $mode): static
+    public function removeMode(int|ModeEnum $mode): static
     {
-        $this->bitwiseMode &= ~$this->normalizeMode($mode);
+        $this->mode &= ~$this->normalizeMode($mode);
         return $this;
     }
 
-    public function hasBitwiseMode(int|ModeEnum $mode): bool
+    public function hasMode(int|ModeEnum $mode): bool
     {
-        return ($this->bitwiseMode & $this->normalizeMode($mode)) === $this->normalizeMode($mode);
+        return ($this->mode & $this->normalizeMode($mode)) === $this->normalizeMode($mode);
     }
 
     public function isReadable(): bool
     {
-        return $this->hasBitwiseMode(ModeEnum::READ->value);
+        return $this->hasMode(ModeEnum::READ->value);
     }
 
     public function isWritable(): bool
     {
-        return $this->hasBitwiseMode(ModeEnum::WRITE->value);
+        return $this->hasMode(ModeEnum::WRITE->value);
     }
 
     public function isExecutable(): bool
     {
-        return $this->hasBitwiseMode(ModeEnum::EXECUTE->value);
+        return $this->hasMode(ModeEnum::EXECUTE->value);
     }
 
     private function normalizeMode(int|ModeEnum $mode): int
@@ -87,6 +87,6 @@ abstract class AbstractBitwiseMode
             return $modeInteger;
         }
 
-        throw new \InvalidArgumentException('Invalid Bitwise Mode');
+        throw new \InvalidArgumentException('Invalid Permission Mode');
     }
 }

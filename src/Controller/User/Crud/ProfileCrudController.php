@@ -47,11 +47,6 @@ class ProfileCrudController extends AbstractUserCrudController
             ->setDisabled(!empty($user->getUsername()));
 
         yield EmailField::new('email');
-
-        yield MoneyField::new('id')
-            ->setFormTypeOption('mapped', false)
-            ->setCurrency('USD')
-        ;
     }
 
     public function configureActions(Actions $actions): Actions

@@ -46,7 +46,7 @@ However, you must use a special syntax inside extends to avoid an infinite loop:
 {% extends '@!EasyAdmin/layout.html.twig' %}
 
 {# Since you installed the EasyAdmin PowerPack, you can also do this #}
-{% extends eau.baseTemplate('layout', true) %}
+{% extends eau.templatePath('layout', true) %}
 
 {% block sidebar %}
     {# ... #}
@@ -61,7 +61,7 @@ However, you must use a special syntax inside extends to avoid an infinite loop:
 {% extends '@!EasyAdmin/page/content.html.twig' %}
 
 {# Since you installed the EasyAdmin PowerPack, you can also do this #}
-{% extends eau.baseTemplate('page/content', true) %}
+{% extends eau.templatePath('page/content', true) %}
 ```
 ---
 

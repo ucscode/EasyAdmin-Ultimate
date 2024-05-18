@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Bundle\Abstracts;
+namespace App\Entity\Abstracts;
 
+use App\Component\Abstracts\AbstractPermission;
 use App\Enum\ModeEnum;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Abstract class representing a meta entity with key-value pairs, timestamp, and access mode.
  *
- * The AbstractMetaEntity class serves as a foundation for managing meta information associated
+ * The AbstractEntityMeta class serves as a foundation for managing meta information associated
  * with entities in a system. Meta information typically includes attributes such as key,
  * value, timestamp, and access mode (permissions).
  *
@@ -23,18 +24,18 @@ use Doctrine\ORM\Mapping as ORM;
  * - metaKey: The key or name of the meta attribute.
  * - metaValue: The value associated with the meta attribute.
  * - metaTimestamp: The timestamp indicating when the meta information was created.
- * - bitwiseMode: The bitwise mode representing access permissions for the meta entity.
+ * - mode: The bitwise mode representing access permissions for the meta entity.
  *
- * @see \App\Bundle\Abstracts\AbstractBitwiseMode
+ * @see \App\Component\Abstracts\AbstractPermission
  *
- * Concrete implementations of classes extending AbstractMetaEntity can define additional
+ * Concrete implementations of classes extending AbstractEntityMeta can define additional
  * attributes or customize the behavior of meta management based on specific requirements
  * of the system or application.
  *
  * @author Uchenna Ajah
  * @link https://github.com/ucscode
  */
-abstract class AbstractMetaEntity extends AbstractBitwiseMode
+abstract class AbstractEntityMeta extends AbstractPermission
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -51,7 +52,7 @@ abstract class AbstractMetaEntity extends AbstractBitwiseMode
     protected ?\DateTimeInterface $metaTimestamp = null;
 
     #[ORM\Column(type: Types::SMALLINT, length: 3)]
-    protected int $bitwiseMode = 0;
+    protected int $mode = 0;
 
     public function __construct(?string $key = null, mixed $value = null, int|ModeEnum $mode = ModeEnum::READ)
     {
@@ -61,7 +62,7 @@ abstract class AbstractMetaEntity extends AbstractBitwiseMode
         }
 
         $this->setMetaTimestamp(new \DateTime());
-        $this->addBitwiseMode($mode);
+        $this->addMode($mode);
     }
 
     public function getId(): ?int

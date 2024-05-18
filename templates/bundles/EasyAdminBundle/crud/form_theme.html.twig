@@ -1,5 +1,6 @@
 {# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
-{% extends eau.baseTemplate('crud/form_theme', true) %}
+{# @var eau \App\Context\EauContext #}
+{% extends eau.templatePath('crud/form_theme', true) %}
 
 {%- macro widget_aside(context) -%}
     {%- if context.type == 'button' %}
@@ -22,13 +23,13 @@
 {%- endmacro -%}
 
 {%- block form_widget_simple -%}
-    {% set prepend = _simple_widget_concat_context(prepend|default(null)) %}
-    {% set append = _simple_widget_concat_context(append|default(null)) %}
-    {%- if prepend or append -%}
+    {% set prepend_content = _simple_widget_concat_context(prepend_content|default(null)) %}
+    {% set append_content = _simple_widget_concat_context(append_content|default(null)) %}
+    {%- if prepend_content or append_content -%}
         <div class="input-group">
-            {{- prepend ? _self.widget_aside(prepend) -}}
+            {{- prepend_content ? _self.widget_aside(prepend_content) -}}
             {{- parent() -}}
-            {{- append ? _self.widget_aside(append) -}}
+            {{- append_content ? _self.widget_aside(append_content) -}}
         </div>
     {%- else -%}
         {{ parent() }}
@@ -37,7 +38,7 @@
 
 {%- block password_widget -%}
     {%- if togglePassword|default(false) -%}
-        {% set append = {
+        {% set append_content = {
             type: 'button',
             value: {
                 'icon': "fas fa-eye",

@@ -1,7 +1,7 @@
 {# All theme layout must extend from the original EasyAdmin Bundle template #}
 {# Else, an infinite loop will occur #}
 
-{% extends theme_layout ? eau.themeLayout(theme_layout) : eau.baseTemplate('layout', true) %}
+{% extends theme_layout ? eau.themePath(theme_layout) : eau.templatePath('layout', true) %}
 
 {% block head_javascript %}
     {{ parent() }}
