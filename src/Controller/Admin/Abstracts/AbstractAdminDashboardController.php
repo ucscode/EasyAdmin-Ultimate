@@ -2,11 +2,11 @@
 
 namespace App\Controller\Admin\Abstracts;
 
-use App\Controller\Admin\Crud\UserCrudController;
+use App\Controller\Admin\Crud\User\UserCrudController;
 use App\Controller\Admin\Interfaces\AdminControllerInterface;
 use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
 use App\Entity\CodeInfusion;
-use App\Entity\User;
+use App\Entity\User\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;

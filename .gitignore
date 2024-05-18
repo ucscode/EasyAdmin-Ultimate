@@ -25,17 +25,13 @@
 ###< symfony/asset-mapper ###
 
 ###> symfony/php-cs-fixer ###
-.php-cs-fixer.cache
+/.php-cs-fixer.cache
 ###< symfony/php-cs-fixer ###
-
-###> public ###
-# Ignore everything in the images directory
-/public/resource/images/**
-
-# Except for the following:
-!/public/resource/images/**/.gitkeep
-!/public/resource/images/system/check-png.webp
 
 ###< JetBrains ###
 /.idea
 ###< JetBrains ###
+
+###< composer ###
+/composer.lock
+###> composer ###

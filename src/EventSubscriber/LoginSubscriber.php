@@ -13,6 +13,25 @@ use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Ucscode\KeyGenerator\KeyGenerator;
 
+/**
+ * A subscriber that listens to login authentication events
+ * 
+ * Login requests are (by default) processed by symfony Login form authenticator. 
+ * However, you can create your own authenticator if you need absolute control.
+ * 
+ * Alternatively, you can take advantage of dispatched events during authentication processes.
+ * The FormLoginAuthenticator dispatches several events during the authentication process
+ * By listening to these events, you can control the authentication process without necessarily
+ * creating a custom login authenticator.
+ * 
+ * References
+ * 
+ * @see \Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
+ * 
+ * @link https://symfony.com/doc/4.x/security/form_login_setup.html  
+ * @link https://symfony.com/doc/current/security.html#form-login
+ * @link https://symfonycasts.com/screencast/symfony-security/security-listeners
+ */
 class LoginSubscriber implements EventSubscriberInterface
 {
     public function __construct(
@@ -36,7 +55,7 @@ class LoginSubscriber implements EventSubscriberInterface
         $passport = $event->getPassport();
 
         /**
-         * @var \App\Entity\User
+         * @var \App\Entity\User\User
          */
         $user = $passport->getUser();
 
@@ -68,7 +87,7 @@ class LoginSubscriber implements EventSubscriberInterface
     public function onLoginSuccess(LoginSuccessEvent $event): void
     {
         /**
-         * @var \App\Entity\User
+         * @var \App\Entity\User\User
          */
         $user = $event->getAuthenticatedToken()->getUser();
         

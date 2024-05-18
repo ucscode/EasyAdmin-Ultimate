@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
-use App\Repository\UserNotificationRepository;
+use App\Repository\User\NotificationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UserNotificationRepository::class)]
-class UserNotification
+#[ORM\Entity(repositoryClass: NotificationRepository::class)]
+class Notification
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

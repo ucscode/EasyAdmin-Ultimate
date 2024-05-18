@@ -2,8 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
-use App\Entity\UserProperty;
+use App\Entity\User\User;
+use App\Entity\User\Property;
 use App\Utils\Stateless\RoleUtils;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -38,7 +38,7 @@ class UserFixtures extends Fixture
             $user->setUsername($data['username']);
 
             foreach($data['meta'] as $key => $value) {
-                $meta = new UserProperty($key, $value);
+                $meta = new Property($key, $value);
                 $user->addUserProperty($meta);
             }
 

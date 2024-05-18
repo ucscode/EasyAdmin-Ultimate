@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\User;
 
-use App\Entity\UserNotification;
+use App\Entity\User\Property;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<UserNotification>
+ * @extends ServiceEntityRepository<Property>
  *
- * @method UserNotification|null find($id, $lockMode = null, $lockVersion = null)
- * @method UserNotification|null findOneBy(array $criteria, array $orderBy = null)
- * @method UserNotification[]    findAll()
- * @method UserNotification[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Property|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Property|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Property[]    findAll()
+ * @method Property[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserNotificationRepository extends ServiceEntityRepository
+class PropertyRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, UserNotification::class);
+        parent::__construct($registry, Property::class);
     }
 
     //    /**
-    //     * @return UserNotification[] Returns an array of UserNotification objects
+    //     * @return Property[] Returns an array of Property objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -36,7 +36,7 @@ class UserNotificationRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?UserNotification
+    //    public function findOneBySomeField($value): ?Property
     //    {
     //        return $this->createQueryBuilder('u')
     //            ->andWhere('u.exampleField = :val')

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use App\Utils\Stateless\RoleUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -55,15 +55,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $avatar = null;
 
     /**
-     * @var Collection<int, UserNotification>
+     * @var Collection<int, Notification>
      */
-    #[ORM\OneToMany(targetEntity: UserNotification::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'])]
     private Collection $notificationCollection;
 
     /**
-     * @var Collection<int, UserProperty>
+     * @var Collection<int, Property>
      */
-    #[ORM\OneToMany(targetEntity: UserProperty::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Property::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'])]
     private Collection $userProperties;
 
     #[ORM\Column(type: 'boolean')]
@@ -233,14 +233,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, UserNotification>
+     * @return Collection<int, Notification>
      */
     public function getNotificationCollection(): Collection
     {
         return $this->notificationCollection;
     }
 
-    public function addNotification(UserNotification $userNotification): static
+    public function addNotification(Notification $userNotification): static
     {
         if (!$this->notificationCollection->contains($userNotification)) {
             $this->notificationCollection->add($userNotification);
@@ -250,7 +250,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeNotification(UserNotification $userNotification): static
+    public function removeNotification(Notification $userNotification): static
     {
         if ($this->notificationCollection->removeElement($userNotification)) {
             // set the owning side to null (unless already changed)
@@ -275,14 +275,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, UserProperty>
+     * @return Collection<int, Property>
      */
     public function getUserProperties(): Collection
     {
         return $this->userProperties;
     }
 
-    public function addUserProperty(UserProperty $userProperty): static
+    public function addUserProperty(Property $userProperty): static
     {
         if (!$this->userProperties->contains($userProperty)) {
             $this->userProperties->add($userProperty);
@@ -292,7 +292,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeUserProperty(UserProperty $userProperty): static
+    public function removeUserProperty(Property $userProperty): static
     {
         if ($this->userProperties->removeElement($userProperty)) {
             // set the owning side to null (unless already changed)

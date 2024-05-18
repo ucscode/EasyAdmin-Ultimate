@@ -4,7 +4,7 @@ namespace App\Controller\Security;
 
 use App\Controller\Security\Abstracts\AbstractSecurityController;
 use App\Form\Security\LoginFormType;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\ConfigurationService;
 use App\Service\ModalService;
@@ -96,7 +96,7 @@ class LoginController extends AbstractSecurityController
             $session->remove('user.email.token');
 
             /**
-             * @var null|\App\Entity\User
+             * @var null|\App\Entity\User\User
              */
             $user = $userRepository->loadUserByIdentifier($lastUsername);
 

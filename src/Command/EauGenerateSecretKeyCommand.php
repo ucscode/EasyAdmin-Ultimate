@@ -18,7 +18,7 @@ use Ucscode\KeyGenerator\KeyGenerator;
     name: 'eau:generate-secret-key',
     description: 'Generate a unique secret key for your application',
 )]
-class UssGenerateSecretKeyCommand extends Command
+class EauGenerateSecretKeyCommand extends Command
 {
     protected KeyGenerator $keyGenerator;
 

@@ -1,0 +1,7 @@
+###> public ###
+# Ignore everything in the images directory
+/images/**
+
+# Except for the following:
+!/images/**/.gitkeep
+!/images/system/check-png.webp

@@ -75,12 +75,12 @@ class PasswordCrudController extends ProfileCrudController
     }
 
     /**
-     * @param \App\Entity\User $entityInstance
+     * @param \App\Entity\User\User $entityInstance
      */
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         /**
-         * @var \App\Entity\User
+         * @var \App\Entity\User\User
          */
         $user = $this->getUser();
 

@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Controller\Admin\Crud;
+namespace App\Controller\Admin\Crud\User;
 
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
-use App\Entity\User;
-use App\Entity\UserProperty;
+use App\Entity\User\Property;
+use App\Entity\User\User;
 use App\Enum\ModeEnum;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
-use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class UserPropertyCrudController extends AbstractAdminCrudController
+class PropertyCrudController extends AbstractAdminCrudController
 {
     public const PROPERTY_KEY = 'metaValue';
 
@@ -32,7 +32,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
 
     public static function getEntityFqcn(): string
     {
-        return UserProperty::class;
+        return Property::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -66,7 +66,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
 
         yield Field::new('metaValueAsString', 'Value')
             ->formatValue(
-                function (mixed $value, UserProperty $entity) {
+                function (mixed $value, Property $entity) {
                     // Write your condition to format values in INDEX page
                     return $value;
                 }
@@ -79,7 +79,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
             ->disable(Action::BATCH_DELETE, Action::NEW, Action::DELETE)
             ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
                 return $action
-                    ->displayIf(function (UserProperty $entity) {
+                    ->displayIf(function (Property $entity) {
                         // Write your condition to hide edit button
                         return $entity->hasMode(ModeEnum::WRITE->value);
                     });
@@ -102,23 +102,23 @@ class UserPropertyCrudController extends AbstractAdminCrudController
         if(!$userId) {
             throw new \RuntimeException(sprintf(
                 'Unable to retrieve "%s" list. The user identifier is not specified in the request.',
-                UserProperty::class
+                Property::class
             ));
         }
 
         /**
-         * @var ?\App\Repository\UserRepository
+         * @var ?\App\Repository\User\UserRepository
          */
         $userRepository = $this->entityManager->getRepository(User::class);
-
+        
         /**
-         * @var ?\App\Entity\User
+         * @var ?\App\Entity\User\User
          */
         $userEntity = $userRepository->find($userId);
 
         if(!$userEntity) {
             throw new \RuntimeException(sprintf(
-                'The "%s" entity with "id = %s" does not exist in the database. The entity may have been deleted by mistake or by a "cascade={"remove"}" operation executed by Doctrine.',
+                '%s::id = %s does not exist in the database',
                 User::class,
                 $userId
             ));
@@ -135,7 +135,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
     protected function getDynamicFormFields(): FieldInterface
     {
         /**
-         * @var UserProperty $entity
+         * @var Property $entity
          * */
         $entity = $this->getContext()->getEntity()?->getInstance();
 

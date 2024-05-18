@@ -19,7 +19,7 @@ use Ucscode\KeyGenerator\KeyGenerator;
     description: 'Initialize User Synthetics Application',
     hidden: false,
 )]
-class UssInitializeCommand extends Command
+class EauInitializeCommand extends Command
 {
     public const ENV_PROD = 'prod';
     public const ENV_DEV = 'dev';

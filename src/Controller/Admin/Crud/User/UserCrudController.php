@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Controller\Admin\Crud;
+namespace App\Controller\Admin\Crud\User;
 
 use App\Constants\FilePathConstants;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Utils\Stateless\RoleUtils;
+use App\Entity\User\User;
+use App\Repository\User\UserRepository;
 use App\Utils\Stateful\DateTimeUtils;
+use App\Utils\Stateless\RoleUtils;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -112,27 +112,28 @@ class UserCrudController extends AbstractAdminCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $userPropertyAction = Action::new('userProperty', 'Properties')
+        $propertyAction = Action::new('property', 'Properties')
             ->linkToUrl(
                 function (User $entity) {
                     return $this->adminUrlGenerator
                         ->setDashboard(DashboardController::class)
-                        ->setController(UserPropertyCrudController::class)
+                        ->setController(PropertyCrudController::class)
                         ->setAction(Crud::PAGE_INDEX)
                         ->set('userId', $entity->getId())
+                        ->setEntityId(null)
                         ->generateUrl()
                     ;
                 }
             );
         ;
 
-        $userNetworkAction = Action::new('userNetwork', 'Hierarchy')
+        $hierarchyAction = Action::new('hierarchy', 'Hierarchy')
             ->linkToUrl('http://example.com')
         ;
 
         return $actions
-            ->add(Crud::PAGE_INDEX, $userPropertyAction)
-            ->add(Crud::PAGE_INDEX, $userNetworkAction)
+            ->add(Crud::PAGE_INDEX, $propertyAction)
+            ->add(Crud::PAGE_INDEX, $hierarchyAction)
         ;
     }
 

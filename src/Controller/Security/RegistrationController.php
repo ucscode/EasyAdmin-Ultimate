@@ -3,9 +3,9 @@
 namespace App\Controller\Security;
 
 use App\Controller\Security\Abstracts\AbstractSecurityController;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Form\Security\RegistrationFormType;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\ConfigurationService;
 use App\Service\ModalService;

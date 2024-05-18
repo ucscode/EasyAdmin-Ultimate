@@ -3,7 +3,7 @@
 namespace App\Controller\Security;
 
 use App\Controller\Security\Abstracts\AbstractSecurityController;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Form\Security\ChangePasswordFormType;
 use App\Form\Security\ResetPasswordRequestFormType;
 use App\Service\ConfigurationService;

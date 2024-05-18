@@ -6,7 +6,7 @@ use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
 use App\Controller\User\Crud\PasswordCrudController;
 use App\Controller\User\Crud\ProfileCrudController;
 use App\Controller\User\Interfaces\UserControllerInterface;
-use App\Entity\User;
+use App\Entity\User\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;

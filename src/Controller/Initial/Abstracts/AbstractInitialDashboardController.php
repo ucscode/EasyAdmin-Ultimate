@@ -4,7 +4,7 @@ namespace App\Controller\Initial\Abstracts;
 
 use App\Constants\FilePathConstants;
 use App\Controller\Initial\Traits\InitialControllerTrait;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Service\ConfigurationService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;

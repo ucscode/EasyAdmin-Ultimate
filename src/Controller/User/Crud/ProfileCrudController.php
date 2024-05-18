@@ -4,14 +4,12 @@ namespace App\Controller\User\Crud;
 
 use App\Constants\FilePathConstants;
 use App\Controller\User\Abstracts\AbstractUserCrudController;
-use App\Entity\User;
+use App\Entity\User\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ProfileCrudController extends AbstractUserCrudController

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use App\Entity\Abstracts\AbstractEntityMeta;
-use App\Repository\UserPropertyRepository;
+use App\Repository\User\PropertyRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[ORM\Entity(repositoryClass: UserPropertyRepository::class)]
+#[ORM\Entity(repositoryClass: PropertyRepository::class)]
 #[UniqueEntity(fields: ['user', 'metaKey'])]
-class UserProperty extends AbstractEntityMeta
+class Property extends AbstractEntityMeta
 {
     #[ORM\ManyToOne(inversedBy: 'userProperties')]
     #[ORM\JoinColumn(nullable: false)]
