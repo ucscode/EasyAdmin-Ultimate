@@ -22,6 +22,7 @@ class UserPrePersistListener
 {
     public function prePersist(User $user, PrePersistEventArgs $args): void
     {
+        // UserPropertyConfig::getConfigurations();
         $this->setDefaultProperties($user);
     }
 
@@ -31,17 +32,17 @@ class UserPrePersistListener
      */
     private function setDefaultProperties(User $user): void
     {
-        $readAndWritePermission = ModeEnum::READ->value|ModeEnum::WRITE->value;
+        $readWritePermission = ModeEnum::READ->value|ModeEnum::WRITE->value;
 
-        // user have permission to read and write
-        $user->addProperty(new Property('firstName', null, $readAndWritePermission, 'First Name'));
-        $user->addProperty(new Property('lastName', null, $readAndWritePermission, 'Last Name'));
-        $user->addProperty(new Property('about', 'Tell us about you', $readAndWritePermission, 'About You'));
+        // admin have permission to read and write
+        $user->addProperty(new Property('firstName', null, $readWritePermission));
+        $user->addProperty(new Property('lastName', null, $readWritePermission));
+        $user->addProperty(new Property('about', 'Tell us about you', $readWritePermission));
 
         // readonly permission (no write access granted)
         $user->addProperty(new Property('balance', 0.00, ModeEnum::READ, 'Your Revenue'));
 
-        // user does not have permission to access the property
+        // admin does not have permission to access the property
         $user->addProperty(new Property('hasPaid', false, ModeEnum::NO_PERMISSION));
     }
 }

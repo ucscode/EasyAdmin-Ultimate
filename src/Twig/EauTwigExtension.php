@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Context\EauContext;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
@@ -41,6 +42,7 @@ class EauTwigExtension extends AbstractExtension implements GlobalsInterface
             new TwigFilter('is_boolean', fn ($item) => is_bool($item)),
             new TwigFilter('html_attributes', fn (iterable $item) => $this->iterableToHtmlAttributes($item)),
             new TwigFilter('boolean_as_string', fn ($item) => is_bool($item) ? ($item ? 'true' : 'false') : $item),
+            new TwigFilter('find_one_by', fn (iterable $collection, array $options) => $this->findOneBy($collection, $options)),
         ];
     }
 
@@ -87,4 +89,22 @@ class EauTwigExtension extends AbstractExtension implements GlobalsInterface
         return $item['value'] !== null ? $item : null;
     }
 
+    protected function findOneBy(iterable $collection, array $options): mixed
+    {
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        /**
+         * @var array|object $item
+         */
+        foreach($collection as $item) {
+            foreach($options as $property => $value) {
+                if($propertyAccessor->getValue($item, sprintf('[%s]', $property)) != $value) {
+                    continue;
+                }
+            }
+            return $item;
+        }
+
+        return null;
+    }
 }

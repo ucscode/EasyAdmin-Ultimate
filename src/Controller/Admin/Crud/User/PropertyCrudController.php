@@ -19,21 +19,20 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
-use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class PropertyCrudController extends AbstractAdminCrudController
 {
-    public const PROPERTY_KEY = 'metaValue';
     protected ?User $propertyOwner;
 
     public function __construct(
         protected EntityManagerInterface $entityManager, 
         protected RequestStack $requestStack,
-        protected AdminUrlGenerator $adminUrlGenerator
+        protected AdminUrlGenerator $adminUrlGenerator,
+        protected KernelInterface $kernel
     )
     {
         $this->setPropertyOwner();
@@ -61,15 +60,15 @@ class PropertyCrudController extends AbstractAdminCrudController
      */
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('metaKey', 'Property')
-            ->setDisabled()
-            ->formatValue(fn ($value) => ucwords(CaseConverter::toSentenceCase($value)))
-        ;
-
         if(in_array($pageName, [Crud::PAGE_EDIT])) {
             yield $this->getDynamicFormFields();
             return;
         };
+
+        yield TextField::new('metaKey', 'Property')
+            ->setDisabled()
+            ->formatValue(fn ($value) => ucwords(CaseConverter::toSentenceCase($value)))
+        ;
 
         yield Field::new('metaValueAsString', 'Value')
             ->formatValue(
@@ -137,30 +136,47 @@ class PropertyCrudController extends AbstractAdminCrudController
             ));
         }
 
-        $metaKey = $entity->getMetaKey();
+        $configs = $this->getMetaValueFieldConfigs($entity->getMetaKey());
 
-        /**
-         * @var Field $field
-         * */
-        $field = $this->getMetaValueFieldTypes()[$metaKey] ?? TextField::new(self::PROPERTY_KEY);
-
-        $field->setLabel('Value');
-
-        return $field;
+        return $configs['field'];
     }
 
     /**
      * Edit the array within the function to match your project preference
      *
-     * @return array
+     * @return FieldInterface
      */
-    protected function getMetaValueFieldTypes(): array
+    protected function getMetaValueFieldConfigs(string $metaKey = null): ?array
     {
-        return [
-            'balance' => MoneyField::new(self::PROPERTY_KEY)
-                ->setCurrency('USD'),
-            'about' => TextareaField::new(self::PROPERTY_KEY)
-        ];
+        $propertyConfigFile = sprintf('%s/src/Config/UserPropertyConfig.php', $this->kernel->getProjectDir());
+        $closure = require $propertyConfigFile;
+        $configuration = $closure();
+
+        foreach($configuration as $key => &$config) {
+            $config['label'] ??= ucwords(CaseConverter::toSentenceCase($key));
+            $config['value'] ??= null;
+            $config['mode'] ??= ModeEnum::READ->value|ModeEnum::WRITE->value;
+            $config['field'] ??= TextField::class;
+
+            if(!in_array(FieldInterface::class, \class_implements($config['field']))) {
+                throw new \InvalidArgumentException(sprintf(
+                    '% configuration; %s field must implement %s',
+                    Property::class,
+                    $key,
+                    FieldInterface::class
+                ));
+            }
+            
+            $config['field'] = $config['field']::new('metaValue');
+            $config['field']->setLabel($config['label']);
+
+            if(is_callable($config['configure_field'] ?? null)) {
+                call_user_func($config['configure_field'], $config['field']);
+                unset($config['configure_field']);
+            }
+        }
+
+        return !$metaKey ? $configuration : ($configuration[$metaKey] ?? null);
     }
 
     private function setPropertyOwner(): void
