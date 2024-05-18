@@ -60,9 +60,7 @@ class UserPropertyCrudController extends AbstractAdminCrudController
         // if page is form page
 
         if(in_array($pageName, [Crud::PAGE_EDIT])) {
-
             yield $this->getDynamicFormFields();
-
             return;
         };
 

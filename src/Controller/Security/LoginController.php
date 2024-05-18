@@ -48,6 +48,8 @@ class LoginController extends AbstractSecurityController
             'is_unverified' => false,
 
             'csrf_token_intention' => 'authenticate',
+            
+            'target_path' => null, // $this->generateUrl('app_admin'),
 
             'page_title' => sprintf('%s | %s', $this->configurationService->get('app.name'), 'Login'),
             'favicon_path' => $this->configurationService->get('app.logo', $this->favicon),

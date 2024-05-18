@@ -3,14 +3,17 @@
 namespace App\EventSubscriber;
 
 use App\Service\ConfigurationService;
+use App\Utils\Stateless\RoleUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;
+use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Ucscode\KeyGenerator\KeyGenerator;
 
-class CheckVerifiedUserSubscriber implements EventSubscriberInterface
+class LoginSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         protected RequestStack $requestStack,
@@ -24,6 +27,7 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface
     {
         return [
             CheckPassportEvent::class => ['onCheckPassport', -10],
+            LoginSuccessEvent::class => ['onLoginSuccess', 1],
         ];
     }
 
@@ -59,5 +63,30 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface
             }
 
         }
+    }
+
+    public function onLoginSuccess(LoginSuccessEvent $event): void
+    {
+        /**
+         * @var \App\Entity\User
+         */
+        $user = $event->getAuthenticatedToken()->getUser();
+        
+        // default redirect path
+        $response = new RedirectResponse($this->urlGenerator->generate('app_user'));
+
+        $redirections = [
+            RoleUtils::ROLE_ADMIN => 'app_admin',
+            // add more redirection path
+        ];
+
+        foreach($redirections as $role => $pathname) {
+            if($user->hasRole($role)) {
+                $response = new RedirectResponse($this->urlGenerator->generate($pathname));
+                break;
+            }
+        }
+
+        $event->setResponse($response);
     }
 }
