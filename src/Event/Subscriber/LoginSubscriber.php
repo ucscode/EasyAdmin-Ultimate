@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventSubscriber;
+namespace App\Event\Subscriber;
 
 use App\Service\ConfigurationService;
 use App\Utils\Stateless\RoleUtils;
@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Ucscode\KeyGenerator\KeyGenerator;
 
 /**
- * A subscriber that listens to login authentication events
+ * A subscriber that listens to log in authentication events
  * 
  * Login requests are (by default) processed by symfony Login form authenticator. 
  * However, you can create your own authenticator if you need absolute control.

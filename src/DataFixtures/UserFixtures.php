@@ -39,7 +39,7 @@ class UserFixtures extends Fixture
 
             foreach($data['meta'] as $key => $value) {
                 $meta = new Property($key, $value);
-                $user->addUserProperty($meta);
+                $user->addProperty($meta);
             }
 
             $manager->persist($user);

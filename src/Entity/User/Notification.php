@@ -38,8 +38,8 @@ class Notification
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $actionText = null;
 
-    #[ORM\ManyToOne(inversedBy: 'notificationCollection')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'notifications')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]

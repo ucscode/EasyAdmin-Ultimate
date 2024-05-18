@@ -207,12 +207,8 @@ class UserCrudController extends AbstractAdminCrudController
     {
         /**
          * Get the array of allowed user roles.
-         *
          * If the array is empty, all roles will be returned.
-         *
-         * @var array
          */
-
         $allowedRoles = [
             // 'Display Value' => UserRole::ROLE_ADMIN
         ];

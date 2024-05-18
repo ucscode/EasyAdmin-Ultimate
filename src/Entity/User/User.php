@@ -34,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var ?string The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
@@ -57,25 +57,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Notification>
      */
-    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'])]
-    private Collection $notificationCollection;
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user', cascade: ['persist'], orphanRemoval: true)]
+    private Collection $notifications;
 
     /**
      * @var Collection<int, Property>
      */
-    #[ORM\OneToMany(targetEntity: Property::class, mappedBy: 'user', orphanRemoval: true, cascade: ['persist'])]
-    private Collection $userProperties;
+    #[ORM\OneToMany(targetEntity: Property::class, mappedBy: 'user', cascade: ['persist'], orphanRemoval: true)]
+    private Collection $properties;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private bool $isVerified = false;
 
     #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
     private ?self $parent = null;
 
     public function __construct()
     {
-        $this->notificationCollection = new ArrayCollection();
-        $this->userProperties = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+        $this->properties = new ArrayCollection();
         $this->setRegistrationTime(new \DateTime());
         $this->setLastSeen(new \DateTime());
         $this->addRole(RoleUtils::ROLE_USER);
@@ -235,27 +235,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Notification>
      */
-    public function getNotificationCollection(): Collection
+    public function getNotifications(): Collection
     {
-        return $this->notificationCollection;
+        return $this->notifications;
     }
 
-    public function addNotification(Notification $userNotification): static
+    public function addNotification(Notification $notification): static
     {
-        if (!$this->notificationCollection->contains($userNotification)) {
-            $this->notificationCollection->add($userNotification);
-            $userNotification->setUser($this);
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeNotification(Notification $userNotification): static
+    public function removeNotification(Notification $notification): static
     {
-        if ($this->notificationCollection->removeElement($userNotification)) {
+        if ($this->notifications->removeElement($notification)) {
             // set the owning side to null (unless already changed)
-            if ($userNotification->getUser() === $this) {
-                $userNotification->setUser(null);
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
             }
         }
 
@@ -277,27 +277,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Property>
      */
-    public function getUserProperties(): Collection
+    public function getProperties(): Collection
     {
-        return $this->userProperties;
+        return $this->properties;
     }
 
-    public function addUserProperty(Property $userProperty): static
+    public function addProperty(Property $property): static
     {
-        if (!$this->userProperties->contains($userProperty)) {
-            $this->userProperties->add($userProperty);
-            $userProperty->setUser($this);
+        if (!$this->properties->contains($property)) {
+            $this->properties->add($property);
+            $property->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeUserProperty(Property $userProperty): static
+    public function removeProperty(Property $property): static
     {
-        if ($this->userProperties->removeElement($userProperty)) {
+        if ($this->properties->removeElement($property)) {
             // set the owning side to null (unless already changed)
-            if ($userProperty->getUser() === $this) {
-                $userProperty->setUser(null);
+            if ($property->getUser() === $this) {
+                $property->setUser(null);
             }
         }
 

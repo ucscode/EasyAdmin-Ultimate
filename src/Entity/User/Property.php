@@ -11,10 +11,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[UniqueEntity(fields: ['user', 'metaKey'])]
 class Property extends AbstractEntityMeta
 {
-    #[ORM\ManyToOne(inversedBy: 'userProperties')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'properties')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
-
+    
     public function getUser(): ?User
     {
         return $this->user;
