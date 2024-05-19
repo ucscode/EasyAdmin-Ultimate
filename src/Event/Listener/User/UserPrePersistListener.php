@@ -2,9 +2,10 @@
 
 namespace App\Event\Listener\User;
 
+use App\Configuration\UserPropertyPattern;
+use App\Constants\ModeConstants;
 use App\Entity\User\Property;
 use App\Entity\User\User;
-use App\Enum\ModeEnum;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
@@ -20,29 +21,22 @@ use Doctrine\ORM\Events;
 #[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: User::class)]
 class UserPrePersistListener
 {
+    /**
+     * do not add __constructor() with dependency injection unless 
+     * it has been properly configured in the service.yaml file
+     * Otherwise, this listener will be ignored 
+     */
+
     public function prePersist(User $user, PrePersistEventArgs $args): void
     {
-        // UserPropertyConfig::getConfigurations();
-        $this->setDefaultProperties($user);
-    }
+        $pattern = new UserPropertyPattern();
 
-    /**
-     * The properties defined here are simply examples
-     * You should define properties that suits your project
-     */
-    private function setDefaultProperties(User $user): void
-    {
-        $readWritePermission = ModeEnum::READ->value|ModeEnum::WRITE->value;
-
-        // admin have permission to read and write
-        $user->addProperty(new Property('firstName', null, $readWritePermission));
-        $user->addProperty(new Property('lastName', null, $readWritePermission));
-        $user->addProperty(new Property('about', 'Tell us about you', $readWritePermission));
-
-        // readonly permission (no write access granted)
-        $user->addProperty(new Property('balance', 0.00, ModeEnum::READ, 'Your Revenue'));
-
-        // admin does not have permission to access the property
-        $user->addProperty(new Property('hasPaid', false, ModeEnum::NO_PERMISSION));
+        /**
+         * @var \Symfony\Component\HttpFoundation\ParameterBag $parameterBag
+         */
+        foreach($pattern->getPatterns() as $name => $parameterBag) {
+            $property = new Property($name, $parameterBag->get('value'), $parameterBag->get('mode'));
+            $user->addProperty($property);
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Component\Abstracts;
 
-use App\Enum\ModeEnum;
+use App\Constants\ModeConstants;
 
 /**
  * Abstract class representing a bitwise mode for granting permissions.
@@ -40,51 +40,49 @@ abstract class AbstractPermission
         return $this->mode;
     }
 
-    public function setMode(int|ModeEnum $mode): static
+    public function setMode(int $mode): static
     {
         $this->mode = $this->normalizeMode($mode);
 
         return $this;
     }
 
-    public function addMode(int|ModeEnum $mode): static
+    public function addMode(int $mode): static
     {
         $this->mode |= $this->normalizeMode($mode);
         return $this;
     }
 
-    public function removeMode(int|ModeEnum $mode): static
+    public function removeMode(int $mode): static
     {
         $this->mode &= ~$this->normalizeMode($mode);
         return $this;
     }
 
-    public function hasMode(int|ModeEnum $mode): bool
+    public function hasMode(int $mode): bool
     {
         return ($this->mode & $this->normalizeMode($mode)) === $this->normalizeMode($mode);
     }
 
     public function isReadable(): bool
     {
-        return $this->hasMode(ModeEnum::READ->value);
+        return $this->hasMode(ModeConstants::READ);
     }
 
     public function isWritable(): bool
     {
-        return $this->hasMode(ModeEnum::WRITE->value);
+        return $this->hasMode(ModeConstants::WRITE);
     }
 
     public function isExecutable(): bool
     {
-        return $this->hasMode(ModeEnum::EXECUTE->value);
+        return $this->hasMode(ModeConstants::EXECUTE);
     }
 
-    private function normalizeMode(int|ModeEnum $mode): int
+    protected function normalizeMode(int $mode): int
     {
-        $modeInteger = $mode instanceof ModeEnum ? $mode->value : $mode;
-
-        if($modeInteger & ModeEnum::EXECUTE->value | ModeEnum::READ->value | ModeEnum::WRITE->value) {
-            return $modeInteger;
+        if($mode & ModeConstants::EXECUTE|ModeConstants::READ|ModeConstants::WRITE) {
+            return $mode;
         }
 
         throw new \InvalidArgumentException('Invalid Permission Mode');

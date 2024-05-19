@@ -3,7 +3,7 @@
 namespace App\Entity\Abstracts;
 
 use App\Component\Abstracts\AbstractPermission;
-use App\Enum\ModeEnum;
+use App\Constants\ModeConstants;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -54,7 +54,7 @@ abstract class AbstractEntityMeta extends AbstractPermission
     #[ORM\Column(type: Types::SMALLINT, length: 3)]
     protected int $mode = 0;
 
-    public function __construct(?string $key = null, mixed $value = null, int|ModeEnum $mode = ModeEnum::READ)
+    public function __construct(?string $key = null, mixed $value = null, int $mode = ModeConstants::READ)
     {
         if(!is_null($key)) {
             $this->setMetaKey($key);

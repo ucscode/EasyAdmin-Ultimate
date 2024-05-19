@@ -2,6 +2,7 @@
 
 namespace App\Component\Abstracts;
 
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -15,33 +16,55 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 abstract class AbstractPattern
 {
-    abstract protected function configureOptions(OptionsResolver $resolver): void;
-    abstract protected function createDefaultOptions(): array;
+    protected const OPTION_OFFSET = 'option._name';
 
+    abstract protected function buildPattern(): void;
+
+    /**
+     * @var array<ParameterBag> $options
+     */
     protected array $options = [];
+    
     protected OptionsResolver $resolver;
 
     public function __construct()
     {
         $this->resolver = new OptionsResolver();
         $this->configureOptions($this->resolver);
-        $this->options = $this->resolver->resolve($this->createDefaultOptions());
+        $this->buildPattern();
     }
 
-    public function set(string $name, mixed $value): static
+    public function setPattern(string $name, array|ParameterBag $options = []): static
     {
-        $this->options[$name] = $value;
-        $this->options = $this->all();
+        if($options instanceof ParameterBag) {
+            $options = $options->all();
+        }
+
+        $options[self::OPTION_OFFSET] = $name;
+
+        $this->options[$name] = new ParameterBag($this->resolver->resolve($options));
+        
         return $this;
     }
 
-    public function get(string $name): mixed
+    public function getPattern(string $name): ?ParameterBag
     {
         return $this->options[$name] ?? null;
     }
 
-    public function all(): array
+    /**
+     * @return ParameterBag[]
+     */
+    public function getPatterns(): array
     {
-        return $this->resolver->resolve($this->options);
+        return $this->options;
+    }
+
+    protected function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setRequired(self::OPTION_OFFSET)
+            ->setAllowedTypes(self::OPTION_OFFSET, 'string')
+        ;
     }
 }

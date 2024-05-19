@@ -2,7 +2,11 @@
 
 namespace App\Command;
 
+use App\Configuration\UserPropertyPattern;
+use App\Entity\User\Property;
+use App\Entity\User\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -49,6 +53,7 @@ class EauInitializeCommand extends Command
 
             $this->updateComposerPackages();
             $this->computeAssetMapperResource();
+            $this->updateUserProperties();
 
         } catch(Exception $exception) {
 
@@ -93,6 +98,44 @@ class EauInitializeCommand extends Command
         };
 
         $this->symfonyStyle->success('Asset Mapper Initialized');
+    }
+
+    protected function updateUserProperties(): void
+    {
+        $this->symfonyStyle->title('Updating User Properties');
+
+        $userRepository = $this->entityManager->getRepository(User::class);
+
+        foreach((new UserPropertyPattern())->getPatterns() as $metaKey => $pattern) {
+
+            $query = $userRepository->createQueryBuilder('U')
+                ->leftJoin(Property::class, 'P', Join::WITH, 'U = P.user')
+                ->groupBy('U.id')
+                ->having('MAX(CASE WHEN P.metaKey = :metaKey THEN 1 ELSE 0 END) = 0')
+                ->setParameter('metaKey', $metaKey)
+                ->getQuery()
+            ;
+            
+            /**
+             * @var \App\Entity\User\User $user
+             */
+            foreach($query->getResult() as $user) {
+                
+                $property = new Property(
+                    $metaKey, 
+                    $pattern->get('value'), 
+                    $pattern->get('mode')
+                );
+
+                $user->addProperty($property);
+
+                $this->entityManager->persist($user);
+            }
+
+            $this->entityManager->flush();
+        }
+
+        $this->symfonyStyle->success('Users Property Updated');
     }
 
     private function runSymfonyConsoleCommand(array $command): void

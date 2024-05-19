@@ -3,79 +3,93 @@
 namespace App\Configuration;
 
 use App\Component\Abstracts\AbstractPattern;
+use App\Constants\ModeConstants;
+use App\Utils\Stateless\CaseConverter;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Define user property configuration that will be used across the application
- * 
- * Configuration Options:
- * 
- * - label (optional): The label to render to user
- * 
- * - value (optional): The default value to set for the property
- * 
- * - mode (option): The permission to assign for admin accessibility
- * 
- * - field (optional): An easyadmin Field Interface class Name that will be used in editing the property
- * 
- * - configure_field (optional): The callable (closure) to configure the field instance field type
- * 
- *      - If the option accepts multiple parameters, use an array to define each parameters instead
- */
 class UserPropertyPattern extends AbstractPattern
-{
-    protected function createDefaultOptions(): array
+{    
+    /**
+     * The pattern defined here are merily examples
+     * You should define pattenrs that suits your project
+     */
+    protected function buildPattern(): void
     {
-        return [
-            'option1' => [
-                'label' => 'string',
-                'value' => 'mixed',
-                'mode' => 'integer or enum',
-                'field' => 'string',
-                'configure_field' => 'callable'
-            ],
-            'option2' => [
-                // same as option 1 configuration
-            ],
-        ];
+        $this
+            ->setPattern('firstName')
+
+            ->setPattern('lastName')
+
+            ->setPattern('about', [
+                'field' => TextareaField::class,
+                'label' => 'About GG'
+            ])
+
+            ->setPattern('balance', [
+                'value' => 0,
+                'field' => MoneyField::class,
+                'configureField' => function(MoneyField $field) {
+                    $field->setCurrency('USD');
+                },
+            ])
+            
+            ->setPattern('hasPremiumAccount', [
+                'field' => BooleanField::class,
+                'value' => false,
+                'mode' => ModeConstants::NO_PERMISSION
+            ])
+        ;
     }
 
     protected function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
+        $resolver
+            ->setDefaults([
+                'label' => null,
+                'value' => null,
+                'mode' => ModeConstants::READ|ModeConstants::WRITE,
+                'field' => TextField::class,
+                'configureField' => null,
+            ]);
         
+        $resolver
+            ->setAllowedTypes('label', ['string', 'null'])
+            ->setAllowedTypes('mode', 'integer')
+            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('configureField', ['callable', 'null'])
+        ;
+
+        $resolver
+            ->setNormalizer('label', function(Options $options, ?string $label) {
+                return $label ?? ucwords(CaseConverter::toSentenceCase($options[self::OPTION_OFFSET]));
+            })
+            
+            ->setNormalizer('field', function(Options $options, string $fieldFqcn) {
+                if(!in_array(FieldInterface::class, \class_implements($fieldFqcn))) {
+                    throw new InvalidOptionsException(sprintf(
+                        'field %s must implement %s',
+                        $fieldFqcn,
+                        FieldInterface::class
+                    ));
+                };
+
+                $field = $fieldFqcn::new('metaValue', $options['label']);
+                
+                if(is_callable($options['configureField'])) {
+                    call_user_func($options['configureField'], $field);
+                }
+
+                return $field;
+            })
+        ;
     }
 }
-
-return static function(): array {
-
-    return [
-
-        'firstName' => [],
-
-        'lastName' => [],
-
-        'about' => [
-            'field' => TextareaField::class,
-            'label' => 'About '
-        ],
-
-        'balance' => [
-            'field' => MoneyField::class,
-            'value' => 0,
-            'configure_field' => function(MoneyField $field) {
-                $field->setCurrency('USD');
-            },
-        ],
-
-        'hasPremiumAccount' => [
-            'field' => BooleanField::class,
-            'value' => false,
-            'mode' => 4
-        ]
-
-    ];
-
-};

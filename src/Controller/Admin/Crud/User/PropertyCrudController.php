@@ -2,11 +2,12 @@
 
 namespace App\Controller\Admin\Crud\User;
 
+use App\Configuration\UserPropertyPattern;
+use App\Constants\ModeConstants;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User\Property;
 use App\Entity\User\User;
-use App\Enum\ModeEnum;
 use App\Utils\Stateless\CaseConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -89,7 +90,7 @@ class PropertyCrudController extends AbstractAdminCrudController
 
                 return $action
 
-                    ->displayIf(fn (Property $entity) => $entity->hasMode(ModeEnum::WRITE))
+                    ->displayIf(fn (Property $entity) => $entity->hasMode(ModeConstants::WRITE))
 
                     ->linkToUrl(function(Property $entity) {
                         
@@ -118,7 +119,7 @@ class PropertyCrudController extends AbstractAdminCrudController
             ->andWhere('entity.user = :user')
             ->andWhere('entity.mode >= :mode')
             ->setParameter('user', $this->propertyOwner)
-            ->setParameter('mode', ModeEnum::READ->value)
+            ->setParameter('mode', ModeConstants::READ)
         ;
     }
 
@@ -129,54 +130,16 @@ class PropertyCrudController extends AbstractAdminCrudController
          * */
         $entity = $this->getContext()->getEntity()?->getInstance();
 
-        if(!$entity->hasMode(ModeEnum::WRITE)) {
+        if(!$entity->hasMode(ModeConstants::WRITE)) {
             throw new \RuntimeException(sprintf(
                 'You do not have permission to modify the "%s" property',
                 $entity->getMetaKey()
             ));
         }
 
-        $configs = $this->getMetaValueFieldConfigs($entity->getMetaKey());
-
-        return $configs['field'];
-    }
-
-    /**
-     * Edit the array within the function to match your project preference
-     *
-     * @return FieldInterface
-     */
-    protected function getMetaValueFieldConfigs(string $metaKey = null): ?array
-    {
-        $propertyConfigFile = sprintf('%s/src/Config/UserPropertyConfig.php', $this->kernel->getProjectDir());
-        $closure = require $propertyConfigFile;
-        $configuration = $closure();
-
-        foreach($configuration as $key => &$config) {
-            $config['label'] ??= ucwords(CaseConverter::toSentenceCase($key));
-            $config['value'] ??= null;
-            $config['mode'] ??= ModeEnum::READ->value|ModeEnum::WRITE->value;
-            $config['field'] ??= TextField::class;
-
-            if(!in_array(FieldInterface::class, \class_implements($config['field']))) {
-                throw new \InvalidArgumentException(sprintf(
-                    '% configuration; %s field must implement %s',
-                    Property::class,
-                    $key,
-                    FieldInterface::class
-                ));
-            }
-            
-            $config['field'] = $config['field']::new('metaValue');
-            $config['field']->setLabel($config['label']);
-
-            if(is_callable($config['configure_field'] ?? null)) {
-                call_user_func($config['configure_field'], $config['field']);
-                unset($config['configure_field']);
-            }
-        }
-
-        return !$metaKey ? $configuration : ($configuration[$metaKey] ?? null);
+        $parameters = (new UserPropertyPattern())->getPattern($entity->getMetaKey());
+        
+        return $parameters->get('field');
     }
 
     private function setPropertyOwner(): void
