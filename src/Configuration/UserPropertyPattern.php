@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Config;
+namespace App\Configuration;
 
+use App\Component\Abstracts\AbstractPattern;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Define user property configuration that will be used across the application
@@ -23,6 +25,30 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
  * 
  *      - If the option accepts multiple parameters, use an array to define each parameters instead
  */
+class UserPropertyPattern extends AbstractPattern
+{
+    protected function createDefaultOptions(): array
+    {
+        return [
+            'option1' => [
+                'label' => 'string',
+                'value' => 'mixed',
+                'mode' => 'integer or enum',
+                'field' => 'string',
+                'configure_field' => 'callable'
+            ],
+            'option2' => [
+                // same as option 1 configuration
+            ],
+        ];
+    }
+
+    protected function configureOptions(OptionsResolver $resolver): void
+    {
+        
+    }
+}
+
 return static function(): array {
 
     return [
