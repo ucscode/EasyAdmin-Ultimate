@@ -41,7 +41,7 @@ abstract class AbstractInitialDashboardController extends AbstractDashboardContr
 
             ->renderContentMaximized()
 
-            ->disableDarkMode()
+            // ->disableDarkMode()
 
             /**
              * IMPORTANT: the locale feature won't work unless you add the {_locale} parameter

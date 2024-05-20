@@ -23,24 +23,27 @@ class UserPropertyPattern extends AbstractPattern
     protected function buildPattern(): void
     {
         $this
-            ->setPattern('firstName')
+            ->setPattern('first_name')
 
-            ->setPattern('lastName')
+            ->setPattern('last_name')
 
             ->setPattern('about', [
                 'field' => TextareaField::class,
-                'label' => 'About GG'
+                'label' => 'About GG',
+                'description' => 'This contains data about the user biography'
             ])
 
             ->setPattern('balance', [
+                'label' => "Balance (USD UNIT)",
                 'value' => 0,
                 'field' => MoneyField::class,
                 'configureField' => function(MoneyField $field) {
                     $field->setCurrency('USD');
                 },
+                'description' => 'User balance are saved as integer to avoid rounding errors! Therefore 9 USD will be saved as 900'
             ])
             
-            ->setPattern('hasPremiumAccount', [
+            ->setPattern('has_premium_account', [
                 'field' => BooleanField::class,
                 'value' => false,
                 'mode' => ModeConstants::NO_PERMISSION
@@ -59,6 +62,7 @@ class UserPropertyPattern extends AbstractPattern
                 'mode' => ModeConstants::READ|ModeConstants::WRITE,
                 'field' => TextField::class,
                 'configureField' => null,
+                'description' => null,
             ]);
         
         $resolver
@@ -66,6 +70,7 @@ class UserPropertyPattern extends AbstractPattern
             ->setAllowedTypes('mode', 'integer')
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('configureField', ['callable', 'null'])
+            ->setAllowedTypes('description', ['string', 'null'])
         ;
 
         $resolver

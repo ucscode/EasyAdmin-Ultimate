@@ -8,6 +8,9 @@ use App\Utils\Stateless\RoleUtils;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * This fixture has not been resolved properly and may generate error
+ */
 class UserFixtures extends Fixture
 {
     public const FIXTURES = [

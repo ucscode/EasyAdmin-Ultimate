@@ -8,7 +8,6 @@ use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User\Property;
 use App\Entity\User\User;
-use App\Utils\Stateless\CaseConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -16,6 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -53,6 +53,7 @@ class PropertyCrudController extends AbstractAdminCrudController
             ->showEntityActionsInlined()
             ->setPageTitle(Crud::PAGE_INDEX, $indexTitle)
             ->setPageTitle(Crud::PAGE_EDIT, $editTitle)
+            ->overrideTemplate('crud/edit', 'admin/crud/edit/user_property.html.twig')
         ;
     }
 
@@ -61,6 +62,8 @@ class PropertyCrudController extends AbstractAdminCrudController
      */
     public function configureFields(string $pageName): iterable
     {
+        $propertyPattern =  new UserPropertyPattern();
+
         if(in_array($pageName, [Crud::PAGE_EDIT])) {
             yield $this->getDynamicFormFields();
             return;
@@ -68,7 +71,7 @@ class PropertyCrudController extends AbstractAdminCrudController
 
         yield TextField::new('metaKey', 'Property')
             ->setDisabled()
-            ->formatValue(fn ($value) => ucwords(CaseConverter::toSentenceCase($value)))
+            ->formatValue(fn (string $value) => $propertyPattern->getPattern($value)?->get('label'))
         ;
 
         yield Field::new('metaValueAsString', 'Value')
@@ -121,6 +124,17 @@ class PropertyCrudController extends AbstractAdminCrudController
             ->setParameter('user', $this->propertyOwner)
             ->setParameter('mode', ModeConstants::READ)
         ;
+    }
+
+    public function configureResponseParameters(KeyValueStore $responseParameters): KeyValueStore
+    {
+        if(Crud::PAGE_EDIT === $responseParameters->get('pageName')) {
+            /** @var Property */
+            $property = $responseParameters->get('entity')->getInstance();
+            $responseParameters->set('property_pattern', (new UserPropertyPattern())->getPattern($property->getMetaKey()));
+        }
+
+        return $responseParameters;
     }
 
     protected function getDynamicFormFields(): FieldInterface

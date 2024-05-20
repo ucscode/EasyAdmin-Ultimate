@@ -1,0 +1,30 @@
+{# @var eau \App\Context\EauContext #}
+{% extends eau.templatePath('crud/edit') %}
+
+{# entity.instance = current Property #}
+{# app.user = current User #}
+
+{% block main %}
+
+    {% block back_action %}
+        {% set backone_url = ea_url().setAction(constant('EasyCorp\\Bundle\\EasyAdminBundle\\Config\\Crud::PAGE_INDEX')) %}
+        <div class="mb-3">
+            <a href='{{ backone_url }}'>
+                <i class="fas fa-arrow-left me-2"></i> Back to Properties
+            </a>
+        </div>
+    {% endblock %}
+
+    {% block alert %}
+        {% set description = property_pattern ? property_pattern.get('description') : null %}
+        {% if description %}
+            <div class="alert alert-info mb-3">
+                {{ description }}
+            </div>
+        {% endif %}
+    {% endblock %}
+
+    {{ parent() }}
+
+{% endblock %}
+
