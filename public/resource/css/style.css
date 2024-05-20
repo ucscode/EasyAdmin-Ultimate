@@ -104,6 +104,12 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     --bs-btn-active-color: var(--bs-secondary-color);
 }
 
+.header-notification .dropdown-menu {
+    --notification-dropdown-width: 360px;
+    max-width: calc(100vw - 32px);
+    width: var(--notification-dropdown-width);
+}
+
 @media (min-width: 992px) {
     .eau-security-wrapper {
         margin: auto;

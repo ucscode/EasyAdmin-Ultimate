@@ -1,15 +1,45 @@
 {% set header_notification_dropdown %}
-    <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="#">Action</a></li>
-        <li><a class="dropdown-item" href="#">Another action</a></li>
-        <li><a class="dropdown-item" href="#">Something else here</a></li>
+    <ul class="dropdown-menu dropdown-menu-end py-2 px-3">
+        <li>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class='fw-semibold'>Notifications</div>
+                <button class="btn btn-sm btn-link">
+                    <small>Mark as read</small>
+                </button>
+            </div>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            {% block header_notification_container %}
+            <div class="notification-container">
+                <div class="notification-item d-flex">
+                    <div class=''>img</div>
+                    <div class='flex-fill text-truncate px-2'>
+                        <h6 class='m-0'>Title</h6>
+                        <div class="text-truncate">The content or message to render that must be shortened</div>
+                        <div class='border-top'></div>
+                        9:55 am
+                    </div>
+                    <div class=''>
+                        <button type="button" class='btn btn-sm btn-secondary' data-bs-toggle="dropdown">...</button>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class='text-center d-block p-1' href='#'>
+                <small>Notification history</small>
+            </a>
+        </li>
     </ul>
 {% endset %}
 
 <div class="user-notification-menu {{ baseClass|default('ms-3') }}">
     {% block header_notification %}
         <div class="dropdown header-notification">
-            <a class="btn btn-secondary btn-notification position-relative" type="button" data-bs-offset="0,5" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="btn btn-secondary btn-notification position-relative" type="button" data-bs-offset="0,5" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                 <i class="fas fa-bell animate__animated animate__swing animate__infinite"></i>
                 <span class="badge text-bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">
                     3
