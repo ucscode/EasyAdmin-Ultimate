@@ -1,11 +1,16 @@
 {# All theme layout must extend from the original EasyAdmin Bundle template #}
 {# Else, an infinite loop will occur #}
 
-{% extends theme_layout ? eau.themePath(theme_layout) : eau.templatePath('layout', true) %}
+{% extends eau.templatePath('layout', true) %}
 
 {% block head_javascript %}
     {{ parent() }}
     {{ codeInfusion(constant('App\\Utils\\Stateless\\CodeInfusionUtils::SLOT_HEADER'))|raw }}
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    {{ codeInfusion(constant('App\\Utils\\Stateless\\CodeInfusionUtils::SLOT_FOOTER'))|raw }}
 {% endblock %}
 
 {% block wrapper_wrapper %}
@@ -19,32 +24,20 @@
 
 {% endblock %}
 
-{% block body_javascript %}
+{% block responsive_header_logo '' %}
+
+{# mobile base header #}
+{% block responsive_header %}
     {{ parent() }}
-    {{ codeInfusion(constant('App\\Utils\\Stateless\\CodeInfusionUtils::SLOT_FOOTER'))|raw }}
+    {% block responsive_header_notification %}
+        {% include eau.templatePath('section/user_notification') %}
+    {% endblock %}
 {% endblock %}
 
-{% set header_notification_dropdown %}
-    <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="#">Action</a></li>
-        <li><a class="dropdown-item" href="#">Another action</a></li>
-        <li><a class="dropdown-item" href="#">Something else here</a></li>
-    </ul>
-{% endset %}
-
-{% block header_custom_menu_wrapper %}
-    {% block header_notification_wrapper %}
-        <div class="user-notification-menu pe-3">
-            {% block header_notification %}
-                <div class="dropdown header-notification">
-                    <a class="btn btn-secondary" type="button" data-bs-offset="0,5" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-bell"></i>
-                    </a>
-                    {{ header_notification_dropdown }}
-                </div>
-            {% endblock %}
-        </div>
-    {% endblock %}
-
+{# desktop based header #}
+{% block content_top_header %}
     {{ parent() }}
+    {% block header_notification_wrapper %}
+        {% include eau.templatePath('section/user_notification') with {baseClass: 'ms-3 d-none d-lg-block'} %}
+    {% endblock %}
 {% endblock %}

@@ -95,6 +95,15 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     display: flex;
 }
 
+.btn.btn-notification,
+.btn.btn-notification:hover {
+    --button-secondary-bg: transparent;
+    --button-secondary-color: var(--bs-gray-600);
+    --button-hover-color: var(--button-secondary-color);
+    --bs-btn-active-bg: var(--button-secondary-bg);
+    --bs-btn-active-color: var(--bs-secondary-color);
+}
+
 @media (min-width: 992px) {
     .eau-security-wrapper {
         margin: auto;

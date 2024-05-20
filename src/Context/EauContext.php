@@ -33,22 +33,6 @@ final class EauContext
     }
 
     /**
-     * Generates the path to a theme layout within the "@EasyAdmin" bundle.
-     *
-     * When extending templates from the "@EasyAdmin" bundle directly, modifications are typically
-     * limited to altering the layout or appearance. By creating multiple theme layouts,
-     * you can interchange between different layouts for various dashboard panels.
-     *
-     * @param string $dirname   The directory name of the theme layout.
-     * @param string $layout    The filename of the layout template (default is 'layout.html.twig').
-     * @return string           The path to the specified theme layout.
-     */
-    public function getThemePath(string $dirname, string $layout = 'layout.html.twig'): string
-    {
-        return sprintf('themes/%s/%s', $dirname, $layout);
-    }
-
-    /**
      * Get a configuration value defined in /config/eau.yaml
      *
      * @param string $name  The configuration key (chained with dot)
