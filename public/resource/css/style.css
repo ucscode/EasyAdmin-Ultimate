@@ -116,7 +116,7 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     --icon-dimension: 34px;
     width: var(--icon-dimension);
     height: var(--icon-dimension);
-    border: 1px solid grey;
+    border: 2px solid var(--bs-gray-400);
     flex: 0 0 auto;
     border-radius: 0.4rem;
     overflow: hidden;

@@ -1,6 +1,6 @@
 ###> public ###
 # Ignore everything in the images directory
-/images/**
+/images/**/
 
 # Except for the following:
 !/images/**/.gitkeep

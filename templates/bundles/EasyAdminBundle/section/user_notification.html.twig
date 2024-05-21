@@ -13,8 +13,8 @@
             {% block header_notification_container %}
             <div class="notification-container">
                 <div class="notification-item d-flex">
-                    <div class='notification-item-icon {{ notification_item_class|default('bg-secondary') }}'>
-                        <img src='https://cdn-icons-png.flaticon.com/512/246/246562.png'>    
+                    <div class='notification-item-icon {{ notification_item_class|default('bg-light') }}'>
+                        <img src='{{ asset('/resource/images/notification-icon.png') }}'>    
                     </div>
                     <div class='flex-fill px-2'>
                         <div class="fw-semibold">You have received a new operating system from your device upgrade</div>
