@@ -1,10 +1,10 @@
 {% set header_notification_dropdown %}
-    <ul class="dropdown-menu dropdown-menu-end py-2 px-3">
+    <ul class="dropdown-menu dropdown-menu-end py-2 px-3 fs-13px">
         <li>
             <div class="d-flex justify-content-between align-items-center">
                 <div class='fw-semibold'>Notifications</div>
-                <button class="btn btn-sm btn-link">
-                    <small>Mark as read</small>
+                <button class="btn btn-sm btn-link fs-12px">
+                    Mark all as read
                 </button>
             </div>
         </li>
@@ -13,15 +13,32 @@
             {% block header_notification_container %}
             <div class="notification-container">
                 <div class="notification-item d-flex">
-                    <div class=''>img</div>
-                    <div class='flex-fill text-truncate px-2'>
-                        <h6 class='m-0'>Title</h6>
-                        <div class="text-truncate">The content or message to render that must be shortened</div>
-                        <div class='border-top'></div>
-                        9:55 am
+                    <div class='notification-item-icon {{ notification_item_class|default('bg-secondary') }}'>
+                        <img src='https://cdn-icons-png.flaticon.com/512/246/246562.png'>    
+                    </div>
+                    <div class='flex-fill px-2'>
+                        <div class="fw-semibold">You have received a new operating system from your device upgrade</div>
+                        <div class='border-top d-none'></div>
+                        <span class='d-block fs-11px text-end'>Sep 10, 2024 - 9:55 AM</span>
                     </div>
                     <div class=''>
-                        <button type="button" class='btn btn-sm btn-secondary' data-bs-toggle="dropdown">...</button>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                ...
+                            </button>
+                            <ul class="dropdown-menu fs-12px">
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        Mark as read
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -30,7 +47,7 @@
         <li><hr class="dropdown-divider"></li>
         <li>
             <a class='text-center d-block p-1' href='#'>
-                <small>Notification history</small>
+                Notification history
             </a>
         </li>
     </ul>

@@ -17,6 +17,8 @@ For instance:
 These variables can then be applied across your stylesheets, promoting consistency and making it simpler to 
 update your design scheme in the future.
 */
+@import url('fontsize.min.css');
+
 body {
     --break-word: break-word;
     word-wrap: var(--break-word);
@@ -104,10 +106,26 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     --bs-btn-active-color: var(--bs-secondary-color);
 }
 
-.header-notification .dropdown-menu {
+.dropdown.header-notification > .dropdown-menu {
     --notification-dropdown-width: 360px;
     max-width: calc(100vw - 32px);
     width: var(--notification-dropdown-width);
+}
+
+.dropdown.header-notification .notification-item-icon {
+    --icon-dimension: 34px;
+    width: var(--icon-dimension);
+    height: var(--icon-dimension);
+    border: 1px solid grey;
+    flex: 0 0 auto;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    padding: 3px;
+}
+
+.dropdown.header-notification .notification-item-icon img {
+    width: 100%;
+    height: 100%;
 }
 
 @media (min-width: 992px) {
