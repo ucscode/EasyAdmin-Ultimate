@@ -69,8 +69,12 @@ final class EauContext
      * 
      * @return array
      */
-    public function getNotifications(User $user, array $options = []): array
+    public function getNotifications(?User $user, array $options = []): array
     {
+        if(!$user) {
+            return [];
+        }
+        
         $optionResolver = new OptionsResolver();
 
         $optionResolver->setDefaults([
@@ -88,7 +92,7 @@ final class EauContext
         ;
 
         $options = $optionResolver->resolve($options);
-        
+
         $notificationRepository = $this->entityManager->getRepository(Notification::class);
 
         $criteria = array_replace($options['criteria'], [
