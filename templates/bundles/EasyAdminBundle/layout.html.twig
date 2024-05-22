@@ -22,6 +22,11 @@
         {% endif %}
     {% endblock %}
 
+    <div id="app-user-context" 
+        data-user-token="{{ csrf_token('app-user') }}"
+        data-app-url="{{ asset('') }}"
+        data-async-notification-route="{{ path('async_notification') }}"
+    ></div>
 {% endblock %}
 
 {% block responsive_header_logo '' %}

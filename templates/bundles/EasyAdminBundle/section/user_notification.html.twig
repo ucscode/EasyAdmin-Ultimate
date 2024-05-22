@@ -1,54 +1,46 @@
+{% set notification_alerts = eau.notifications(app.user, {criteria: {seenByUser: false}})|length %}
+{% set notification_total = app.user.notifications|length %}
+
 {% set header_notification_dropdown %}
     <ul class="dropdown-menu dropdown-menu-end py-2 px-3 fs-13px">
-        <li>
-            <div class="d-flex justify-content-between align-items-center">
-                <div class='fw-semibold'>Notifications</div>
-                <button class="btn btn-sm btn-link fs-12px">
-                    Mark all as read
-                </button>
-            </div>
-        </li>
-        <li><hr class="dropdown-divider"></li>
-        <li>
-            {% block header_notification_container %}
-            <div class="notification-container">
-                <div class="notification-item d-flex">
-                    <div class='notification-item-icon {{ notification_item_class|default('bg-light') }}'>
-                        <img src='{{ asset('/resource/images/notification-icon.png') }}'>    
-                    </div>
-                    <div class='flex-fill px-2'>
-                        <div class="fw-semibold">You have received a new operating system from your device upgrade</div>
-                        <div class='border-top d-none'></div>
-                        <span class='d-block fs-11px text-end'>Sep 10, 2024 - 9:55 AM</span>
-                    </div>
-                    <div class=''>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                ...
-                            </button>
-                            <ul class="dropdown-menu fs-12px">
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        Mark as read
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        Delete
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+    
+        <li class='notification-header'>
+            {% block notification_header %}
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class='fw-semibold'>Notifications</div>
+                    {% if notification_total %}
+                        <button class="btn btn-sm btn-link fs-12px" data-notification-action="read-all">
+                            Mark all as read
+                        </button>
+                    {% endif %}
                 </div>
-            </div>
+                <div class='border-bottom my-2'></div>
             {% endblock %}
         </li>
-        <li><hr class="dropdown-divider"></li>
-        <li>
-            <a class='text-center d-block p-1' href='#'>
-                Notification history
-            </a>
+
+        <li class="notification-body">
+            {% block notification_body %}
+                {% if notification_total %}
+                    <div class="notification-container">
+                        {% for notification in eau.notifications(app.user, {limit: 4}) %}
+                            {% include eau.templatePath('section/notification_item') with {'notification': notification} %}
+                        {% endfor %}
+                    </div> {# notification-container #}
+                {% else %}
+                    <div class="p-2 text-bg-light rounded">
+                        <i class="fas fa-question-circle"></i>
+                        You have not received any notification
+                    </div>
+                {% endif %}
+            {% endblock %}
+        </li>
+
+        <li class="notification-footer">
+            {% block notification_footer %}
+                {% if notification_total %}
+                    <a class='text-center d-block p-1' href='#'>Notification history</a>
+                {% endif %}
+            {% endblock %}
         </li>
     </ul>
 {% endset %}
@@ -56,10 +48,10 @@
 <div class="user-notification-menu {{ baseClass|default('ms-3') }}">
     {% block header_notification %}
         <div class="dropdown header-notification">
-            <a class="btn btn-secondary btn-notification position-relative" type="button" data-bs-offset="0,5" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                <i class="fas fa-bell animate__animated animate__swing animate__infinite"></i>
-                <span class="badge text-bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">
-                    3
+            <a class="btn btn-secondary btn-notification position-relative" data-notification-anchor type="button" data-bs-offset="0,5" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                <i class="fas fa-bell icon animate__animated animate__infinite {{ notification_alerts != 0 ? 'animate__swing' }}"></i>
+                <span class="badge text-bg-danger position-absolute top-0 start-100 translate-middle rounded-pill {{ not notification_alerts ? 'd-none' }}">
+                    <span data-count>{{ notification_alerts }}</span>
                     <span class="visually-hidden">unread messages</span>
                 </span>
             </a>

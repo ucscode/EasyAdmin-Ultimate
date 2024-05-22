@@ -14,7 +14,7 @@ class Notification
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -34,9 +34,6 @@ class Notification
 
     #[ORM\Column]
     private ?bool $seenByUser = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $actionText = null;
 
     #[ORM\ManyToOne(inversedBy: 'notifications')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
@@ -137,18 +134,6 @@ class Notification
     public function setSeenByUser(bool $seen): static
     {
         $this->seenByUser = $seen;
-
-        return $this;
-    }
-
-    public function getActionText(): ?string
-    {
-        return $this->actionText;
-    }
-
-    public function setActionText(?string $actionText): static
-    {
-        $this->actionText = $actionText;
 
         return $this;
     }

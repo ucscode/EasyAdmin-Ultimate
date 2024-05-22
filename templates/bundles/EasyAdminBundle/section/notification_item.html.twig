@@ -1,0 +1,40 @@
+{% set action = notification.actionUrl %}
+
+<div class="notification-item {{ not notification.seenByUser ? 'unread' }} d-flex" data-notification-identifier="{{ notification.id|base64_encode }}">
+    <div class='notification-item-icon {{ notification_item_class|default('bg-light') }}'>
+        <img src='{{ notification.imageUrl ?? asset('/resource/images/notification-icon.png') }}'>    
+    </div>
+    <div class='flex-fill px-2'>
+        <div class="fw-semibold mb-1 notification-content">
+            <a class="notification-link {{ action ? 'has-link' }}" href='{{ action|default('javascript:void(0)') }}' target="{{ action ? '_blank' : '_self' }}">
+                {{ notification.message }}
+            </a>
+        </div>
+        <div class='fs-11px text-end notification-time'>
+            {{ notification.createdAt.format('M d, Y - h:i A') }}
+        </div>
+    </div>
+    {% block notification_handler %}
+        <div class='notification-control'>
+            <div class="dropdown">
+                <button class="btn btn-secondary btn-notification-control bg-transparent shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    ...
+                </button>
+                <ul class="dropdown-menu fs-12px">
+                    <li>
+                        <a class="dropdown-item" data-notification-action="read" href="#">
+                            Mark as read
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" data-notification-action="delete" href="#">
+                            Delete
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endblock %}
+</div>
+
+<div class='border my-2'></div>

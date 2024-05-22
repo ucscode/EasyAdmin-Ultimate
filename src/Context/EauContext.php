@@ -2,8 +2,12 @@
 
 namespace App\Context;
 
+use App\Entity\User\Notification;
+use App\Entity\User\User;
 use App\Service\ConfigurationService;
 use App\Service\ModalService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Twig\Environment;
 
 final class EauContext
@@ -11,7 +15,8 @@ final class EauContext
     public function __construct(
         protected ConfigurationService $configurationService, 
         protected ModalService $modalService,
-        protected Environment $twig
+        protected Environment $twig,
+        protected EntityManagerInterface $entityManager
     )
     {
     }
@@ -55,5 +60,46 @@ final class EauContext
         }
 
         return $modalContainer;
+    }
+
+    /**
+     * Get Notifications of a user in descending order
+     * 
+     * This is required to reduce the sorting load and iterative filtering for better optimization
+     * 
+     * @return array
+     */
+    public function getNotifications(User $user, array $options = []): array
+    {
+        $optionResolver = new OptionsResolver();
+
+        $optionResolver->setDefaults([
+            'criteria' => [],
+            'orderBy' => ['id' => 'DESC'],
+            'limit' => null,
+            'offset' => null,
+        ]);
+
+        $optionResolver
+            ->setAllowedTypes('criteria', 'array')
+            ->setAllowedTypes('orderBy', 'array')
+            ->setAllowedTypes('limit', ['integer', 'null'])
+            ->setAllowedTypes('offset', ['integer', 'null'])
+        ;
+
+        $options = $optionResolver->resolve($options);
+        
+        $notificationRepository = $this->entityManager->getRepository(Notification::class);
+
+        $criteria = array_replace($options['criteria'], [
+            'user' => $user,
+        ]);
+
+        return $notificationRepository->findBy(
+            $criteria, 
+            $options['orderBy'], 
+            $options['limit'], 
+            $options['offset']
+        );
     }
 }

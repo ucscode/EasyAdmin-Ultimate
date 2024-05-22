@@ -42,7 +42,7 @@ class UserFixtures extends Fixture
         for($x = 0; $x < self::LIMIT; $x++) {
             if($x) {
                 $data = [
-                    'uniqueId' => (new KeyGenerator())->generateKey(8),
+                    'uniqueId' => $faker->regexify('\w{7}'), // (new KeyGenerator())->generateKey(8),
                     'roles' => [
                         RoleUtils::ROLE_USER
                     ],
