@@ -12,7 +12,7 @@ use Faker\Generator;
 
 class NotificationFixture extends Fixture implements DependentFixtureInterface
 {
-    public const LIMIT = 9;
+    public const LIMIT = 20;
 
     public function getDependencies()
     {

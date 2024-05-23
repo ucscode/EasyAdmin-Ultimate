@@ -1,1 +1,52 @@
-wow
+{% extends eau.templatePath("layout") %}
+
+{% block main %}
+
+    <div class="row">
+
+        {% block notification_main %}
+            <div class="col-xxl-6 col-lg-9 col-md-10 mx-auto">
+                        
+                <div class="mb-3 text-end">
+                    <button class="btn btn-secondary" data-notification-action="read-all">
+                        <i class="fas fa-check me-1"></i> Mark all as read
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class='card-body p-md-4'>
+
+                        <div class="notification-global notification-container notification-list mb-3">
+                            {% block notification_list %}
+                                {% for notification in pager %}
+                                    {% include eau.templatePath('section/notification_item') with {'notification': notification} %}
+                                {% endfor %}
+                            {% endblock %}
+                        </div>
+                        
+                        {% block notification_nav %}
+                            <div class="row row-cols-2 notification-nav">
+                                <div class="col notification-nav-older">
+                                    {% if pager.hasNextPage() %}
+                                        <a class='nav-older-link' href='{{ ea_url().setRoute("app_notification").set("page", pager.getNextPage()) }}'>
+                                            See Older Notifications
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <div class="col notification-nav-newer text-end">
+                                    {% if pager.hasPreviousPage() %}
+                                        <a class='nav-newer-link' href='{{ ea_url().setRoute("app_notification").set("page", pager.getPreviousPage()) }}'>
+                                            See Newer Notifications
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endblock %}
+                        
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+
+    </div>
+{% endblock %}

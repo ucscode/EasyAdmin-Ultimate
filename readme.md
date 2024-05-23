@@ -36,6 +36,8 @@ For detailed usage instructions and documentation, please refer to the following
 
 - [EasyAdmin Documentation](https://symfony.com/doc/current/bundles/EasyAdminBundle/index.html): Official documentation for EasyAdmin bundle, offering detailed documentation on installation, configuration, and usage of EasyAdmin for Symfony applications.
 
+- [EasyAdmin SymfonyCast](https://symfonycasts.com/screencast/easyadminbundle/install): Official video screening page, providing step by step video footages on how to use EasyAdmin.
+
 You can also explore the features and components included in EasyAdmin Ultimate and start leveraging them in your Symfony projects to facilitate development workflows.
 
 ## License

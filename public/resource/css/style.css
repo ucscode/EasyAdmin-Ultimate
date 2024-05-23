@@ -112,7 +112,11 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     width: var(--notification-dropdown-width);
 }
 
-.dropdown.header-notification .notification-item-icon {
+.notification-global {
+    list-style: none;
+}
+
+.notification-global .notification-item-icon {
     --icon-dimension: 34px;
     width: var(--icon-dimension);
     height: var(--icon-dimension);
@@ -123,32 +127,63 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     padding: 3px;
 }
 
-.dropdown.header-notification .notification-item-icon img {
+.notification-global .notification-item-icon img {
     width: 100%;
     height: 100%;
 }
 
-.notification-container .notification-item {
-    padding: 0.3rem;
+.notification-global .notification-item {
+    --item-padding: 0.3rem;
+    padding: var(--item-padding);
     border-radius: 0.3rem;
 }
 
-.notification-container .notification-item.unread {
+.notification-global .notification-item.unread {
     background-color: var(--bs-gray-200);
 }
 
-.notification-container .notification-item.deleted {
+.notification-global .notification-item.deleted {
     opacity: 0.15;
     background: var(--bs-danger-bg-subtle);
 }
 
-.notification-container .notification-item.deleted .notification-control {
+.notification-global .notification-item.deleted .notification-control {
     display: none;
+}
+
+.notification-global .pre-content {
+    padding: 0 0.5rem;
+}
+
+.notification-global .notification-item .notification-link {
+    color: var(--bs-gray-600);
+    font-weight: 500;
+}
+
+.content-top {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bs-white);
 }
 
 @media (min-width: 992px) {
     .eau-security-wrapper {
         margin: auto;
         width: 100%;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        width: 100%;
+    }
+
+    .notification-global.notification-list .notification-item {
+        --item-padding: 0.8rem;
+    }
+
+    .notification-global.notification-list .pre-content {
+        padding: 0 1rem;
     }
 }

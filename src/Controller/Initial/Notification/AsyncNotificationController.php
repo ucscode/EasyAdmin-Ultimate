@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Initial;
+namespace App\Controller\Initial\Notification;
 
 use App\Entity\User\Notification;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
 /**
  * For information about routing condition:

@@ -98,7 +98,7 @@ final class EauContext
         $criteria = array_replace($options['criteria'], [
             'user' => $user,
         ]);
-
+        
         return $notificationRepository->findBy(
             $criteria, 
             $options['orderBy'], 

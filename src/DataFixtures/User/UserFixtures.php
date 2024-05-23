@@ -15,7 +15,7 @@ use Ucscode\KeyGenerator\KeyGenerator;
  */
 class UserFixtures extends Fixture
 {
-    public const LIMIT = 20;
+    public const LIMIT = 5;
 
     public const DEFAULT_USER = [
         'uniqueId' => '87e60f2b',
@@ -24,7 +24,7 @@ class UserFixtures extends Fixture
         ],
         'password' => '123456',
         'email' => 'root@localhost.com',
-        'username' => 'ucscode',
+        'username' => 'admin',
         'isVerified' => true,
     ];
 

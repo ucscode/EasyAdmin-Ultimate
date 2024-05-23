@@ -54,7 +54,7 @@ class CodeInfusionExtension extends AbstractExtension
          * @var \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext|null
          */
         $easyAdminContext = $this->requestStack->getCurrentRequest()->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
-
+        
         foreach($entities as $entityInstance) {
 
             $implementations = $easyAdminContext ? class_implements($easyAdminContext->getDashboardControllerFqcn()) : [];
