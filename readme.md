@@ -42,13 +42,13 @@ You can also explore the features and components included in EasyAdmin Ultimate 
 
 ## License
 
-Symfony PowerPack is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+EasyAdmin Ultimate is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## Contribution
 
 If you would like to contribute to the project, you can do so in several ways:
 
-- **Report Issues**: If you encounter any bugs, issues, or have feature requests, please [open an issue](https://github.com/ucscode/symfony-easyadmin-powerpack/issues) on GitHub. Providing detailed information about the problem or suggestion will help us address it more effectively.
+- **Report Issues**: If you encounter any bugs, issues, or have feature requests, please [open an issue](https://github.com/ucscode/easyadmin-ultimate/issues) on GitHub. Providing detailed information about the problem or suggestion will help us address it more effectively.
 
 - **Submit Pull Requests**: If you would like to contribute code enhancements, bug fixes, or new features, please fork the repository, make your changes, and submit a pull request. Make sure to follow the coding standards and include relevant tests and documentation for your changes.
 
@@ -60,7 +60,7 @@ Thank you for considering contributing to EasyAdmin Ultimate!
 
 ## Disclaimer
 
-Symfony PowerPack is a personal project created by [Uchenna Ajah](http://ucscode.com) and is not affiliated with, endorsed by, or sponsored by the Symfony team. Symfony and EasyAdmin are trademarks of their respective owners. This project is not an official product or package from the Symfony team and should not be misconstrued as such.
+EasyAdmin Ultimate is a personal project created by [Uchenna Ajah](http://ucscode.com) and is not affiliated with, endorsed by, or sponsored by the Symfony team. Symfony and EasyAdmin are trademarks of their respective owners. This project is not an official product or package from the Symfony team and should not be misconstrued as such.
 
 Please note that while EasyAdmin Ultimate leverages Symfony and EasyAdmin components, it is a standalone project with its own goals and objectives. Any opinions expressed within this project are solely those of the project creator and contributors and do not necessarily reflect the views or opinions of the Symfony team or its affiliates.
 
