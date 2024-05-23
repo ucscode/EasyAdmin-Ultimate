@@ -6,9 +6,10 @@
 'use strict';
 
 $(function() {
+
     // get app context
-    const appContext = $("#app-user-context").get(0).dataset;
-    console.log(appContext)
+    const appContext = $("#app-user-context").get(0)?.dataset;
+    
     // Auto display modal on document load
     $(".eau-modal[data-bs-visible]").each(function() {
         const render = $(this).attr('data-bs-visible');
@@ -20,7 +21,7 @@ $(function() {
         const input = $($(this).attr('data-password-toggle'));
         if(input.length) input.attr('type', (index, attr) => attr == 'text' ? 'password' : 'text');
     });
-
+    
     // Update user notifications
     $('[data-notification-action]').click(function(e) {
         e.preventDefault();

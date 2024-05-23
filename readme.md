@@ -19,7 +19,7 @@ EasyAdmin Ultimate is a comprehensive enhancement package built on top of the Sy
 You can install EasyAdmin Ultimate via Composer. Run the following command:
 
 ```bash
-composer require ucscode/easyadmin-ultimate
+composer create-project ucscode/easyadmin-ultimate
 ```
 
 Once installed, run the following command to get your project ready
