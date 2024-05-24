@@ -2,20 +2,26 @@
 
 namespace App\Controller\Admin\Crud;
 
+use App\Configuration\ContentSlotPattern;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
-use App\Entity\CodeInfusion;
-use App\Utils\CodeInfusionUtils;
+use App\Entity\ContentSlot;
+use App\Utils\ContentSlotUtils;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class CodeInfusionCrudController extends AbstractAdminCrudController
+class ContentSlotCrudController extends AbstractAdminCrudController
 {
+    public function __construct(protected ContentSlotPattern $contentSlotPattern)
+    {
+        
+    }
+
     public static function getEntityFqcn(): string
     {
-        return CodeInfusion::class;
+        return ContentSlot::class;
     }
 
     public function configureFields(string $pageName): iterable
@@ -25,13 +31,13 @@ class CodeInfusionCrudController extends AbstractAdminCrudController
         ;
 
         yield ChoiceField::new('slot')
-            ->setFormTypeOption('choices', CodeInfusionUtils::getChoices('SLOT_'))
+            ->setFormTypeOption('choices', ContentSlotUtils::getChoices('SLOT_'))
             ->setHelp('Where in a page should the code be placed?')
             ->onlyOnForms()
         ;
 
         yield ChoiceField::new('targets')
-            ->setFormTypeOption('choices', CodeInfusionUtils::getChoices('TARGET_'))
+            ->setFormTypeOption('choices', $this->getContentSlotChoices())
             ->allowMultipleChoices()
             ->setHelp('In what panel should this code be available?')
             ->onlyOnForms()
@@ -47,5 +53,16 @@ class CodeInfusionCrudController extends AbstractAdminCrudController
             ->setLanguage('xml')
             ->setNumOfRows(20)
         ;
+    }
+
+    protected function getContentSlotChoices(): array
+    {
+        $choices = [];
+
+        foreach($this->contentSlotPattern->getPatterns() as $pattern) {
+            $choices[$pattern->get('title')] = $pattern->get(ContentSlotPattern::OPTION_OFFSET);
+        }
+        
+        return $choices;
     }
 }

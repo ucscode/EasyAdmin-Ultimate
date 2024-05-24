@@ -5,7 +5,7 @@ namespace App\Controller\Admin\Abstracts;
 use App\Controller\Admin\Crud\User\UserCrudController;
 use App\Controller\Admin\Interfaces\AdminControllerInterface;
 use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
-use App\Entity\CodeInfusion;
+use App\Entity\ContentSlot;
 use App\Entity\User\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -50,7 +50,7 @@ abstract class AbstractAdminDashboardController extends AbstractInitialDashboard
 
         yield MenuItem::section('Misc');
 
-        yield MenuItem::linkToCrud('Code Infusion', 'fa fa-code', CodeInfusion::class);
+        yield MenuItem::linkToCrud('Code Infusion', 'fa fa-code', ContentSlot::class);
         yield MenuItem::linkToLogout('Logout', 'fas fa-arrow-right-from-bracket');
     }
 

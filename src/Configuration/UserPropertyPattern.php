@@ -23,17 +23,17 @@ class UserPropertyPattern extends AbstractPattern
     protected function buildPattern(): void
     {
         $this
-            ->setPattern('first_name')
+            ->addPattern('first_name')
 
-            ->setPattern('last_name')
+            ->addPattern('last_name')
 
-            ->setPattern('about', [
+            ->addPattern('about', [
                 'field' => TextareaField::class,
                 'label' => 'About GG',
                 'description' => 'This contains data about the user biography'
             ])
 
-            ->setPattern('balance', [
+            ->addPattern('balance', [
                 'label' => "Balance (USD UNIT)",
                 'value' => 0,
                 'field' => MoneyField::class,
@@ -43,7 +43,7 @@ class UserPropertyPattern extends AbstractPattern
                 'description' => 'User balance are saved as integer to avoid rounding errors! Therefore 9 USD will be saved as 900'
             ])
             
-            ->setPattern('has_premium_account', [
+            ->addPattern('has_premium_account', [
                 'field' => BooleanField::class,
                 'value' => false,
                 'mode' => ModeConstants::NO_PERMISSION

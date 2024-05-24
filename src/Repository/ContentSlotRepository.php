@@ -2,27 +2,27 @@
 
 namespace App\Repository;
 
-use App\Entity\CodeInfusion;
+use App\Entity\ContentSlot;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CodeInfusion>
+ * @extends ServiceEntityRepository<ContentSlot>
  *
- * @method CodeInfusion|null find($id, $lockMode = null, $lockVersion = null)
- * @method CodeInfusion|null findOneBy(array $criteria, array $orderBy = null)
- * @method CodeInfusion[]    findAll()
- * @method CodeInfusion[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ContentSlot|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ContentSlot|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ContentSlot[]    findAll()
+ * @method ContentSlot[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CodeInfusionRepository extends ServiceEntityRepository
+class ContentSlotRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CodeInfusion::class);
+        parent::__construct($registry, ContentSlot::class);
     }
 
     //    /**
-    //     * @return CodeInfusion[] Returns an array of CodeInfusion objects
+    //     * @return ContentSlot[] Returns an array of ContentSlot objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -36,7 +36,7 @@ class CodeInfusionRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?CodeInfusion
+    //    public function findOneBySomeField($value): ?ContentSlot
     //    {
     //        return $this->createQueryBuilder('c')
     //            ->andWhere('c.exampleField = :val')

@@ -5,12 +5,12 @@
 
 {% block head_javascript %}
     {{ parent() }}
-    {{ codeInfusion(constant('App\\Utils\\CodeInfusionUtils::SLOT_HEADER'))|raw }}
+    {{ _slot(constant('App\\Utils\\ContentSlotUtils::SLOT_HEADER'))|raw }}
 {% endblock %}
 
 {% block body_javascript %}
     {{ parent() }}
-    {{ codeInfusion(constant('App\\Utils\\CodeInfusionUtils::SLOT_FOOTER'))|raw }}
+    {{ _slot(constant('App\\Utils\\ContentSlotUtils::SLOT_FOOTER'))|raw }}
 {% endblock %}
 
 {% block wrapper_wrapper %}

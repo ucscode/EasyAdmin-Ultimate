@@ -16,16 +16,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 abstract class AbstractPattern
 {
-    protected const OPTION_OFFSET = 'option._name';
+    public const OPTION_OFFSET = 'option._name';
 
     abstract protected function buildPattern(): void;
 
     /**
      * @var array<ParameterBag> $options
      */
-    protected array $options = [];
+    private array $patterns = [];
     
-    protected OptionsResolver $resolver;
+    private OptionsResolver $resolver;
 
     public function __construct()
     {
@@ -34,22 +34,37 @@ abstract class AbstractPattern
         $this->buildPattern();
     }
 
-    public function setPattern(string $name, array|ParameterBag $options = []): static
+    /**
+     * Add a new pattern or update an existing pattern
+     * 
+     * @param string $name  The name of the pattern
+     * @param array|ParameterBag $options   The configuration options of the pattern
+     */
+    public function addPattern(string $name, array|ParameterBag $pattern = []): static
     {
-        if($options instanceof ParameterBag) {
-            $options = $options->all();
+        if($pattern instanceof ParameterBag) {
+            $pattern = $pattern->all();
         }
 
-        $options[self::OPTION_OFFSET] = $name;
+        $unresolvedPattern = [self::OPTION_OFFSET => $name] + array_replace($this->patterns[$name] ?? [], $pattern);
 
-        $this->options[$name] = new ParameterBag($this->resolver->resolve($options));
+        $this->patterns[$name] = new ParameterBag($this->resolver->resolve($unresolvedPattern));
         
+        return $this;
+    }
+
+    public function removePattern(string $name): static
+    {
+        if(array_key_exists($name, $this->patterns)) {
+            unset($this->patterns[$name]);
+        }
+
         return $this;
     }
 
     public function getPattern(string $name): ?ParameterBag
     {
-        return $this->options[$name] ?? null;
+        return $this->patterns[$name] ?? null;
     }
 
     /**
@@ -57,7 +72,7 @@ abstract class AbstractPattern
      */
     public function getPatterns(): array
     {
-        return $this->options;
+        return $this->patterns;
     }
 
     protected function configureOptions(OptionsResolver $resolver): void

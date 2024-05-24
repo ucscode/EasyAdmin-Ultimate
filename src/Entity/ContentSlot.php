@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\CodeInfusionRepository;
+use App\Repository\ContentSlotRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CodeInfusionRepository::class)]
-class CodeInfusion
+#[ORM\Entity(repositoryClass: ContentSlotRepository::class)]
+class ContentSlot
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
