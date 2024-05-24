@@ -7,8 +7,9 @@ use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User\User;
 use App\Repository\User\UserRepository;
-use App\Utils\Stateful\DateTimeUtils;
-use App\Utils\Stateless\RoleUtils;
+use App\Security\PasswordStrengthEstimator;
+use App\Utils\RoleUtils;
+use Carbon\Carbon;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -24,6 +25,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Ucscode\KeyGenerator\KeyGenerator;
 
 class UserCrudController extends AbstractAdminCrudController
@@ -32,7 +36,8 @@ class UserCrudController extends AbstractAdminCrudController
 
     public function __construct(
         protected AdminUrlGenerator $adminUrlGenerator,
-        protected UserPasswordHasherInterface $userPasswordHasher
+        protected UserPasswordHasherInterface $userPasswordHasher,
+        protected PasswordStrengthEstimator $passwordStrengthEstimator
     ) {
         $this->keyGenerator = new KeyGenerator();
     }
@@ -68,7 +73,7 @@ class UserCrudController extends AbstractAdminCrudController
         yield DateTimeField::new('lastSeen')
             ->hideOnForm()
             ->formatValue(function (DateTimeInterface $value) {
-                return (new DateTimeUtils($value))->getRelativeTime(true);
+                return Carbon::instance($value)->diffForHumans();
             })
         ;
 
@@ -149,9 +154,13 @@ class UserCrudController extends AbstractAdminCrudController
         return $entity;
     }
 
+    /**
+     * @param User $entityInstance
+     */
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->hashEntityPassword($entityInstance, $entityInstance->getPassword());
+        $hashedPassword = $this->userPasswordHasher->hashPassword($entityInstance, $entityInstance->getPassword());    
+        $entityInstance->setPassword($hashedPassword);
 
         /**
          * Create an persist properties here
@@ -160,18 +169,20 @@ class UserCrudController extends AbstractAdminCrudController
         parent::persistEntity($entityManager, $entityInstance);
     }
 
+    /**
+     * @param \App\Entity\User\User $entityInstance
+     */
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $submittedPassword = trim($entityInstance->getPassword() ?? '');
-
+        $submittedPassword = $entityInstance->getPassword();
         $originalEntityData = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
 
-        /**
-         * @var User $entityInstance
-         */
-        $entityInstance->setPassword($originalEntityData['password'], false); // restore original password
+        $hashedPassword = empty($submittedPassword) ? $originalEntityData['password'] : $this->userPasswordHasher->hashPassword(
+            $entityInstance,
+            $submittedPassword
+        );
 
-        empty($submittedPassword) ?: $this->hashEntityPassword($entityInstance, $submittedPassword);
+        $entityInstance->setPassword($hashedPassword);
 
         /**
          * Make your custom modification here
@@ -187,6 +198,18 @@ class UserCrudController extends AbstractAdminCrudController
                 'required' => $pageName == Crud::PAGE_NEW,
                 'attr' => [
                     'value' => ''
+                ],
+                'constraints' => [
+                    new Callback(function(?string $password, ExecutionContextInterface $context): void {
+                        if($password) {
+                            $callable = $this->passwordStrengthEstimator->getCallbackConstraintArgument(
+                                'password',
+                                PasswordStrength::STRENGTH_MEDIUM,
+                                'The new password is not strong enough'
+                            );
+                            call_user_func($callable, $password, $context);
+                        }
+                    })
                 ]
             ])
         ;
@@ -214,15 +237,5 @@ class UserCrudController extends AbstractAdminCrudController
         ];
 
         return $allowedRoles ?: RoleUtils::getChoices('ROLE_');
-    }
-
-    private function hashEntityPassword(User $entity, string $plainPassword): void
-    {
-        $entity->setPassword(
-            $this->userPasswordHasher->hashPassword(
-                $entity,
-                $plainPassword
-            )
-        );
     }
 }

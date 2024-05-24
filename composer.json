@@ -15,6 +15,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.1",
         "easycorp/easyadmin-bundle": "^4.9",
+        "nesbot/carbon": "^3.3",
         "pagerfanta/doctrine-orm-adapter": "^4.5",
         "pagerfanta/twig": "^4.5",
         "phpdocumentor/reflection-docblock": "^5.3",

@@ -17,7 +17,6 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PasswordStrength;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class RegistrationFormType extends AbstractType
 {
@@ -47,16 +46,12 @@ class RegistrationFormType extends AbstractType
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
-                    new Callback(function(string $password, ExecutionContextInterface $context): void {
-                        $estimation = $this->passwordStrengthEstimator->getPasswordStrength($password);
-                        if($estimation->get('score') < PasswordStrength::STRENGTH_MEDIUM) {
-                            $context
-                                ->buildViolation('Your password is weak')
-                                ->atPath('plainPassword')
-                                ->addViolation()
-                            ;
-                        };
-                    }),
+                    new Callback(
+                        $this->passwordStrengthEstimator->getCallbackConstraintArgument(
+                            'plainPassword', 
+                            PasswordStrength::STRENGTH_MEDIUM
+                        )
+                    ),
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [

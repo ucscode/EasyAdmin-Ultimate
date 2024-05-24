@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Utils\Stateless;
+namespace App\Utils;
 
-use App\Utils\Stateless\Abstracts\AbstractUtils;
+use App\Utils\Traits\ConstantUtilsTrait;
 
-final class CodeInfusionUtils extends AbstractUtils
+final class CodeInfusionUtils
 {
+    use ConstantUtilsTrait;
+
     public const SLOT_HEADER = 'HEADER';
     public const SLOT_FOOTER = 'FOOTER';
     public const TARGET_ADMIN = 'TARGET_ADMIN';

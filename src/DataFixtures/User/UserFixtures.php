@@ -3,12 +3,11 @@
 namespace App\DataFixtures\User;
 
 use App\Entity\User\User;
-use App\Utils\Stateless\RoleUtils;
+use App\Utils\RoleUtils;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Ucscode\KeyGenerator\KeyGenerator;
 
 /**
  * This fixture has not been resolved properly and may generate error

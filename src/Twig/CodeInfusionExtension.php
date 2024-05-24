@@ -6,7 +6,7 @@ use App\Controller\Admin\Interfaces\AdminControllerInterface;
 use App\Controller\Security\Interfaces\SecurityControllerInterface;
 use App\Controller\User\Interfaces\UserControllerInterface;
 use App\Entity\CodeInfusion;
-use App\Utils\Stateless\CodeInfusionUtils;
+use App\Utils\CodeInfusionUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use Symfony\Component\HttpFoundation\RequestStack;

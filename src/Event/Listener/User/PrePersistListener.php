@@ -19,7 +19,7 @@ use Doctrine\ORM\Events;
  */
 
 #[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: User::class)]
-class UserPrePersistListener
+class PrePersistListener
 {
     /**
      * do not add __constructor() with dependency injection unless 

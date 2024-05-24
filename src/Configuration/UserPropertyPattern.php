@@ -4,7 +4,6 @@ namespace App\Configuration;
 
 use App\Component\Abstracts\AbstractPattern;
 use App\Constants\ModeConstants;
-use App\Utils\Stateless\CaseConverter;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
@@ -13,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\String\UnicodeString;
 
 class UserPropertyPattern extends AbstractPattern
 {    
@@ -75,7 +75,11 @@ class UserPropertyPattern extends AbstractPattern
 
         $resolver
             ->setNormalizer('label', function(Options $options, ?string $label) {
-                return $label ?? ucwords(CaseConverter::toSentenceCase($options[self::OPTION_OFFSET]));
+                if(!$label) {
+                    $unicode = new UnicodeString($options[self::OPTION_OFFSET]);
+                    $label = $unicode->snake()->replace('_', ' ')->title(true);
+                }
+                return $label;
             })
             
             ->setNormalizer('field', function(Options $options, string $fieldFqcn) {

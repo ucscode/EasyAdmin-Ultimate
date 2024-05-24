@@ -3,8 +3,8 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
-use App\Utils\Stateless\CodeInfusionUtils;
 use App\Entity\CodeInfusion;
+use App\Utils\CodeInfusionUtils;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;

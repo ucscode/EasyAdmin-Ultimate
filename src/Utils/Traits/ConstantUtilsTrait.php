@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Utils\Stateless\Abstracts;
+namespace App\Utils\Traits;
 
 use ReflectionClass;
 
-abstract class AbstractUtils
+trait ConstantUtilsTrait
 {
     /**
      * Get all constants declared in the inheriting class
@@ -17,28 +17,28 @@ abstract class AbstractUtils
     }
 
     /**
-     * Get all or limited constants as Choice Field Options
+     * Get all the current class constants as an array representing Choice Field Options
      *
-     * This accepts a prefix to filter constants and then return it as choices to be selected
-     *
+     * @param string|null $havingPrefix Get only choice starting with a particular prefix
+     * @param bool $constantNameAsKey  Whether to use the constant name or value as array keys
      * @return array
      */
-    public static function getChoices(?string $prefix = null, bool $displayKey = false): array
+    public static function getChoices(?string $havingPrefix = null, bool $constantNameAsKey = false): array
     {
         $constants = self::getConstants();
 
-        if($prefix) {
-            $regexp = sprintf("/^%s/", $prefix);
+        if($havingPrefix) {
+            $regexp = sprintf("/^%s/", $havingPrefix);
             $constants = array_filter($constants, fn ($constantValue) => preg_match($regexp, $constantValue), ARRAY_FILTER_USE_KEY);
             $mapper = array_map(
                 fn ($constantValue) => preg_replace($regexp, '', $constantValue),
-                $displayKey ? array_keys($constants) : array_values($constants)
+                $constantNameAsKey ? array_keys($constants) : array_values($constants)
             );
         }
 
         $mapper = array_map(
             fn ($value) => trim(str_replace('_', ' ', $value)),
-            $mapper ?? ($displayKey ? array_keys($constants) : array_values($constants))
+            $mapper ?? ($constantNameAsKey ? array_keys($constants) : array_values($constants))
         );
 
         return array_combine($mapper, $constants); // Display Value => Submitted Value

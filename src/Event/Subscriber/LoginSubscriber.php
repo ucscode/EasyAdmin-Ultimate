@@ -3,7 +3,7 @@
 namespace App\Event\Subscriber;
 
 use App\Service\ConfigurationService;
-use App\Utils\Stateless\RoleUtils;
+use App\Utils\RoleUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;

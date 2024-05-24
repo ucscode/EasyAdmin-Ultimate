@@ -3,7 +3,7 @@
 namespace App\Entity\User;
 
 use App\Repository\User\UserRepository;
-use App\Utils\Stateless\RoleUtils;
+use App\Utils\RoleUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
