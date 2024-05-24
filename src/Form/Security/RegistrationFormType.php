@@ -3,6 +3,7 @@
 namespace App\Form\Security;
 
 use App\Entity\User\User;
+use App\Security\PasswordStrengthEstimator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -11,14 +12,16 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PasswordStrength;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class RegistrationFormType extends AbstractType
 {
-    public function __construct(protected RouterInterface $router)
+    public function __construct(protected RouterInterface $router, protected PasswordStrengthEstimator $passwordStrengthEstimator)
     {
 
     }
@@ -44,10 +47,16 @@ class RegistrationFormType extends AbstractType
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
-                    new PasswordStrength([
-                        'minScore' => PasswordStrength::STRENGTH_WEAK,
-                        'message' => 'Please use a stronger password',
-                    ]),
+                    new Callback(function(string $password, ExecutionContextInterface $context): void {
+                        $estimation = $this->passwordStrengthEstimator->getPasswordStrength($password);
+                        if($estimation->get('score') < PasswordStrength::STRENGTH_MEDIUM) {
+                            $context
+                                ->buildViolation('Your password is weak')
+                                ->atPath('plainPassword')
+                                ->addViolation()
+                            ;
+                        };
+                    }),
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [

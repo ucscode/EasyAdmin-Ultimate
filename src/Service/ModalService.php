@@ -3,9 +3,15 @@
 namespace App\Service;
 
 use App\Model\Modal\Modal;
-use App\Utils\Stateless\Constraint;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Webmozart\Assert\Assert;
 
+/**
+ * This service controls modal state between sessions and provide context that are rendered by twig
+ * If you need to render a modal in your page, use this service
+ * 
+ * @see https://github.com/webmozarts/assert
+ */
 class ModalService
 {
     public const SESSION_KEY = 'flash.modals';
@@ -56,7 +62,7 @@ class ModalService
      */
     protected function setModals(array $modalContainer): static
     {
-        Constraint::assertIsArrayOf($modalContainer, Modal::class);
+        Assert::allIsInstanceOf($modalContainer, Modal::class);
 
         $this->requestStack->getSession()->set(self::SESSION_KEY, $modalContainer);
 

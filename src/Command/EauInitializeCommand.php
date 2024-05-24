@@ -51,7 +51,7 @@ class EauInitializeCommand extends Command
                 $this->symfonyStyle->warning('You are currently in "development" environment');
             }
 
-            $this->updateComposerPackages();
+            // $this->updateComposerPackages();
             $this->computeAssetMapperResource();
             $this->updateUserProperties();
 
