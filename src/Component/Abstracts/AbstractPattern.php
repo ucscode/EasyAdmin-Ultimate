@@ -12,11 +12,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * default options and validation using Symfony's OptionsResolver. It ensures
  * that all options are validated and resolved consistently across the application.
  *
- * @package App\Component
+ * @package App\Component 
  */
 abstract class AbstractPattern
 {
-    public const OPTION_OFFSET = 'option._name';
+    public const ACCESS_KEY = 'pattern.[name]';
 
     abstract protected function buildPattern(): void;
 
@@ -46,7 +46,7 @@ abstract class AbstractPattern
             $pattern = $pattern->all();
         }
 
-        $unresolvedPattern = [self::OPTION_OFFSET => $name] + array_replace($this->patterns[$name] ?? [], $pattern);
+        $unresolvedPattern = [self::ACCESS_KEY => $name] + array_replace($this->patterns[$name] ?? [], $pattern);
 
         $this->patterns[$name] = new ParameterBag($this->resolver->resolve($unresolvedPattern));
         
@@ -78,8 +78,8 @@ abstract class AbstractPattern
     protected function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setRequired(self::OPTION_OFFSET)
-            ->setAllowedTypes(self::OPTION_OFFSET, 'string')
+            ->setRequired(self::ACCESS_KEY)
+            ->setAllowedTypes(self::ACCESS_KEY, 'string')
         ;
     }
 }

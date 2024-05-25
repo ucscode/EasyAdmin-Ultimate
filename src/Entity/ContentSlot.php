@@ -18,8 +18,8 @@ class ContentSlot
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 25)]
-    private ?string $slot = null;
+    #[ORM\Column(type: Types::JSON)]
+    private array $slots = [];
 
     #[ORM\Column(type: Types::JSON)]
     private array $targets = [];
@@ -59,14 +59,38 @@ class ContentSlot
         return $this;
     }
 
-    public function getSlot(): ?string
+    public function getSlots(): array
     {
-        return $this->slot;
+        return $this->slots;
     }
 
-    public function setSlot(string $slot): static
+    public function setSlots(array $slots): static
     {
-        $this->slot = $slot;
+        $this->slots = $slots;
+
+        return $this;
+    }
+
+    public function hasSlot(string $slot): bool
+    {
+        return in_array($slot, $this->slots, true);
+    }
+
+    public function addSlot(string $slot): static
+    {
+        if(!$this->hasSlot($slot)) {
+            $this->slots[] = $slot;
+        }
+
+        return $this;
+    }
+
+    public function removeSlot(string $slot): static
+    {
+        if(false !== $index = array_search($slot, $this->slots, true)) {
+            unset($this->slots[$index]);
+            $this->slots = array_values($this->slots);
+        }
 
         return $this;
     }

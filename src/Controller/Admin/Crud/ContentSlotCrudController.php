@@ -30,8 +30,12 @@ class ContentSlotCrudController extends AbstractAdminCrudController
             ->setHelp('Define a title to remember the code')
         ;
 
-        yield ChoiceField::new('slot')
-            ->setFormTypeOption('choices', ContentSlotUtils::getChoices('SLOT_'))
+        yield ChoiceField::new('slots')
+            ->setFormTypeOption('choices', [
+                'Header' => 'SLOT_HEADER',
+                'Footer' => 'SLOT_FOOTER'
+            ])
+            ->allowMultipleChoices()
             ->setHelp('Where in a page should the code be placed?')
             ->onlyOnForms()
         ;
@@ -60,7 +64,7 @@ class ContentSlotCrudController extends AbstractAdminCrudController
         $choices = [];
 
         foreach($this->contentSlotPattern->getPatterns() as $pattern) {
-            $choices[$pattern->get('title')] = $pattern->get(ContentSlotPattern::OPTION_OFFSET);
+            $choices[$pattern->get('title')] = $pattern->get(ContentSlotPattern::ACCESS_KEY);
         }
         
         return $choices;

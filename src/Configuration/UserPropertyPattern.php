@@ -76,7 +76,7 @@ class UserPropertyPattern extends AbstractPattern
         $resolver
             ->setNormalizer('label', function(Options $options, ?string $label) {
                 if(!$label) {
-                    $unicode = new UnicodeString($options[self::OPTION_OFFSET]);
+                    $unicode = new UnicodeString($options[self::ACCESS_KEY]);
                     $label = $unicode->snake()->replace('_', ' ')->title(true);
                 }
                 return $label;

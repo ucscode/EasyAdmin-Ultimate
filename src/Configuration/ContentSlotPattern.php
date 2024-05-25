@@ -13,27 +13,42 @@ class ContentSlotPattern extends AbstractPattern
 {
     use ConstantUtilsTrait;
     
+    public const ACCESS_TITLE = 'title';
+    public const ACCESS_PARENT_FQCN = 'ancestor';
+
     protected function buildPattern(): void
     {
+        # Slot content will be rendered only if the current controller is:
+
+        # An instance of AdminControllerInterface
+
         $this->addPattern('TARGET_ADMIN', [
-            'title' => 'Admin Interface',
-            'intent' => AdminControllerInterface::class,
+            self::ACCESS_TITLE => 'Admin Interface',
+            self::ACCESS_PARENT_FQCN => AdminControllerInterface::class,
         ]);
+
+        # An instance of UserControllerInterface
 
         $this->addPattern('TARGET_USER', [
-            'title' => 'User Interface',
-            'intent' => UserControllerInterface::class,
+            self::ACCESS_TITLE => 'User Interface',
+            self::ACCESS_PARENT_FQCN => UserControllerInterface::class,
         ]);
+
+        # An instance of SecurityControllerInterface
 
         $this->addPattern('TARGET_SECURITY', [
-            'title' => 'Security Interface',
-            'intent' => SecurityControllerInterface::class,
+            self::ACCESS_TITLE => 'Security Interface',
+            self::ACCESS_PARENT_FQCN => SecurityControllerInterface::class,
         ]);
 
+        # Not an instance of any of the pattern above
+
         $this->addPattern('TARGET_OTHERS', [
-            'title' => 'Any other interface',
-            'intent' => null,
+            self::ACCESS_TITLE => 'Other Interface',
+            self::ACCESS_PARENT_FQCN => null,
         ]);
+
+        // You can add more pattern here
     }
 
     protected function configureOptions(OptionsResolver $resolver): void
@@ -41,9 +56,12 @@ class ContentSlotPattern extends AbstractPattern
         parent::configureOptions($resolver);
 
         $resolver
-            ->setRequired(['title', 'intent'])
-            ->setAllowedTypes('title', 'string')
-            ->setAllowedTypes('intent', ['string', 'null'])
+            ->setRequired([
+                self::ACCESS_TITLE, 
+                self::ACCESS_PARENT_FQCN
+            ])
+            ->setAllowedTypes(self::ACCESS_TITLE, 'string')
+            ->setAllowedTypes(self::ACCESS_PARENT_FQCN, ['string', 'null'])
         ;
     }
 }

@@ -5,12 +5,12 @@
 
 {% block head_javascript %}
     {{ parent() }}
-    {{ _slot(constant('App\\Utils\\ContentSlotUtils::SLOT_HEADER'))|raw }}
+    {{ _slot('SLOT_HEADER')|raw }}
 {% endblock %}
 
 {% block body_javascript %}
     {{ parent() }}
-    {{ _slot(constant('App\\Utils\\ContentSlotUtils::SLOT_FOOTER'))|raw }}
+    {{ _slot('SLOT_FOOTER')|raw }}
 {% endblock %}
 
 {% block wrapper_wrapper %}
