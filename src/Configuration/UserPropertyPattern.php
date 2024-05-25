@@ -15,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\UnicodeString;
 
 class UserPropertyPattern extends AbstractPattern
-{    
+{
     /**
      * The pattern defined here are merily examples
      * You should define pattenrs that suits your project
@@ -37,12 +37,12 @@ class UserPropertyPattern extends AbstractPattern
                 'label' => "Balance (USD UNIT)",
                 'value' => 0,
                 'field' => MoneyField::class,
-                'configureField' => function(MoneyField $field) {
+                'configureField' => function (MoneyField $field) {
                     $field->setCurrency('USD');
                 },
                 'description' => 'User balance are saved as integer to avoid rounding errors! Therefore 9 USD will be saved as 900'
             ])
-            
+
             ->addPattern('has_premium_account', [
                 'field' => BooleanField::class,
                 'value' => false,
@@ -59,12 +59,12 @@ class UserPropertyPattern extends AbstractPattern
             ->setDefaults([
                 'label' => null,
                 'value' => null,
-                'mode' => ModeConstants::READ|ModeConstants::WRITE,
+                'mode' => ModeConstants::READ | ModeConstants::WRITE,
                 'field' => TextField::class,
                 'configureField' => null,
                 'description' => null,
             ]);
-        
+
         $resolver
             ->setAllowedTypes('label', ['string', 'null'])
             ->setAllowedTypes('mode', 'integer')
@@ -74,15 +74,15 @@ class UserPropertyPattern extends AbstractPattern
         ;
 
         $resolver
-            ->setNormalizer('label', function(Options $options, ?string $label) {
+            ->setNormalizer('label', function (Options $options, ?string $label) {
                 if(!$label) {
                     $unicode = new UnicodeString($options[self::ACCESS_KEY]);
                     $label = $unicode->snake()->replace('_', ' ')->title(true);
                 }
                 return $label;
             })
-            
-            ->setNormalizer('field', function(Options $options, string $fieldFqcn) {
+
+            ->setNormalizer('field', function (Options $options, string $fieldFqcn) {
                 if(!in_array(FieldInterface::class, \class_implements($fieldFqcn))) {
                     throw new InvalidOptionsException(sprintf(
                         'field %s must implement %s',
@@ -92,7 +92,7 @@ class UserPropertyPattern extends AbstractPattern
                 };
 
                 $field = $fieldFqcn::new('metaValue', $options['label']);
-                
+
                 if(is_callable($options['configureField'])) {
                     call_user_func($options['configureField'], $field);
                 }

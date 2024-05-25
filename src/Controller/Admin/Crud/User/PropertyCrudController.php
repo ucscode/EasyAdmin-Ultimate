@@ -30,12 +30,11 @@ class PropertyCrudController extends AbstractAdminCrudController
     protected ?User $propertyOwner;
 
     public function __construct(
-        protected EntityManagerInterface $entityManager, 
+        protected EntityManagerInterface $entityManager,
         protected RequestStack $requestStack,
         protected AdminUrlGenerator $adminUrlGenerator,
         protected KernelInterface $kernel
-    )
-    {
+    ) {
         $this->setPropertyOwner();
     }
 
@@ -45,7 +44,7 @@ class PropertyCrudController extends AbstractAdminCrudController
     }
 
     public function configureCrud(Crud $crud): Crud
-    {        
+    {
         $indexTitle = ucfirst(sprintf('%s [properties]', $this->propertyOwner->getEmail()));
         $editTitle = ucfirst(sprintf('%s [edit property]', $this->propertyOwner->getEmail()));
 
@@ -95,8 +94,8 @@ class PropertyCrudController extends AbstractAdminCrudController
 
                     ->displayIf(fn (Property $entity) => $entity->hasMode(ModeConstants::WRITE))
 
-                    ->linkToUrl(function(Property $entity) {
-                        
+                    ->linkToUrl(function (Property $entity) {
+
                         return $this->adminUrlGenerator
                             ->setDashboard(DashboardController::class)
                             ->setController(PropertyCrudController::class)
@@ -108,7 +107,7 @@ class PropertyCrudController extends AbstractAdminCrudController
                     })
                 ;
             })
-            
+
         ;
     }
 
@@ -152,7 +151,7 @@ class PropertyCrudController extends AbstractAdminCrudController
         }
 
         $parameters = (new UserPropertyPattern())->getPattern($entity->getMetaKey());
-        
+
         return $parameters->get('field');
     }
 
@@ -171,7 +170,7 @@ class PropertyCrudController extends AbstractAdminCrudController
          * @var \App\Repository\User\UserRepository
          */
         $userRepository = $this->entityManager->getRepository(User::class);
-        
+
         $this->propertyOwner = $userRepository->find($userId);
     }
 }

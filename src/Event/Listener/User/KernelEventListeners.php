@@ -36,11 +36,11 @@ class KernelEventListeners
 
                 /**
                  * To ensure that updates to the "last seen" information do not significantly impact the overall performance of the platform;
-                 * Instead of updating the lastSeen field on every request, it can be updated periodically. 
+                 * Instead of updating the lastSeen field on every request, it can be updated periodically.
                  * For example, it might only be updated if a certain amount of time has passed since the last update (e.g., 5 minutes).
                  */
                 $updateLastSeenAfterSeconds = 60 * 5; // update after every $x seconds
-                
+
                 /**
                  * Update the current user last seen
                  */

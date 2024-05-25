@@ -53,11 +53,11 @@ class PasswordStrengthEstimator
 
     /**
      * Returns a callable that should passed as an argument to the Callback Constraint constructor
-     * 
+     *
      * $callback = $estimator->getCallbackConstraintArgument(...);
-     * 
+     *
      * new Callback($callback);
-     * 
+     *
      * @param string $atPath   The property path that describes the location of the property within the object
      * @param int $minScore    The minimum required strength for password validation
      * @param string $message  The default message supplied when the password does not reach the minimum required score.
@@ -65,8 +65,8 @@ class PasswordStrengthEstimator
     public function getCallbackConstraintArgument(string $atPath, int $minScore, ?string $message = null): callable
     {
         Assert::range($minScore, PasswordStrength::STRENGTH_VERY_WEAK, PasswordStrength::STRENGTH_VERY_STRONG);
-        
-        return function(string $password, ExecutionContextInterface $context) use($atPath, $minScore, $message): void {
+
+        return function (string $password, ExecutionContextInterface $context) use ($atPath, $minScore, $message): void {
             $estimation = $this->getPasswordStrength($password);
             if($estimation->get('score') < $minScore) {
                 $context
@@ -80,7 +80,7 @@ class PasswordStrengthEstimator
 
     /**
      * Recursively convert all array values to ParameterBag Instances
-     * 
+     *
      * @param array $parameters The parameters to convert into parameter bag
      * @return ParameterBag The resultant parameter bag
      */

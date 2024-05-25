@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * default options and validation using Symfony's OptionsResolver. It ensures
  * that all options are validated and resolved consistently across the application.
  *
- * @package App\Component 
+ * @package App\Component
  */
 abstract class AbstractPattern
 {
@@ -24,7 +24,7 @@ abstract class AbstractPattern
      * @var array<ParameterBag> $options
      */
     private array $patterns = [];
-    
+
     private OptionsResolver $resolver;
 
     public function __construct()
@@ -36,7 +36,7 @@ abstract class AbstractPattern
 
     /**
      * Add a new pattern or update an existing pattern
-     * 
+     *
      * @param string $name  The name of the pattern
      * @param array|ParameterBag $options   The configuration options of the pattern
      */
@@ -49,7 +49,7 @@ abstract class AbstractPattern
         $unresolvedPattern = [self::ACCESS_KEY => $name] + array_replace($this->patterns[$name] ?? [], $pattern);
 
         $this->patterns[$name] = new ParameterBag($this->resolver->resolve($unresolvedPattern));
-        
+
         return $this;
     }
 

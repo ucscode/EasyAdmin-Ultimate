@@ -48,7 +48,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                     new Callback(
                         $this->passwordStrengthEstimator->getCallbackConstraintArgument(
-                            'plainPassword', 
+                            'plainPassword',
                             PasswordStrength::STRENGTH_MEDIUM
                         )
                     ),

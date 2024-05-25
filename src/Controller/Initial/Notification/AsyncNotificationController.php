@@ -24,8 +24,8 @@ class AsyncNotificationController extends AbstractController
     }
 
     #[Route(
-        '/async/notification', 
-        name: 'async_notification', 
+        '/async/notification',
+        name: 'async_notification',
         methods: 'POST',
         condition: "request.request.has('token') and request.request.has('action') and request.request.has('entityId')"
     )]
@@ -96,7 +96,7 @@ class AsyncNotificationController extends AbstractController
         };
 
         $this->entityManager->flush();
-        
+
         return $this->clientResponse($request);
     }
 

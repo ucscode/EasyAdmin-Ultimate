@@ -14,7 +14,7 @@ class Property extends AbstractEntityMeta
     #[ORM\ManyToOne(inversedBy: 'properties')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
-    
+
     public function getUser(): ?User
     {
         return $this->user;

@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 /**
  * Learn more about doctrine pagination in symfony here
  * @see https://symfonycasts.com/screencast/symfony-doctrine/pagination
- * 
+ *
  * @author Ucscode
  */
 class NotificationController extends AbstractInitialDashboardController
@@ -23,7 +23,7 @@ class NotificationController extends AbstractInitialDashboardController
 
     public function __construct(protected EntityManagerInterface $entityManager)
     {
-        
+
     }
 
     #[Route('/app/notification', self::ROUTE_NAME)]
@@ -32,7 +32,7 @@ class NotificationController extends AbstractInitialDashboardController
         if($request->attributes->get('_route') === self::ROUTE_NAME) {
             throw $this->createAccessDeniedException('Direct access to this page is not allowed!');
         }
-        
+
         $queryBuilder = $this->entityManager->getRepository(Notification::class)
             ->createQueryBuilder('N')
             ->where('N.user = :user')

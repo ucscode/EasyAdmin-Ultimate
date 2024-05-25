@@ -13,12 +13,11 @@ use Twig\Environment;
 final class EauContext
 {
     public function __construct(
-        protected ConfigurationService $configurationService, 
+        protected ConfigurationService $configurationService,
         protected ModalService $modalService,
         protected Environment $twig,
         protected EntityManagerInterface $entityManager
-    )
-    {
+    ) {
     }
 
     /**
@@ -64,9 +63,9 @@ final class EauContext
 
     /**
      * Get Notifications of a user in descending order
-     * 
+     *
      * This is required to reduce the sorting load and iterative filtering for better optimization
-     * 
+     *
      * @return array
      */
     public function getNotifications(?User $user, array $options = []): array
@@ -74,7 +73,7 @@ final class EauContext
         if(!$user) {
             return [];
         }
-        
+
         $optionResolver = new OptionsResolver();
 
         $optionResolver->setDefaults([
@@ -98,11 +97,11 @@ final class EauContext
         $criteria = array_replace($options['criteria'], [
             'user' => $user,
         ]);
-        
+
         return $notificationRepository->findBy(
-            $criteria, 
-            $options['orderBy'], 
-            $options['limit'], 
+            $criteria,
+            $options['orderBy'],
+            $options['limit'],
             $options['offset']
         );
     }

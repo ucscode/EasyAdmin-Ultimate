@@ -16,7 +16,7 @@ class ContentSlotCrudController extends AbstractAdminCrudController
 {
     public function __construct(protected ContentSlotPattern $contentSlotPattern)
     {
-        
+
     }
 
     public static function getEntityFqcn(): string
@@ -66,7 +66,7 @@ class ContentSlotCrudController extends AbstractAdminCrudController
         foreach($this->contentSlotPattern->getPatterns() as $pattern) {
             $choices[$pattern->get('title')] = $pattern->get(ContentSlotPattern::ACCESS_KEY);
         }
-        
+
         return $choices;
     }
 }

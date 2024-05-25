@@ -159,7 +159,7 @@ class UserCrudController extends AbstractAdminCrudController
      */
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $hashedPassword = $this->userPasswordHasher->hashPassword($entityInstance, $entityInstance->getPassword());    
+        $hashedPassword = $this->userPasswordHasher->hashPassword($entityInstance, $entityInstance->getPassword());
         $entityInstance->setPassword($hashedPassword);
 
         /**
@@ -200,7 +200,7 @@ class UserCrudController extends AbstractAdminCrudController
                     'value' => ''
                 ],
                 'constraints' => [
-                    new Callback(function(?string $password, ExecutionContextInterface $context): void {
+                    new Callback(function (?string $password, ExecutionContextInterface $context): void {
                         if($password) {
                             $callable = $this->passwordStrengthEstimator->getCallbackConstraintArgument(
                                 'password',

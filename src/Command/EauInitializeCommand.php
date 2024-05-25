@@ -115,15 +115,15 @@ class EauInitializeCommand extends Command
                 ->setParameter('metaKey', $metaKey)
                 ->getQuery()
             ;
-            
+
             /**
              * @var \App\Entity\User\User $user
              */
             foreach($query->getResult() as $user) {
-                
+
                 $property = new Property(
-                    $metaKey, 
-                    $pattern->get('value'), 
+                    $metaKey,
+                    $pattern->get('value'),
                     $pattern->get('mode')
                 );
 

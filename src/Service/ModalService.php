@@ -9,7 +9,7 @@ use Webmozart\Assert\Assert;
 /**
  * This service controls modal state between sessions and provide context that are rendered by twig
  * If you need to render a modal in your page, use this service
- * 
+ *
  * @see https://github.com/webmozarts/assert
  */
 class ModalService

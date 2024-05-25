@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ContentSlotPattern extends AbstractPattern
 {
     use ConstantUtilsTrait;
-    
+
     public const ACCESS_TITLE = 'title';
     public const ACCESS_PARENT_FQCN = 'ancestor';
 
@@ -57,7 +57,7 @@ class ContentSlotPattern extends AbstractPattern
 
         $resolver
             ->setRequired([
-                self::ACCESS_TITLE, 
+                self::ACCESS_TITLE,
                 self::ACCESS_PARENT_FQCN
             ])
             ->setAllowedTypes(self::ACCESS_TITLE, 'string')

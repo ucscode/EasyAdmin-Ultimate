@@ -15,11 +15,10 @@ use Webmozart\Assert\Assert;
 class ContentSlotExtension extends AbstractExtension
 {
     public function __construct(
-        protected EntityManagerInterface $entityManager, 
+        protected EntityManagerInterface $entityManager,
         protected RequestStack $requestStack,
         protected ContentSlotPattern $contentSlotPattern
-    ) 
-    {
+    ) {
         //
     }
 
@@ -32,17 +31,17 @@ class ContentSlotExtension extends AbstractExtension
 
     /**
      * The initial method that is called when _slot() is used in twig.
-     * 
-     * This will search in the database for content that matches the slot name 
+     *
+     * This will search in the database for content that matches the slot name
      * and render them base on certain criteria.
-     * 
+     *
      * @param string $slotName  The name of the slot
      * @return string           All content added to the named slot
      */
     public function contentSlotCallback(string $slotName): string
-    {       
+    {
         $queryBuilder = $this->entityManager->getRepository(ContentSlot::class)->createQueryBuilder('entity');
-        
+
         $queryBuilder
             ->where("entity.slots LIKE :slot")
             ->andWhere('entity.enabled = :enabled')
@@ -52,7 +51,7 @@ class ContentSlotExtension extends AbstractExtension
         ;
 
         $entities = $queryBuilder->getQuery()->getResult();
-        
+
         $contentStack = array_map(fn (ContentSlot $entityInstance) => $this->getSlotContent($entityInstance), $entities);
 
         return implode("\n", array_filter($contentStack));
@@ -60,10 +59,10 @@ class ContentSlotExtension extends AbstractExtension
 
     /**
      * Get the content to be rendered in a slot by matching the current controller parent classes
-     * 
+     *
      * This method checks if the current controller class is subclass of some targeted classes
      * and then returns the content of the ContentSlot entity if evaluated to true
-     * 
+     *
      * @param ContentSlot $entityInstance   The entity containing the content and targeted areas
      * @return string|null                  A string if controller has matching subclass, false otherwise
      */
@@ -75,16 +74,16 @@ class ContentSlotExtension extends AbstractExtension
             array_map(
                 fn (ParameterBag $pattern) => $pattern->get(ContentSlotPattern::ACCESS_PARENT_FQCN), // (string) ancestor class
                 $this->contentSlotPattern->getPatterns() // (array) patterns
-            ), 
+            ),
             fn (?string $parentFQCN) => $parentFQCN !== null
         );
 
         // Get targeted areas where the contents are allowed to render
-        
+
         foreach($entityInstance->getTargets() as $patternKey) {
-            
+
             if($pattern = $this->contentSlotPattern->getPattern($patternKey)) {
-                
+
                 $parentFQCN = $pattern->get(ContentSlotPattern::ACCESS_PARENT_FQCN); // (string) single parent
 
                 if($parentFQCN === null) {
@@ -124,7 +123,7 @@ class ContentSlotExtension extends AbstractExtension
     /**
      * Retrieves the fully qualified class name (FQCN) of the current controller.
      *
-     * This method first checks if the request is within the EasyAdmin context and retrieves the dashboard controller FQCN. 
+     * This method first checks if the request is within the EasyAdmin context and retrieves the dashboard controller FQCN.
      * If not, it falls back to retrieving the original controller from the request attributes.
      *
      * @return string|null The FQCN of the current controller, or null if it cannot be determined.
@@ -135,7 +134,7 @@ class ContentSlotExtension extends AbstractExtension
          * @var \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext|null
          */
         $easyAdminContext = $this->requestStack->getCurrentRequest()->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
-        
+
         if($easyAdminContext) {
             return $easyAdminContext->getDashboardControllerFqcn();
         };

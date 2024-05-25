@@ -15,20 +15,20 @@ use Ucscode\KeyGenerator\KeyGenerator;
 
 /**
  * A subscriber that listens to log in authentication events
- * 
- * Login requests are (by default) processed by symfony Login form authenticator. 
+ *
+ * Login requests are (by default) processed by symfony Login form authenticator.
  * However, you can create your own authenticator if you need absolute control.
- * 
+ *
  * Alternatively, you can take advantage of dispatched events during authentication processes.
  * The FormLoginAuthenticator dispatches several events during the authentication process
  * By listening to these events, you can control the authentication process without necessarily
  * creating a custom login authenticator.
- * 
+ *
  * References
- * 
+ *
  * @see \Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
- * 
- * @link https://symfony.com/doc/4.x/security/form_login_setup.html  
+ *
+ * @link https://symfony.com/doc/4.x/security/form_login_setup.html
  * @link https://symfony.com/doc/current/security.html#form-login
  * @link https://symfonycasts.com/screencast/symfony-security/security-listeners
  */
@@ -90,7 +90,7 @@ class LoginSubscriber implements EventSubscriberInterface
          * @var \App\Entity\User\User
          */
         $user = $event->getAuthenticatedToken()->getUser();
-        
+
         // default redirect path
         $response = new RedirectResponse($this->urlGenerator->generate('app_user'));
 

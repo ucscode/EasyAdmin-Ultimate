@@ -81,7 +81,7 @@ abstract class AbstractPermission
 
     protected function normalizeMode(int $mode): int
     {
-        if($mode & ModeConstants::EXECUTE|ModeConstants::READ|ModeConstants::WRITE) {
+        if($mode & ModeConstants::EXECUTE | ModeConstants::READ | ModeConstants::WRITE) {
             return $mode;
         }
 
