@@ -16,7 +16,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-use Ucscode\KeyGenerator\KeyGenerator;
 
 #[AsCommand(
     name: 'eau:initialize',
@@ -39,35 +38,31 @@ class EauInitializeCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * The command entry point
+     * 
+     * This method is called by symfony when run through "php bin/console ..."
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->input = $input;
         $this->output = $output;
         $this->symfonyStyle = new SymfonyStyle($this->input, $this->output);
 
-        try {
+        $this->symfonyStyle->info(sprintf('APP_ENV=%s', $this->kernel->getEnvironment()));
 
-            if(!$this->isProductionEnvironment()) {
-                $this->symfonyStyle->warning('You are currently in "development" environment');
-            }
+        try {
 
             // $this->updateComposerPackages();
             $this->computeAssetMapperResource();
             $this->updateUserProperties();
 
         } catch(Exception $exception) {
-
             $this->symfonyStyle->error(
-                sprintf(
-                    "%s on %s:%s",
-                    $exception->getMessage(),
-                    $exception->getFile(),
-                    $exception->getLine(),
-                )
+                sprintf("%s on %s:%s", $exception->getMessage(), $exception->getFile(), $exception->getLine())
             );
 
             return Command::FAILURE;
-
         }
 
         $this->symfonyStyle->success('User Synthetics Initialization Completed');
@@ -75,31 +70,42 @@ class EauInitializeCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * $ composer update
+     * 
+     * Update project dependencies to the latest version and modifies the "composer.lock" file 
+     * to reflect the new versions of the packages that have been installed.
+     */
     protected function updateComposerPackages(): void
     {
         $this->symfonyStyle->title("Updating Composer Packages");
-
-        $this->runSymfonyConsoleCommand(['composer', 'update']);
-
+        $this->execBashCommand(['composer', 'update']);
         $this->symfonyStyle->success("Composer Packages Revised");
     }
 
+    /**
+     * initialize import map
+     * 
+     * Install import map packages and compile them when on production environment
+     */
     protected function computeAssetMapperResource(): void
     {
         $this->symfonyStyle->title("Initializing Asset Mapper");
+        $this->execBashCommand(['php', 'bin/console', 'importmap:install']);
 
-        $this->runSymfonyConsoleCommand(['php', 'bin/console', 'importmap:install']);
-
-        # If env == prod
-        if($this->isProductionEnvironment()) {
-
-            $this->runSymfonyConsoleCommand(['php', 'bin/console', 'asset-map:compile']);
-
-        };
+        ($this->kernel->getEnvironment() == self::ENV_DEV) ?: 
+        $this->execBashCommand(['php', 'bin/console', 'asset-map:compile']);
 
         $this->symfonyStyle->success('Asset Mapper Initialized');
     }
 
+    /**
+     * Update user property configurations
+     * 
+     * When new properties are added to user property pattern after compilation, only newly registered
+     * users will receive the new property. To ensure the property is available to all users, this
+     * will iterate the patterns and new patterns will be added for users who don't have the property
+     */
     protected function updateUserProperties(): void
     {
         $this->symfonyStyle->title('Updating User Properties');
@@ -138,7 +144,7 @@ class EauInitializeCommand extends Command
         $this->symfonyStyle->success('Users Property Updated');
     }
 
-    private function runSymfonyConsoleCommand(array $command): void
+    private function execBashCommand(array $command): void
     {
         $process = new Process($command);
         $process->run();
@@ -148,10 +154,5 @@ class EauInitializeCommand extends Command
         }
 
         $this->symfonyStyle->text($process->getOutput());
-    }
-
-    private function isProductionEnvironment(): bool
-    {
-        return $this->kernel->getEnvironment() === self::ENV_PROD;
     }
 }
