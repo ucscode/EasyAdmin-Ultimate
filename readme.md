@@ -28,6 +28,15 @@ Once installed, run the following command to get your project ready
 php bin/console eau:initialize
 ```
 
+## Configuration
+
+If you are using Apache on shared hosting or within a subdirectory and do not have access to the Apache configuration file, please follow these steps to ensure your project works correctly:
+
+- Rename the `.htaccess.bk` file in the project root directory to `.htaccess.`
+- Update the **RewriteBase** directive in the .htaccess file to point to your project's subdirectory.
+
+This ensures that the necessary configurations are in place for your project to function as expected.
+
 ## Documentation
 
 For detailed usage instructions and documentation, please refer to the following resources:

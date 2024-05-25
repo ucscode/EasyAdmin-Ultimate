@@ -1,0 +1,24 @@
+# This file handles request for symfony projects that are installed in sub-directory (or shared server).
+# If you run the project in a sub-directory or don't have access to the core apache configuration file
+# Then, rename this file from ".htaccess.bk" to ".htaccess" and update the "RewriteBase" as required
+
+RewriteEngine On
+
+# Set the rewrite base to match your sub-directory
+
+# If your project is installed in https://domain.com/project/symfony
+# Then your rewrite base should be "/project/symfony/"
+
+# If your project is on the root directory (https://domain.com)
+# Then your rewrite base would be "/" (a forward slash only)
+
+RewriteBase /path-to-project/
+
+# Check if the request doesn't already start with /public/
+RewriteCond %{REQUEST_URI} !^/public/
+
+# Prevent further rewriting if the request is already in /public/
+RewriteRule ^public/ - [L]
+
+# Rewrite any other request to /public/
+RewriteRule ^(.*)$ public/$1 [L,QSA]
