@@ -7,18 +7,18 @@ RewriteEngine On
 # Set the rewrite base to match your sub-directory
 
 # If your project is installed in https://domain.com/project/symfony
-# Then your rewrite base should be "/project/symfony/"
+# Then your rewrite base should be "/project/symfony/public"
 
 # If your project is on the root directory (https://domain.com)
-# Then your rewrite base would be "/" (a forward slash only)
+# Then your rewrite base would be "/public/"
 
-RewriteBase /path-to-project/
+RewriteBase /project-dir/public/
 
-# Check if the request doesn't already start with /public/
-RewriteCond %{REQUEST_URI} !^/public/
+# Prevent further rewriting if the request ends with index.php
+RewriteRule index.php$ - [L]
 
-# Prevent further rewriting if the request is already in /public/
-RewriteRule ^public/ - [L]
+# If the loaded resource is not a file
+RewriteCond %{REQUEST_FILENAME} !-f
 
 # Rewrite any other request to /public/
-RewriteRule ^(.*)$ public/$1 [L,QSA]
+RewriteRule ^(.*)$ index.php [L,QSA]

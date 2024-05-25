@@ -28,16 +28,21 @@ Once installed, run the following command to get your project ready
 php bin/console eau:initialize
 ```
 
-## Configuration
+## Configuration Concepts:
 
-If you are using Apache on shared hosting or within a subdirectory and do not have access to the Apache configuration file, please follow these steps to ensure your project works correctly:
+@see [Configuring a Web Server](https://symfony.com/doc/current/setup/web_server_configuration.html)
 
-- Rename the `.htaccess.bk` file in the project root directory to `.htaccess.`
-- Update the **RewriteBase** directive in the .htaccess file to point to your project's subdirectory.
+@see [How to Override Symfony's default Directory Structure](https://symfony.com/doc/current/configuration/override_dir_structure.html#override-the-public-directory)
 
-This ensures that the necessary configurations are in place for your project to function as expected.
+If you make any changes to symfony's default directory structure, remember to run:
 
-> Don't forget to create `.env.local` file with `APP_ENV=dev` for local development
+```bash
+composer update 
+```
+
+@see also https://stackoverflow.com/a/69060581/9463084
+
+> Remember to create `.env.local` file with `APP_ENV=dev` for local development
 
 ## Documentation
 
