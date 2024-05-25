@@ -3,12 +3,12 @@
 namespace App\Controller\Admin\Crud\User;
 
 use App\Constants\FilePathConstants;
+use App\Constants\RoleConstants;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User\User;
 use App\Repository\User\UserRepository;
 use App\Security\PasswordStrengthEstimator;
-use App\Utils\RoleUtils;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -236,6 +236,6 @@ class UserCrudController extends AbstractAdminCrudController
             // 'Display Value' => UserRole::ROLE_ADMIN
         ];
 
-        return $allowedRoles ?: RoleUtils::getChoices('ROLE_');
+        return $allowedRoles ?: RoleConstants::getChoices('ROLE_');
     }
 }

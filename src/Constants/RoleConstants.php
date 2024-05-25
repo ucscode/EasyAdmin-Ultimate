@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Utils;
+namespace App\Constants;
 
-use App\Utils\Traits\ConstantUtilsTrait;
+use App\Component\Traits\ConstantTrait;
 
 /**
  * This is just a template to reduce your thinking process by listing common roles.
  * Basically, not all roles listed here will be useful in your project but having them is beneficial.
  * You can add new roles to it or remove existing roles from it based on your preference or project requirements
  */
-final class RoleUtils
+final class RoleConstants
 {
-    use ConstantUtilsTrait;
+    use ConstantTrait;
 
     public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_AGENT = 'ROLE_AGENT';

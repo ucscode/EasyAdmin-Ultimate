@@ -2,8 +2,8 @@
 
 namespace App\DataFixtures\User;
 
+use App\Constants\RoleConstants;
 use App\Entity\User\User;
-use App\Utils\RoleUtils;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -19,7 +19,7 @@ class UserFixtures extends Fixture
     public const DEFAULT_USER = [
         'uniqueId' => '87e60f2b',
         'roles' => [
-            RoleUtils::ROLE_ADMIN,
+            RoleConstants::ROLE_ADMIN,
         ],
         'password' => '123456',
         'email' => 'root@localhost.com',
@@ -43,7 +43,7 @@ class UserFixtures extends Fixture
                 $data = [
                     'uniqueId' => $faker->regexify('\w{7}'), // (new KeyGenerator())->generateKey(8),
                     'roles' => [
-                        RoleUtils::ROLE_USER
+                        RoleConstants::ROLE_USER
                     ],
                     'password' => '123456',
                     'email' => $faker->email(),

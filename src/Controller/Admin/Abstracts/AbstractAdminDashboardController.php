@@ -50,7 +50,7 @@ abstract class AbstractAdminDashboardController extends AbstractInitialDashboard
 
         yield MenuItem::section('Misc');
 
-        yield MenuItem::linkToCrud('Code Infusion', 'fa fa-code', ContentSlot::class);
+        yield MenuItem::linkToCrud('Slots', 'fa fa-code', ContentSlot::class);
         yield MenuItem::linkToLogout('Logout', 'fas fa-arrow-right-from-bracket');
     }
 

@@ -174,9 +174,11 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     }
 
     .sidebar {
+        --sidebar-z-index: 1030;
         position: fixed;
         left: 0;
         width: 100%;
+        z-index: var(--sidebar-z-index);
     }
 
     .notification-global.notification-list .notification-item {

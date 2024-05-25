@@ -3,15 +3,15 @@
 namespace App\Configuration;
 
 use App\Component\Abstracts\AbstractPattern;
+use App\Component\Traits\ConstantTrait;
 use App\Controller\Admin\Interfaces\AdminControllerInterface;
 use App\Controller\Security\Interfaces\SecurityControllerInterface;
 use App\Controller\User\Interfaces\UserControllerInterface;
-use App\Utils\Traits\ConstantUtilsTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContentSlotPattern extends AbstractPattern
 {
-    use ConstantUtilsTrait;
+    use ConstantTrait;
 
     public const ACCESS_TITLE = 'title';
     public const ACCESS_PARENT_FQCN = 'ancestor';

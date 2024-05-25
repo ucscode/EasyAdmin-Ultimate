@@ -3,20 +3,31 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Configuration\ContentSlotPattern;
+use App\Constants\SlotConstants;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Entity\ContentSlot;
-use App\Utils\ContentSlotUtils;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\String\UnicodeString;
 
 class ContentSlotCrudController extends AbstractAdminCrudController
 {
+    protected string $title;
+    protected array $slotChoices;
+
     public function __construct(protected ContentSlotPattern $contentSlotPattern)
     {
+        $classBaseName = array_slice(explode("\\", ContentSlot::class), -1)[0];
 
+        $this->title = (new UnicodeString($classBaseName))->snake()->replace('_', ' ')->title(true);
+
+        $this->slotChoices =  SlotConstants::getChoices('SLOT_', null, function(string $value) {
+            $label = preg_replace(sprintf('/^%s/', preg_quote('SLOT_', '/')), '', $value);
+            return str_replace('_', ' ', $label);
+        });
     }
 
     public static function getEntityFqcn(): string
@@ -31,10 +42,7 @@ class ContentSlotCrudController extends AbstractAdminCrudController
         ;
 
         yield ChoiceField::new('slots')
-            ->setFormTypeOption('choices', [
-                'Header' => 'SLOT_HEADER',
-                'Footer' => 'SLOT_FOOTER'
-            ])
+            ->setFormTypeOption('choices', array_flip($this->slotChoices))
             ->allowMultipleChoices()
             ->setHelp('Where in a page should the code be placed?')
             ->onlyOnForms()
