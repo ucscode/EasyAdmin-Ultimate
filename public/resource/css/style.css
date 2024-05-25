@@ -163,7 +163,7 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
 .content-top {
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 700;
     background-color: var(--bs-white);
 }
 
