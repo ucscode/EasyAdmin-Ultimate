@@ -37,6 +37,8 @@ If you are using Apache on shared hosting or within a subdirectory and do not ha
 
 This ensures that the necessary configurations are in place for your project to function as expected.
 
+> Don't forget to create `.env.local` file with `APP_ENV=dev` for local development
+
 ## Documentation
 
 For detailed usage instructions and documentation, please refer to the following resources:
