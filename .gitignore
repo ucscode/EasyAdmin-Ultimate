@@ -22,6 +22,7 @@
 ###> symfony/asset-mapper ###
 /public/assets/
 /assets/vendor/
+symfony.lock
 ###< symfony/asset-mapper ###
 
 ###> symfony/php-cs-fixer ###
