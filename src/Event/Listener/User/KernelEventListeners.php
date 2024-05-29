@@ -60,7 +60,7 @@ class KernelEventListeners
     #[AsEventListener(KernelEvents::RESPONSE)]
     public function saveReferralIdentityToCookie(ResponseEvent $event): void
     {
-        if($referralId = $event->getRequest()->query->get(AffiliationService::QUERY_KEY)) {
+        if($referralId = $event->getRequest()->query->get(AffiliationService::REQUEST_QUERY_KEY)) {
             /**
              * @var User
              */
@@ -70,7 +70,7 @@ class KernelEventListeners
 
             if($parent) {
                 $cookie = new Cookie(
-                    AffiliationService::COOKIE_KEY, 
+                    AffiliationService::REQUEST_COOKIE_KEY, 
                     $parent->getUniqueId(),
                     new \DateTime('+7 days')
                 );

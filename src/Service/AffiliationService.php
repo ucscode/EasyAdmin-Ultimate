@@ -3,93 +3,250 @@
 namespace App\Service;
 
 use App\Entity\User\User;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Webmozart\Assert\Assert;
 
 class AffiliationService
 {
-    public const QUERY_KEY = 'ref';
-    public const COOKIE_KEY = 'app_ref';
+    public const REQUEST_QUERY_KEY = 'ref';
+    public const REQUEST_COOKIE_KEY = 'app_ref';
+    private const TRAVERSE_PARENT = 0;
+    private const TRAVERSE_CHILDREN = 1;
 
+    protected Connection $connection;
+    protected ClassMetadata $classMetaData;
+    
     public function __construct(
         protected RequestStack $requestStack, 
         protected EntityManagerInterface $entityManager,
         protected ConfigurationService $configurationService
     )
     {
-        
+        $this->connection = $this->entityManager->getConnection();
+        $this->classMetaData = $this->entityManager->getClassMetadata(User::class);
     }
 
+    /**
+     * Checks if the affiliation feature is enabled.
+     *
+     * @return bool Returns true if the affiliation feature is enabled, false otherwise.
+     */
     public function isEnabled(): bool
     {
         return !!$this->configurationService->get('affiliation.enabled');
     }
 
+    /**
+     * Retrieves the referrer user from the current request, if available.
+     *
+     * @return User|null Returns the referrer user if found, null otherwise.
+     */
     public function getRequestReferrer(): ?User
     {
-        if($this->isEnabled()) {
-            $referralId = 
-                $this->requestStack->getCurrentRequest()->query->get(self::QUERY_KEY) ??
-                $this->requestStack->getCurrentRequest()->cookies->get(self::COOKIE_KEY)
-            ;
+        $referralId = 
+            $this->requestStack->getCurrentRequest()->query->get(self::REQUEST_QUERY_KEY) ??
+            $this->requestStack->getCurrentRequest()->cookies->get(self::REQUEST_COOKIE_KEY);
 
-            return $referralId ? $this->entityManager->getRepository(User::class)->findOneBy(['uniqueId' => $referralId]) : null;
+        return $referralId ? $this->entityManager->getRepository(User::class)->findOneBy(['uniqueId' => $referralId]) : null;
+    }
+
+    /**
+     * Get children of a user at different depths
+     * 
+     * @param User $user The user to traverse
+     * @param array $criteria The criteria to filter children
+     * @return Result Doctrine DBAL Result containing all children
+     */
+    public function getChildren(User|int $user, array $criteria = []): Result
+    {   
+        $queryString = $this->getRecursionQuerySQL(
+            $user instanceof User ? $user->getId() : $user, 
+            self::TRAVERSE_CHILDREN,
+            $this->getCriteriaCondition($criteria, self::TRAVERSE_CHILDREN) ?: 1
+        );
+        
+       return $this->connection->prepare($queryString)->executeQuery();
+    }
+
+    /**
+     * Get ancestors of a user
+     * 
+     * @param User $user The user to traverse
+     * @param array $criteria The criteria to filter parents
+     * @return Result Doctrine DBAL Result containing all parents
+     */
+    public function getAncestors(User|int $user, array $criteria = []): Result
+    {
+        $queryString = $this->getRecursionQuerySQL(
+            $user instanceof User ? $user->getId() : $user,
+            self::TRAVERSE_PARENT,
+            $this->getCriteriaCondition($criteria, self::TRAVERSE_PARENT) ?: 1
+        );
+        
+        return $this->connection->prepare($queryString)->executeQuery();
+    }
+
+    /**
+     * Checks if a given user is a child of a reference user.
+     *
+     * @param User|int $child The child user or its ID to check.
+     * @param User|int $reference The reference user or its ID to check against.
+     * @return bool Returns true if the given user is a child of the reference user, false otherwise.
+     */
+    public function hasChild(User|int $child, User|int $reference): bool
+    {
+        return !empty($this->getChildren($reference, ['entity' => $child])->rowCount());
+    }
+
+    /**
+     * Checks if a given user is an ancestor of a reference user.
+     *
+     * @param User|int $parent The parent user or its ID to check.
+     * @param User|int $reference The reference user or its ID to check against.
+     * @return bool Returns true if the given user is an ancestor of the reference user, false otherwise.
+     */
+    public function hasAncestor(User|int $parent, User|int $reference): bool
+    {
+        return !empty($this->getAncestors($reference, ['entity' => $parent])->rowCount());
+    }
+
+    /**
+     * Checks if the target user is a child of the reference user.
+     *
+     * @param User $target The target user to check.
+     * @param User $reference The reference user to check against.
+     * @return bool Returns true if the target user is a child of the reference user, false otherwise.
+     */
+    public function isChildOf(User|int $target, User|int $reference): bool
+    {
+        return $this->hasAncestor($target, $reference);
+    }
+
+    /**
+     * Checks if the target user is a parent of the reference user.
+     *
+     * @param User $target The target user to check.
+     * @param User $reference The reference user to check against.
+     * @return bool Returns true if the target user is a parent of the reference user, false otherwise.
+     */
+    public function isParentOf(User|int $target, User|int $reference): bool
+    {
+        return $this->hasChild($target, $reference);
+    }
+
+    /**
+     * Get a recursive SQL Syntax that iterates over adjacency list descendants or ancestors
+     * 
+     * @param int $entityId             The anchor or node to begin iteration from
+     * @param int $traversal            Whether to return SQL query for children or parent traversal
+     * @param string $filterCondtion    The condition to filter the list of traversed result
+     * 
+     * @return string                   The recursive SQL Syntax
+     */
+    private function getRecursionQuerySQL(int $entityId, int $traversal, ?string $filterCondition = null): string
+    {       
+        $recursionQuery = "WITH RECURSIVE nodes AS (
+            -- The Anchor Member (target)
+            SELECT `@entity`.*, 0 AS depth
+            FROM `@entity`
+            WHERE id = :entityId
+
+            UNION ALL
+
+            -- Recursive Member
+            SELECT kin.*, nodes.depth + 1
+            FROM `@entity` kin
+            INNER JOIN nodes ON @traversalCondition
+        )
+
+        SELECT nodes.*
+        FROM nodes
+        WHERE id <> :entityId
+        AND @filterCondition
+        ORDER BY depth
+        ";
+
+        $traversalCondition = ($traversal === self::TRAVERSE_CHILDREN) ? "kin.parent_id = nodes.id" : "kin.id = nodes.parent_id";
+
+        return strtr($recursionQuery, [
+            '@entity' => $this->classMetaData->getTableName(),
+            '@traversalCondition' => $traversalCondition,
+            '@filterCondition' => $filterCondition ?: 1,
+            ':entityId' => $entityId,
+        ]);
+    }
+
+    /**
+     * An option resolver to validate the option passed by user to filter traversal result
+     * 
+     * @param array $criteria   The array of data to traverse
+     * @return array            The validated resolved option
+     * @throws \Exception        If criteria contain invalid key or value
+     */
+    private function resolveCriteriaOptions(array $criteria): array
+    {
+        $defaultOptions = [
+            'depth' => null, // the depth to get/return
+            'entity' => null, // the identity of a child
+            'minDepth' => null, // minimum depth to fetch
+            'maxDepth' => null, // max depth to fetch
+        ];
+
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults($defaultOptions);
+
+        foreach($defaultOptions as $key => $option) {
+            $resolver
+                ->setAllowedTypes($key, ['null', 'integer'])
+                ->setAllowedValues($key, fn (?int $value) => $value === null || $value > 0);
+        }
+        
+        $criteria = $resolver->resolve($criteria);
+        
+        if($criteria['maxDepth'] !== null) {
+            Assert::greaterThanEq(
+                $criteria['maxDepth'], 
+                $criteria['minDepth'], 
+                'The option "maxDepth" should not be less than "minDepth"'
+            );
         }
 
-        return null;
+        return $criteria;
     }
 
     /**
-     * Get children of a user at different levels
+     * Generates the condition string used to filter traversal result
      * 
-     * @param User $user The user to traverse
-     * @param null|int $level The level to fetch
-     * @return array[] Each level containing an array of children
+     * @param array $criteria   The criteria to confirm
+     * @return string           The "where" clause string to filter the result
      */
-    public function getChildren(User $user, ?int $level = null): array
+    private function getCriteriaCondition(array $criteria): ?string
     {
-        return [];
-    }
+        // convert user entity to entity id
+        if(!empty($criteria['entity']) && $criteria['entity'] instanceof User) {
+            $criteria['entity'] = $criteria['entity']->getId();
+        }
 
-    /**
-     * Get parent of a user up to the root or to a specified level
-     * 
-     * @param User $user The user to traverse
-     * @param null|int $level The level to fetch
-     * @return User[]|User|null The parent list or parent entity
-     */
-    public function getParents(User $user, ?int $level = null): User|array|null
-    {
-        $builder = $this->entityManager->getRepository(User::class)->createQueryBuilder('U')
+        $criteria = $this->resolveCriteriaOptions($criteria);
 
-        ;
-        dd($builder);
-        return null;
-    }
+        $condition = array_filter([
+            "depth >= %s" => $criteria['minDepth'] ?? null,
+            "depth <= %s" => $criteria['maxDepth'] ?? null,
+            "depth = %s" => $criteria['depth'] ?? null,
+            "id = %s" => $criteria['entity'] ?? null, 
+        ]);
 
-    /**
-     * @return ?int The level of the child or null if the child does not exists
-     */
-    public function UserHasChild(User $child, User $reference): ?int
-    {
-        return 1;
-    }
+        $result = array_map(
+            fn ($value, $key) => sprintf($value, $key), 
+            array_keys($condition), 
+            array_values($condition)
+        );
 
-    /**
-     * @return ?int The level of the parent or null if the parent does not exist
-     */
-    public function UserHasParent(User $parent, User $reference): ?int
-    {
-        return 1;
-    }
-
-    public function isChildOf(User $target, User $reference): bool
-    {
-        return false;
-    }
-
-    public function isParentOf(User $target, User $reference): int
-    {
-        return false;
+        return trim(implode(" AND ", $result)) ?: null;
     }
 }

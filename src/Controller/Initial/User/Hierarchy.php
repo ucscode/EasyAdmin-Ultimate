@@ -39,7 +39,9 @@ class Hierarchy extends AbstractInitialDashboardController
             $target = $this->entityManager->getRepository(User::class)->find($parameters->get('entityId'));
         }
 
-        $this->affiliationService->getParents($target);
+        $ancestors = $this->affiliationService->hasAncestor(164, $target);
+
+        // dd($children->fetchAllAssociative());
 
         return $this->render('initial/user_hierarchy.html.twig', [
 
