@@ -7,6 +7,7 @@ use App\Entity\User\User;
 use App\Form\Security\RegistrationFormType;
 use App\Repository\User\UserRepository;
 use App\Security\EmailVerifier;
+use App\Service\AffiliationService;
 use App\Service\ConfigurationService;
 use App\Service\ModalService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,7 +26,8 @@ class RegistrationController extends AbstractSecurityController
     public function __construct(
         private EmailVerifier $emailVerifier,
         protected ConfigurationService $configurationService,
-        protected ModalService $modalService
+        protected ModalService $modalService,
+        protected AffiliationService $affiliationService
     ) {
         $this->keyGenerator = new KeyGenerator();
     }
@@ -36,7 +38,7 @@ class RegistrationController extends AbstractSecurityController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -48,7 +50,9 @@ class RegistrationController extends AbstractSecurityController
 
             // Generate Uniqid
             $user->setUniqueId($this->keyGenerator->generateKey(7));
-
+            
+            $user->setParent($this->affiliationService->getRequestReferrer());
+            
             $entityManager->persist($user);
             $entityManager->flush();
 

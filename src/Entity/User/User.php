@@ -69,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private bool $isVerified = false;
 
-    #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
     private ?self $parent = null;
 
     public function __construct()

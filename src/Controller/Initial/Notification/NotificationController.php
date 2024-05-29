@@ -4,6 +4,7 @@ namespace App\Controller\Initial\Notification;
 
 use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
 use App\Entity\User\Notification;
+use App\Exceptions\AccessForbiddenException;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -30,7 +31,7 @@ class NotificationController extends AbstractInitialDashboardController
     public function notification(Request $request): Response
     {
         if($request->attributes->get('_route') === self::ROUTE_NAME) {
-            throw $this->createAccessDeniedException('Direct access to this page is not allowed!');
+            throw new AccessForbiddenException();
         }
 
         $queryBuilder = $this->entityManager->getRepository(Notification::class)

@@ -2,13 +2,17 @@
 
 namespace App\Event\Listener\User;
 
+use App\Constants\UserConstants;
+use App\Entity\User\User;
+use App\Service\AffiliationService;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Controller\DashboardControllerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class KernelEventListeners
@@ -19,7 +23,7 @@ class KernelEventListeners
     }
 
     #[AsEventListener(KernelEvents::CONTROLLER, priority: -10)]
-    public function onKernelController(ControllerEvent $event): void
+    public function updateLastSeen(ControllerEvent $event): void
     {
         /**
          * @var \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext $adminContext
@@ -50,6 +54,29 @@ class KernelEventListeners
                     $this->entityManager->flush();
                 }
             };
+        }
+    }
+    
+    #[AsEventListener(KernelEvents::RESPONSE)]
+    public function saveReferralIdentityToCookie(ResponseEvent $event): void
+    {
+        if($referralId = $event->getRequest()->query->get(AffiliationService::QUERY_KEY)) {
+            /**
+             * @var User
+             */
+            $parent = $this->entityManager->getRepository(User::class)->findOneBy([
+                'uniqueId' => $referralId
+            ]);
+
+            if($parent) {
+                $cookie = new Cookie(
+                    AffiliationService::COOKIE_KEY, 
+                    $parent->getUniqueId(),
+                    new \DateTime('+7 days')
+                );
+                
+                $event->getResponse()->headers->setCookie($cookie);
+            }
         }
     }
 }

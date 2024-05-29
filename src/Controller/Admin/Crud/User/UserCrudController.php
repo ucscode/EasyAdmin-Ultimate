@@ -6,9 +6,11 @@ use App\Constants\FilePathConstants;
 use App\Constants\RoleConstants;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
+use App\Controller\Initial\User\Hierarchy;
 use App\Entity\User\User;
 use App\Repository\User\UserRepository;
 use App\Security\PasswordStrengthEstimator;
+use App\Service\AffiliationService;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,7 +39,8 @@ class UserCrudController extends AbstractAdminCrudController
     public function __construct(
         protected AdminUrlGenerator $adminUrlGenerator,
         protected UserPasswordHasherInterface $userPasswordHasher,
-        protected PasswordStrengthEstimator $passwordStrengthEstimator
+        protected PasswordStrengthEstimator $passwordStrengthEstimator,
+        protected AffiliationService $affiliationService
     ) {
         $this->keyGenerator = new KeyGenerator();
     }
@@ -51,13 +54,8 @@ class UserCrudController extends AbstractAdminCrudController
     {
         yield TextField::new('uniqueId')
             ->setDisabled()
+            ->onlyOnForms()
             ->hideWhenCreating()
-        ;
-
-        yield ImageField::new('avatar')
-            ->setUploadDir(FilePathConstants::USER_IMAGE_UPLOAD_DIR)
-            ->setBasePath(FilePathConstants::USER_IMAGE_BASE_PATH)
-            ->setUploadedFileNamePattern(FilePathConstants::USER_IMAGE_UPLOAD_FILE_PATTERN)
         ;
 
         yield EmailField::new('email');
@@ -65,6 +63,12 @@ class UserCrudController extends AbstractAdminCrudController
         yield TextField::new('username');
 
         yield $this->passwordFieldFactory($pageName);
+
+        yield ImageField::new('avatar')
+            ->setUploadDir(FilePathConstants::USER_IMAGE_UPLOAD_DIR)
+            ->setBasePath(FilePathConstants::USER_IMAGE_BASE_PATH)
+            ->setUploadedFileNamePattern(FilePathConstants::USER_IMAGE_UPLOAD_FILE_PATTERN)
+        ;
 
         yield DateTimeField::new('registrationTime')
             ->hideOnIndex()
@@ -86,33 +90,37 @@ class UserCrudController extends AbstractAdminCrudController
             ->renderAsSwitch(false)
         ;
 
-        $parentField = AssociationField::new('parent')
-            ->hideOnIndex()
-        ;
+        if($this->affiliationService->isEnabled()) {
 
-        /**
-         * Filter parent associates to prevent user from selecting oneself as parent
-         */
-        if(in_array($pageName, [Crud::PAGE_EDIT, Crud::PAGE_NEW])) {
+            $parentField = AssociationField::new('parent')
+                ->setCrudController(self::class)
+                // ->hideOnIndex()
+            ;
 
-            $parentField->setFormTypeOption('query_builder', function (UserRepository $userRepository): QueryBuilder {
-                /**
-                 * @var User
-                 */
-                $entity = $this->getContext()->getEntity()->getInstance();
-                $queryBuilder = $userRepository->createQueryBuilder('u');
+            /**
+             * Filter parent associates to prevent user from selecting oneself as parent
+             */
+            if(in_array($pageName, [Crud::PAGE_EDIT, Crud::PAGE_NEW])) {
 
-                if($entity?->getId()) {
-                    $queryBuilder
-                        ->andWhere('u.id != :currentUserId')
-                        ->setParameter('currentUserId', $entity->getId());
-                };
+                $parentField->setFormTypeOption('query_builder', function (UserRepository $userRepository): QueryBuilder {
+                    /**
+                     * @var User
+                     */
+                    $entity = $this->getContext()->getEntity()->getInstance();
+                    $queryBuilder = $userRepository->createQueryBuilder('u');
 
-                return $queryBuilder;
-            });
+                    if($entity?->getId()) {
+                        $queryBuilder
+                            ->andWhere('u.id != :currentUserId')
+                            ->setParameter('currentUserId', $entity->getId());
+                    };
+
+                    return $queryBuilder;
+                });
+            }
+
+            yield $parentField;
         }
-
-        yield $parentField;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -133,7 +141,13 @@ class UserCrudController extends AbstractAdminCrudController
         ;
 
         $hierarchyAction = Action::new('hierarchy', 'Hierarchy')
-            ->linkToUrl('http://example.com')
+            ->linkToUrl(function(User $entity) {
+                return $this->adminUrlGenerator
+                    ->setRoute(Hierarchy::ROUTE_NAME, [
+                        'entityId' => $entity->getId(),
+                    ])
+                ;
+            })
         ;
 
         return $actions

@@ -8,6 +8,12 @@
         <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
             <button type="button" class="position-absolute top-0 end-0 p-3 m-3 btn-close bg-secondary bg-opacity-10 rounded-pill" aria-label="Close"></button>
             <h1 class="text-body-emphasis mb-4">User Synthetics</h1>
+            {% if eau.config('affiliation.enabled') %}
+                <div class="my-3">
+                    <h5>Your Referral Link is</h5>
+                    {{ absolute_url(path('app_register', {ref: app.user.uniqueId})) }}
+                </div>
+            {% endif %}
             <p class="col-lg-6 mx-auto">
                 User Synthetics is no longer a stand alone project but now built on the foundation of symfony.
                 A platform know for it's long term stability and versatility. 

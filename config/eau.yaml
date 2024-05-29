@@ -65,5 +65,14 @@ user:
     # > This option will not take effect if "delete_if_inactive" is set to false
     inactive_account_expiration_days: 7
 
+# Affiliation & Referral Configuration
+# This section contains configuration detail relating to affiliation and networking
+
+affiliation:
+  
+  enabled: true
+
+
+
 # Custom Configurations
 # You can add and manager your own custom configuration and access them easily via the ConfigurationService provided by Easyadmin Ultimate
