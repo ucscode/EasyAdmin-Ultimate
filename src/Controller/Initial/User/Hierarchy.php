@@ -61,13 +61,15 @@ class Hierarchy extends AbstractInitialDashboardController
             if($nodeEntity != $currentUser) {
                 if(!$currentUser || !$this->affiliationService->hasChild($currentUser, $nodeEntity)) {
                     // Check if user has permission to view the child. Else
-                    throw new AccessForbiddenException('Access to members outside your hierarchy is prohibited.');
+                    throw new AccessForbiddenException('Access to nodes outside your hierarchy is prohibited.');
                 }
             }
 
             $parent = $nodeEntity->getParent();
             $children = $this->affiliationService->getChildren($nodeEntity, ['maxDepth' => 4]);
 
+            // dd($this->affiliationService->getNestedAssociatives($children, $nodeEntity));
+            
             if($parent) {
                 // start from an empty container; do not render node above the parent
                 $structure = $this->createStructureItem($structure, $parent, null);

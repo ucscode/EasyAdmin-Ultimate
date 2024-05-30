@@ -24,25 +24,7 @@
 
 {% block body_javascript %}
     {{ parent() }}
+    <div data-node-structure="{{ structure|raw }}"></div>
     <script src="{{ asset('vendor/TreeDataNext/TreeDataNext.js') }}"></script>
-
-    <script type="module">
-        import $ from 'jquery';
-        import bootbox from 'bootbox';
-        
-        $(function() {
-            const structure = JSON.parse(atob('{{ structure|raw }}'));
-            
-            new TreeDataNext(structure)
-                .build(function(element, depth, item) {
-                    $(element).find('> a.tree-anchor').attr('href', item.hierarchyUrl);
-                })
-                .then(node => {
-                    $('#tree-nodes').append(node);
-                    let clone = node.cloneNode(true);
-                    $(clone).find('.tree').removeClass('tree').addClass('tree-items');
-                    $("#tree-list").append(clone);
-                });
-        });
-    </script>
+    <script type="module" src="{{ asset('resource/js/hierarchy.js') }}"></script>
 {% endblock %}

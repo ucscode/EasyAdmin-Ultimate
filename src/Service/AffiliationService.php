@@ -155,6 +155,32 @@ class AffiliationService
 
         return !empty($this->connection->prepare($simpleQuery)->executeQuery()->rowCount());
     }
+    
+    /**
+     * Get a nested array of parent-children relationship.
+     * 
+     * This will only work for result instance containing children associatives, not parent associatives.
+     * 
+     * @param Result $associatives        Doctrine DBAL Result instance retrieved from the children entity
+     * @param null|User $ancestor   The parent entity to use a root
+     */
+    public function getNestedAssociatives(array|Result $associatives, User|int $ancestor): array
+    {
+        !($ancestor instanceof User) ?: $ancestor = $ancestor->getId();
+        !($associatives instanceof Result) ?: $associatives = $associatives->fetchAllAssociative();
+
+        $collection = [];
+    
+        foreach ($associatives as $element) {
+            if ($element['parentId'] == $ancestor) {
+                $children = $this->getNestedAssociatives($associatives, $element['id']);
+                $element['children'] = $children ?: [];
+                $collection[] = $element;
+            }
+        }
+    
+        return $collection;
+    }
 
     /**
      * Get a recursive SQL Syntax that iterates over adjacency list descendants or ancestors

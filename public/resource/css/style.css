@@ -167,6 +167,100 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     background-color: var(--bs-white);
 }
 
+/* ----------- Tree Nodes -------------- */
+
+/* Reset some basic styles */
+.tree-list ul, 
+.tree-list li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    font-family: Arial, sans-serif;
+}
+
+/* Main tree container */
+.tree-list .tree-family {
+    /* padding-left: 20px; */
+    position: relative;
+}
+
+/* Tree items */
+.tree-list .tree-item {
+    margin: 0;
+    /* padding: 10px 0; */
+    position: relative;
+    /* padding-left: 20px; */
+}
+
+/* Links within tree items */
+.tree-list .tree-anchor {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background 0.3s, color 0.3s;
+    display: block;
+    border: 1px dotted var(--bs-gray-500);
+    margin: 10px auto;
+}
+
+.tree-list .tree-anchor:hover {
+    background: #3498db;
+    color: #fff;
+}
+
+/* Style for nested lists */
+.tree-list .tree-family ul {
+    margin-left: 10px;
+    padding-left: 16px;
+    border-left: 1px dashed #bdc3c7;
+    position: relative;
+    display: none;
+}
+
+.tree-list .tree-anchor.show ~ ul.tree-family {
+    display: block;
+}
+
+.tree-list .tree-item:first-child::before {
+    top: 50%;
+}
+
+.tree-list .tree-item:last-child::before {
+    top: 50%;
+}
+
+.tree-list .tree-item:first-child:last-child::before {
+    display: inline-block;
+}
+
+/* Icon before each anchor */
+.tree-list .tree-item > .tree-anchor::before {
+    font-family: 'FontAwesome';
+    margin-right: 10px;
+    transition: color 0.3s;
+    content: "\f06c";
+    color: var(--bs-warning);
+}
+
+.tree-list .tree-item.branch > .tree-anchor::before {
+    content: "\2b"; /* Plus Icon */
+    color: var(--bs-success);
+}
+
+.tree-list .tree-item.branch > .tree-anchor.show::before {
+    content: "\f068"; /* Minus Icon */
+    color: var(--bs-danger);
+}
+
+.tree-list .tree-item .tree-anchor:hover::before,
+.tree-list .tree-item.branch .tree-anchor:hover::before {
+    color: #fff;
+}
+
+/* ----------- /Tree Nodes ------------- */
+
 @media (min-width: 992px) {
     .eau-security-wrapper {
         margin: auto;
