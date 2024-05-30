@@ -1,5 +1,48 @@
 {% extends eau.templatePath('layout') %}
 
+{% block head_stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('vendor/TreeDataNext/TreeDataNext.css') }}">
+{% endblock %}
+
 {% block main %}
-    Yeo
+    <div class="row">
+        <div class="col-xl-8 mb-4">
+            <div class="border p-3 bg-light rounded-3">
+                <div id="tree-nodes" class="overflow-auto py-4"></div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <h5>Linear Tree View</h5>
+            <hr>
+            <div class="border p-3">
+                <div class="tree-list overflow-auto" id="tree-list"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    <script src="{{ asset('vendor/TreeDataNext/TreeDataNext.js') }}"></script>
+
+    <script type="module">
+        import $ from 'jquery';
+        import bootbox from 'bootbox';
+        
+        $(function() {
+            const structure = JSON.parse(atob('{{ structure|raw }}'));
+            
+            new TreeDataNext(structure)
+                .build(function(element, depth, item) {
+                    $(element).find('> a.tree-anchor').attr('href', item.hierarchyUrl);
+                })
+                .then(node => {
+                    $('#tree-nodes').append(node);
+                    let clone = node.cloneNode(true);
+                    $(clone).find('.tree').removeClass('tree').addClass('tree-items');
+                    $("#tree-list").append(clone);
+                });
+        });
+    </script>
 {% endblock %}

@@ -94,49 +94,66 @@ class AffiliationService
     /**
      * Checks if a given user is a child of a reference user.
      *
-     * @param User|int $child The child user or its ID to check.
-     * @param User|int $reference The reference user or its ID to check against.
-     * @return bool Returns true if the given user is a child of the reference user, false otherwise.
+     * @param User|int $user The base entity/node.
+     * @param User|int $child The child to be tested for.
+     * @return bool Returns true if the given user has the child specified, false otherwise.
      */
-    public function hasChild(User|int $child, User|int $reference): bool
+    public function hasChild(User|int $user, User|int $child): bool
     {
-        return !empty($this->getChildren($reference, ['entity' => $child])->rowCount());
+        return !empty($this->getChildren($user, ['entity' => $child])->rowCount());
     }
 
     /**
      * Checks if a given user is an ancestor of a reference user.
      *
-     * @param User|int $parent The parent user or its ID to check.
-     * @param User|int $reference The reference user or its ID to check against.
-     * @return bool Returns true if the given user is an ancestor of the reference user, false otherwise.
+     * @param User|int $user The base entity/node.
+     * @param User|int $ancestor The parent to check for.
+     * @return bool Returns true if the given user has the ancestor specified, false otherwise.
      */
-    public function hasAncestor(User|int $parent, User|int $reference): bool
+    public function hasAncestor(User|int $user, User|int $ancestor): bool
     {
-        return !empty($this->getAncestors($reference, ['entity' => $parent])->rowCount());
+        return !empty($this->getAncestors($user, ['entity' => $ancestor])->rowCount());
     }
 
     /**
      * Checks if the target user is a child of the reference user.
      *
-     * @param User $target The target user to check.
-     * @param User $reference The reference user to check against.
-     * @return bool Returns true if the target user is a child of the reference user, false otherwise.
+     * @param User $user The base entity/node.
+     * @param User $parent The parent user to test against.
+     * @return bool Returns true if the target user is a child of the parent user, false otherwise.
      */
-    public function isChildOf(User|int $target, User|int $reference): bool
+    public function isChildOf(User|int $user, User|int $parent): bool
     {
-        return $this->hasAncestor($target, $reference);
+        return $this->hasAncestor($user, $parent);
     }
 
     /**
      * Checks if the target user is a parent of the reference user.
      *
-     * @param User $target The target user to check.
-     * @param User $reference The reference user to check against.
+     * @param User|int $user The base entity/node to check.
+     * @param User|int $child The child user to check against.
      * @return bool Returns true if the target user is a parent of the reference user, false otherwise.
      */
-    public function isParentOf(User|int $target, User|int $reference): bool
+    public function isParentOf(User|int $user, User|int $child): bool
     {
-        return $this->hasChild($target, $reference);
+        return $this->hasChild($user, $child);
+    }
+
+    /**
+     * Check if a node/user has children. IE. Check if user is leaf node
+     * 
+     * @param User|int $reference   The reference user to check against
+     * @return bool     Returns true if children exists, false otherwise.
+     */
+    public function hasChildren(User|int $user): bool
+    {
+        $simpleQuery = sprintf(
+            "SELECT id FROM `%s` WHERE parent_id = %s",
+            $this->classMetaData->getTableName(),
+            $user instanceof User ? $user->getId() : $user
+        );
+
+        return !empty($this->connection->prepare($simpleQuery)->executeQuery()->rowCount());
     }
 
     /**
@@ -151,15 +168,23 @@ class AffiliationService
     private function getRecursionQuerySQL(int $entityId, int $traversal, ?string $filterCondition = null): string
     {       
         $recursionQuery = "WITH RECURSIVE nodes AS (
-            -- The Anchor Member (target)
-            SELECT `@entity`.*, 0 AS depth
-            FROM `@entity`
+            -- The Anchor Member 
+            SELECT 
+                anchor.id, 
+                anchor.email,
+                anchor.parent_id AS parentId, 
+                0 AS depth
+            FROM `@entity` anchor
             WHERE id = :entityId
 
             UNION ALL
 
             -- Recursive Member
-            SELECT kin.*, nodes.depth + 1
+            SELECT 
+                kin.id, 
+                kin.email,
+                kin.parent_id as parentId, 
+                nodes.depth + 1
             FROM `@entity` kin
             INNER JOIN nodes ON @traversalCondition
         )

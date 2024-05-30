@@ -71,14 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
     private ?self $parent = null;
-
-    /**
-     * The depth will always return null unless it is queried by the
-     * affiliation service which will set the depth relative to the
-     * root node
-     */
-    private ?int $depth = null;
-
+    
     public function __construct()
     {
         $this->notifications = new ArrayCollection();
@@ -333,17 +326,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->parent = $parent;
 
         return $this;
-    }
-
-    public function setDepth(?int $depth): static
-    {
-        $this->depth = $depth;
-
-        return $this;
-    }
-
-    public function getDepth(): ?int
-    {
-        return $this->depth;
     }
 }
