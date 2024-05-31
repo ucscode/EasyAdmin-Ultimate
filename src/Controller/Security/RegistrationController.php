@@ -38,7 +38,7 @@ class RegistrationController extends AbstractSecurityController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -50,9 +50,9 @@ class RegistrationController extends AbstractSecurityController
 
             // Generate Uniqid
             $user->setUniqueId($this->keyGenerator->generateKey(7));
-            
+
             $user->setParent($this->affiliationService->getRequestReferrer());
-            
+
             $entityManager->persist($user);
             $entityManager->flush();
 

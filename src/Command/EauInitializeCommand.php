@@ -40,7 +40,7 @@ class EauInitializeCommand extends Command
 
     /**
      * The command entry point
-     * 
+     *
      * This method is called by symfony when run through "php bin/console ..."
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -72,8 +72,8 @@ class EauInitializeCommand extends Command
 
     /**
      * $ composer update
-     * 
-     * Update project dependencies to the latest version and modifies the "composer.lock" file 
+     *
+     * Update project dependencies to the latest version and modifies the "composer.lock" file
      * to reflect the new versions of the packages that have been installed.
      */
     protected function updateComposerPackages(): void
@@ -85,7 +85,7 @@ class EauInitializeCommand extends Command
 
     /**
      * initialize import map
-     * 
+     *
      * Install import map packages and compile them when on production environment
      */
     protected function computeAssetMapperResource(): void
@@ -93,7 +93,7 @@ class EauInitializeCommand extends Command
         $this->symfonyStyle->title("Initializing Asset Mapper");
         $this->execBashCommand(['php', 'bin/console', 'importmap:install']);
 
-        ($this->kernel->getEnvironment() == self::ENV_DEV) ?: 
+        ($this->kernel->getEnvironment() == self::ENV_DEV) ?:
         $this->execBashCommand(['php', 'bin/console', 'asset-map:compile']);
 
         $this->symfonyStyle->success('Asset Mapper Initialized');
@@ -101,7 +101,7 @@ class EauInitializeCommand extends Command
 
     /**
      * Update user property configurations
-     * 
+     *
      * When new properties are added to user property pattern after compilation, only newly registered
      * users will receive the new property. To ensure the property is available to all users, this
      * will iterate the patterns and new patterns will be added for users who don't have the property

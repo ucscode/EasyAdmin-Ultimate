@@ -1,0 +1,35 @@
+<table class="table datagrid {{ table.rows|length is empty ? 'datagrid-empty' }}">
+    {% if table.rows|length %}
+        <thead>
+        {% block table_head %}
+            <tr>
+                {% for column in table.columns %}
+                    <th {{ table.cellAttributes(column)|html_attributes|raw }}>
+                        <span>{{ table.cellValueTransformer(column)|default(column.label) }}</span>
+                    </th>
+                {% endfor %}
+            </tr>
+        {% endblock table_head %}
+        </thead>
+    {% endif %}
+
+    <tbody>
+    {% block table_body %}
+        {% for row in table.rows %}
+            <tr data-id="{{ loop.index }}">
+                {% for cell in row %}
+                    <td {{ table.cellAttributes(cell)|html_attributes|raw }}>
+                        <span>{{ table.cellValueTransformer(cell) }}</span>
+                    </td>
+                {% endfor %}
+            </tr>
+
+        {% endfor %}
+    {% endblock table_body %}
+    </tbody>
+
+    <tfoot>
+    {% block table_footer %}
+    {% endblock table_footer %}
+    </tfoot>
+</table>

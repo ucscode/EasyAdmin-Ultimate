@@ -71,7 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
     private ?self $parent = null;
-    
+
     public function __construct()
     {
         $this->notifications = new ArrayCollection();

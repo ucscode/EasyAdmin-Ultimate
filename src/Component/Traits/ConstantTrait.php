@@ -21,7 +21,7 @@ trait ConstantTrait
      *
      * This method fetches the current class constants and optionally filters them by a specified prefix.
      * The keys and values of the resulting array can be formatted using the provided callbacks.
-     * 
+     *
      * @param string|null $withPrefix   Get only choice starting with a particular prefix
      * @param callable $formatKey       Format the keys of the resulting array
      * @param callable $formatValue     Format the values of the resulting array
@@ -30,15 +30,15 @@ trait ConstantTrait
     public static function getChoices(?string $withPrefix = null, ?callable $formatKey = null, ?callable $formatValue = null): array
     {
         $constants = self::getConstants();
-       
+
         if($withPrefix) {
             $constants = array_filter(
-                $constants, 
-                fn ($value) => preg_match(sprintf("/^%s/", $withPrefix), $value), 
+                $constants,
+                fn ($value) => preg_match(sprintf("/^%s/", $withPrefix), $value),
                 ARRAY_FILTER_USE_KEY
             );
         }
-        
+
         $arrayKeys = $formatKey ? array_map($formatKey, array_keys($constants)) : array_keys($constants);
         $arrayValues = $formatValue ? array_map($formatValue, array_values($constants)) : array_values($constants);
 

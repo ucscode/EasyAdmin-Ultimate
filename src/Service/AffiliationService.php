@@ -20,13 +20,12 @@ class AffiliationService
 
     protected Connection $connection;
     protected ClassMetadata $classMetaData;
-    
+
     public function __construct(
-        protected RequestStack $requestStack, 
+        protected RequestStack $requestStack,
         protected EntityManagerInterface $entityManager,
         protected ConfigurationService $configurationService
-    )
-    {
+    ) {
         $this->connection = $this->entityManager->getConnection();
         $this->classMetaData = $this->entityManager->getClassMetadata(User::class);
     }
@@ -48,7 +47,7 @@ class AffiliationService
      */
     public function getRequestReferrer(): ?User
     {
-        $referralId = 
+        $referralId =
             $this->requestStack->getCurrentRequest()->query->get(self::REQUEST_QUERY_KEY) ??
             $this->requestStack->getCurrentRequest()->cookies->get(self::REQUEST_COOKIE_KEY);
 
@@ -57,25 +56,25 @@ class AffiliationService
 
     /**
      * Get children of a user at different depths
-     * 
+     *
      * @param User $user The user to traverse
      * @param array $criteria The criteria to filter children
      * @return Result Doctrine DBAL Result containing all children
      */
     public function getChildren(User|int $user, array $criteria = []): Result
-    {   
+    {
         $queryString = $this->getRecursionQuerySQL(
-            $user instanceof User ? $user->getId() : $user, 
+            $user instanceof User ? $user->getId() : $user,
             self::TRAVERSE_CHILDREN,
             $this->getCriteriaCondition($criteria, self::TRAVERSE_CHILDREN) ?: 1
         );
-        
-       return $this->connection->prepare($queryString)->executeQuery();
+
+        return $this->connection->prepare($queryString)->executeQuery();
     }
 
     /**
      * Get ancestors of a user
-     * 
+     *
      * @param User $user The user to traverse
      * @param array $criteria The criteria to filter parents
      * @return Result Doctrine DBAL Result containing all parents
@@ -87,7 +86,7 @@ class AffiliationService
             self::TRAVERSE_PARENT,
             $this->getCriteriaCondition($criteria, self::TRAVERSE_PARENT) ?: 1
         );
-        
+
         return $this->connection->prepare($queryString)->executeQuery();
     }
 
@@ -141,7 +140,7 @@ class AffiliationService
 
     /**
      * Check if a node/user has children. IE. Check if user is leaf node
-     * 
+     *
      * @param User|int $reference   The reference user to check against
      * @return bool     Returns true if children exists, false otherwise.
      */
@@ -155,12 +154,12 @@ class AffiliationService
 
         return !empty($this->connection->prepare($simpleQuery)->executeQuery()->rowCount());
     }
-    
+
     /**
      * Get a nested array of parent-children relationship.
-     * 
+     *
      * This will only work for result instance containing children associatives, not parent associatives.
-     * 
+     *
      * @param Result $associatives        Doctrine DBAL Result instance retrieved from the children entity
      * @param null|User $ancestor   The parent entity to use a root
      */
@@ -170,7 +169,7 @@ class AffiliationService
         !($associatives instanceof Result) ?: $associatives = $associatives->fetchAllAssociative();
 
         $collection = [];
-    
+
         foreach ($associatives as $element) {
             if ($element['parentId'] == $ancestor) {
                 $children = $this->getNestedAssociatives($associatives, $element['id']);
@@ -178,21 +177,21 @@ class AffiliationService
                 $collection[] = $element;
             }
         }
-    
+
         return $collection;
     }
 
     /**
      * Get a recursive SQL Syntax that iterates over adjacency list descendants or ancestors
-     * 
+     *
      * @param int $entityId             The anchor or node to begin iteration from
      * @param int $traversal            Whether to return SQL query for children or parent traversal
      * @param string $filterCondtion    The condition to filter the list of traversed result
-     * 
+     *
      * @return string                   The recursive SQL Syntax
      */
     private function getRecursionQuerySQL(int $entityId, int $traversal, ?string $filterCondition = null): string
-    {       
+    {
         $recursionQuery = "WITH RECURSIVE nodes AS (
             -- The Anchor Member 
             SELECT 
@@ -234,7 +233,7 @@ class AffiliationService
 
     /**
      * An option resolver to validate the option passed by user to filter traversal result
-     * 
+     *
      * @param array $criteria   The array of data to traverse
      * @return array            The validated resolved option
      * @throws \Exception        If criteria contain invalid key or value
@@ -256,13 +255,13 @@ class AffiliationService
                 ->setAllowedTypes($key, ['null', 'integer'])
                 ->setAllowedValues($key, fn (?int $value) => $value === null || $value > 0);
         }
-        
+
         $criteria = $resolver->resolve($criteria);
-        
+
         if($criteria['maxDepth'] !== null) {
             Assert::greaterThanEq(
-                $criteria['maxDepth'], 
-                $criteria['minDepth'], 
+                $criteria['maxDepth'],
+                $criteria['minDepth'],
                 'The option "maxDepth" should not be less than "minDepth"'
             );
         }
@@ -272,7 +271,7 @@ class AffiliationService
 
     /**
      * Generates the condition string used to filter traversal result
-     * 
+     *
      * @param array $criteria   The criteria to confirm
      * @return string           The "where" clause string to filter the result
      */
@@ -289,12 +288,12 @@ class AffiliationService
             "depth >= %s" => $criteria['minDepth'] ?? null,
             "depth <= %s" => $criteria['maxDepth'] ?? null,
             "depth = %s" => $criteria['depth'] ?? null,
-            "id = %s" => $criteria['entity'] ?? null, 
+            "id = %s" => $criteria['entity'] ?? null,
         ]);
 
         $result = array_map(
-            fn ($value, $key) => sprintf($value, $key), 
-            array_keys($condition), 
+            fn ($value, $key) => sprintf($value, $key),
+            array_keys($condition),
             array_values($condition)
         );
 

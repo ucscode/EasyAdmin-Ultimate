@@ -141,7 +141,7 @@ class UserCrudController extends AbstractAdminCrudController
         ;
 
         $hierarchyAction = Action::new('hierarchy', 'Hierarchy')
-            ->linkToUrl(function(User $entity) {
+            ->linkToUrl(function (User $entity) {
                 return $this->adminUrlGenerator
                     ->setRoute(Hierarchy::ROUTE_NAME, [
                         'entityId' => $entity->getId(),

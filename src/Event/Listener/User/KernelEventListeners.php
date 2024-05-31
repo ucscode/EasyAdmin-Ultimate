@@ -56,7 +56,7 @@ class KernelEventListeners
             };
         }
     }
-    
+
     #[AsEventListener(KernelEvents::RESPONSE)]
     public function saveReferralIdentityToCookie(ResponseEvent $event): void
     {
@@ -70,11 +70,11 @@ class KernelEventListeners
 
             if($parent) {
                 $cookie = new Cookie(
-                    AffiliationService::REQUEST_COOKIE_KEY, 
+                    AffiliationService::REQUEST_COOKIE_KEY,
                     $parent->getUniqueId(),
                     new \DateTime('+7 days')
                 );
-                
+
                 $event->getResponse()->headers->setCookie($cookie);
             }
         }

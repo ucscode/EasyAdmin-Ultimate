@@ -6,7 +6,7 @@ use App\Component\Traits\ConstantTrait;
 
 /**
  * This class is used to maintain consistency in slot management.
- * 
+ *
  * Both within database, application context or twig environment.
  * It define slot names that can be used with the _slot() twig function
  */

@@ -5,6 +5,8 @@ namespace App\Controller\Initial\User;
 use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
 use App\Entity\User\User;
 use App\Exceptions\AccessForbiddenException;
+use App\Model\Table\Cell;
+use App\Model\Table\Table;
 use App\Service\AffiliationService;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -16,16 +18,15 @@ use Symfony\Component\Routing\Attribute\Route;
 class Hierarchy extends AbstractInitialDashboardController
 {
     public const ROUTE_NAME = 'app_user_hierarchy';
-    
+
     protected ParameterBag $parameters;
 
     public function __construct(
-        protected EntityManagerInterface $entityManager, 
+        protected EntityManagerInterface $entityManager,
         protected AffiliationService $affiliationService,
         protected AdminUrlGenerator $adminUrlGenerator,
-    )
-    {
-        
+    ) {
+
     }
 
     #[Route("/hierarchy", name: self::ROUTE_NAME)]
@@ -40,24 +41,27 @@ class Hierarchy extends AbstractInitialDashboardController
         }
 
         $this->parameters = new ParameterBag($request->query->all('routeParams'));
-        
+
         $nodeEntity = $this->parameters->get('entityId') ?
             $this->entityManager->getRepository(User::class)->find($this->parameters->get('entityId')) :
             $this->getUser();
 
         $structure = $this->getGenealogyStructure($nodeEntity, $this->getUser());
 
+        $table = $this->tableFactory($nodeEntity);
+
         return $this->render('initial/user_hierarchy.html.twig', [
             'structure' => base64_encode(json_encode($structure)),
+            'table' => $table,
         ]);
     }
 
     protected function getGenealogyStructure(?User $nodeEntity, ?User $currentUser): array
-    {            
+    {
         $structure = [];
 
         if($nodeEntity) {
-            
+
             if($nodeEntity != $currentUser) {
                 if(!$currentUser || !$this->affiliationService->hasChild($currentUser, $nodeEntity)) {
                     // Check if user has permission to view the child. Else
@@ -66,15 +70,14 @@ class Hierarchy extends AbstractInitialDashboardController
             }
 
             $parent = $nodeEntity->getParent();
+
             $children = $this->affiliationService->getChildren($nodeEntity, ['maxDepth' => 4]);
 
-            // dd($this->affiliationService->getNestedAssociatives($children, $nodeEntity));
-            
             if($parent) {
                 // start from an empty container; do not render node above the parent
                 $structure = $this->createStructureItem($structure, $parent, null);
             }
-            
+
             // render the target node after parent or as root node if no parent
             $structure = $this->createStructureItem($structure, $nodeEntity, $parent);
 
@@ -88,6 +91,23 @@ class Hierarchy extends AbstractInitialDashboardController
         return $structure;
     }
 
+    protected function tableFactory(User $nodeEntity): Table
+    {
+        $table = new Table();
+
+        $table->setColumns([
+            Cell::new('Id'),
+            Cell::new('Email'),
+            Cell::new('Parent'),
+            Cell::new('Level')
+        ]);
+
+        $table->setRows($this->affiliationService->getChildren($nodeEntity)->fetchAllAssociative());
+
+        return $table;
+
+    }
+
     /**
      * @param array $structure  The structure container
      * @param User $user        The node to be created
@@ -95,7 +115,7 @@ class Hierarchy extends AbstractInitialDashboardController
      */
     private function createStructureItem(array $structure, User $user, ?User $parent = null): array
     {
-        $urlGenerator =$this->adminUrlGenerator->setRoute(self::ROUTE_NAME, [
+        $urlGenerator = $this->adminUrlGenerator->setRoute(self::ROUTE_NAME, [
             'entityId' => $user->getId(),
         ]);
 

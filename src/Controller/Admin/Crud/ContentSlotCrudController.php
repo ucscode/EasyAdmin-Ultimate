@@ -24,7 +24,7 @@ class ContentSlotCrudController extends AbstractAdminCrudController
 
         $this->title = (new UnicodeString($classBaseName))->snake()->replace('_', ' ')->title(true);
 
-        $this->slotChoices =  SlotConstants::getChoices('SLOT_', null, function(string $value) {
+        $this->slotChoices =  SlotConstants::getChoices('SLOT_', null, function (string $value) {
             $label = preg_replace(sprintf('/^%s/', preg_quote('SLOT_', '/')), '', $value);
             return str_replace('_', ' ', $label);
         });

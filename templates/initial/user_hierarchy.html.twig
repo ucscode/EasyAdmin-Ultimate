@@ -6,19 +6,33 @@
 {% endblock %}
 
 {% block main %}
-    <div class="row">
-        <div class="col-xl-8 mb-4">
-            <div class="border p-3 bg-light rounded-3">
-                <div id="tree-nodes" class="overflow-auto py-4"></div>
+
+    <div class="container">
+
+        <div class="row mb-5">
+            <div class="col-xl-8 mb-4">
+                <div class="border p-3 bg-light rounded-3">
+                    <div id="tree-nodes" class="overflow-auto py-4"></div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <h5>Linear Tree View</h5>
+                <hr>
+                <div class="border p-3">
+                    <div class="tree-list overflow-auto" id="tree-list"></div>
+                </div>
             </div>
         </div>
-        <div class="col-xl-4">
-            <h5>Linear Tree View</h5>
-            <hr>
-            <div class="border p-3">
-                <div class="tree-list overflow-auto" id="tree-list"></div>
+
+        <div class="border border-3 p-4">
+            <h3 class="fw-light mb-3">
+                <i class="fas fa-sitemap me-2"></i> Referrals
+            </h3>
+            <div class="">
+                {% include 'utils/table.html.twig' with {table: table} %}
             </div>
         </div>
+
     </div>
 {% endblock %}
 

@@ -49,11 +49,11 @@ class ContentSlotExtension extends AbstractExtension
             ->setParameter('enabled', true)
             ->orderBy('entity.sort', 'ASC')
         ;
-        
+
         $entities = $queryBuilder->getQuery()->getResult();
-        
+
         $contentStack = array_map(fn (ContentSlot $entityInstance) => $this->getSlotContent($entityInstance), $entities);
-        
+
         return implode("\n", array_filter($contentStack));
     }
 
@@ -77,21 +77,21 @@ class ContentSlotExtension extends AbstractExtension
             ),
             fn (?string $parentFQCN) => $parentFQCN !== null
         );
-        
+
         // Get targeted areas where the contents are allowed to render
-        
+
         foreach($entityInstance->getTargets() as $patternKey) {
-            
+
             if($pattern = $this->contentSlotPattern->getPattern($patternKey)) {
-                
+
                 $parentFQCN = $pattern->get(ContentSlotPattern::ACCESS_PARENT_FQCN); // (string) single parent
-                
+
                 if($parentFQCN === null) {
                     // ensure that current controller is not part of the ancestors container
                     if(!$this->isSubClassOf($this->getControllerClassName(), $ancestorsContainer)) {
                         return $entityInstance->getContent();
                     }
-                    
+
                     continue;
                 }
 
@@ -100,7 +100,7 @@ class ContentSlotExtension extends AbstractExtension
                 }
             }
         }
-        
+
         return null;
     }
 
