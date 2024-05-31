@@ -6,6 +6,7 @@ use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
 use App\Entity\User\User;
 use App\Exceptions\AccessForbiddenException;
 use App\Model\Table\Cell;
+use App\Model\Table\ColumnCell;
 use App\Model\Table\Table;
 use App\Service\AffiliationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -63,10 +64,10 @@ class Hierarchy extends AbstractInitialDashboardController
         if($nodeEntity) {
 
             if($nodeEntity != $currentUser) {
-                if(!$currentUser || !$this->affiliationService->hasChild($currentUser, $nodeEntity)) {
-                    // Check if user has permission to view the child. Else
-                    throw new AccessForbiddenException('Access to nodes outside your hierarchy is prohibited.');
-                }
+                // if(!$currentUser || !$this->affiliationService->hasChild($currentUser, $nodeEntity)) {
+                //     // Check if user has permission to view the child. Else
+                //     throw new AccessForbiddenException('Access to nodes outside your hierarchy is prohibited.');
+                // }
             }
 
             $parent = $nodeEntity->getParent();
@@ -93,16 +94,17 @@ class Hierarchy extends AbstractInitialDashboardController
 
     protected function tableFactory(User $nodeEntity): Table
     {
-        $table = new Table();
+        $table = new Table('hierarchy');
 
         $table->setColumns([
-            Cell::new('Id'),
-            Cell::new('Email'),
-            Cell::new('Parent'),
-            Cell::new('Level')
+            ColumnCell::new('Id'),
+            ColumnCell::new('Email'),
+            ColumnCell::new('Parent'),
+            ColumnCell::new('Level')
         ]);
 
         $table->setRows($this->affiliationService->getChildren($nodeEntity)->fetchAllAssociative());
+        $table->setBatchActions(true, 0);
 
         return $table;
 

@@ -4,60 +4,100 @@ namespace App\Model\Table;
 
 use Closure;
 use ErrorException;
+use InvalidArgumentException;
+use Ucscode\Paginator\Paginator;
 
 class Table
 {
-    /**
-     * @var Cell[]
-     */
-    private array $columns = [];
+    protected ?string $name = null;
 
     /**
-     * @var Array<Cell[]>
+     * @var ColumnCell[]
      */
-    private array $rows = [];
+    protected array $columns = [];
 
-    private ?Closure $cellAttributes = null;
+    /**
+     * @var Array<DataCell[]>
+     */
+    protected array $rows = [];
 
-    private ?Closure $cellValueTransformer = null;
+    protected ?Closure $cellAttributes = null;
 
-    public function __construct()
+    protected ?Closure $cellValueTransformer = null;
+
+    protected bool $batchActions = false;
+
+    protected ?string $associateIndex = null;
+
+    protected Paginator $paginator;
+    
+    public function __construct(?string $name = '')
     {
-        $this->setCellAttributes(function (Cell $cell): array {
-            return [
-                'data-column' => $cell->getLabel() ?: $cell->getValue(),
-                'class' => $cell->getType() == Cell::TYPE_COLUMN ? 'cell-column' : 'cell-data',
-                'data-label' => $cell->getLabel(),
+        $this->setName($name);
+
+        $this->setCellAttributes(function (Cell $cell, int $offset): array 
+        {
+            $attributes = [
+                'data-cell' => $offset
             ];
+
+            if($cell instanceof ColumnCell) {
+                return array_replace($attributes, [
+                    'data-column' => $cell->getLabel() ?: $cell->getValue(),
+                    'class' => 'cell-column',
+                ]);
+            }
+            
+            return array_replace($attributes, [
+                'data-label' => $cell->getLabel(),
+                'class' => 'cell-data',
+            ]);
         });
     }
 
+    public function setName(?string $name): static
+    {
+        // Remove leading digits
+        $name = preg_replace('/^[0-9]+/', '', $name);
+        // Remove invalid characters
+        $name = preg_replace('/[^a-zA-Z0-9_\-:.]/', '', $name);
+        // Ensure it starts with a letter
+        $this->name = preg_replace('/^[^a-zA-Z]+/', '', $name);
+
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     /**
-     * @param Array<string|Cell> $columns
+     * @param Array<string|ColumnCell> $columns
      */
     public function setColumns(array $columns): static
     {
-        $this->columns = $this->convertToCell($columns, Cell::TYPE_COLUMN);
+        $this->columns = $this->convertToCell($columns, ColumnCell::class);
 
         return $this;
     }
 
     /**
-     * @return Cell[]
+     * @return ColumnCell[]
      */
     public function getColumns(): array
     {
         return $this->columns;
     }
 
-    public function addColumn(Cell $cell): static
+    public function addColumn(ColumnCell $cell): static
     {
         $this->columns[] = $cell;
 
         return $this;
     }
 
-    public function removeColumn(Cell $cell): static
+    public function removeColumn(ColumnCell $cell): static
     {
         if(false !== ($key = array_search($cell, $this->columns))) {
             unset($this->columns[$key]);
@@ -66,10 +106,12 @@ class Table
         return $this;
     }
 
-    public function getColumn(string $label): ?Cell
+    public function getColumnBy(string $property, string $value): ?ColumnCell
     {
+        $method = sprintf('get%s', ucfirst($property));
+        
         foreach($this->columns as $cell) {
-            if($cell->getLabel() == $label) {
+            if(method_exists($cell, $method) && $cell->{$method}() == $value) {
                 return $cell;
             }
         }
@@ -80,17 +122,17 @@ class Table
     /**
      * Each row will be iterated and the data will be converted to a cell if it is a string
      *
-     * @param Array<(Cell|string)[]> $rows     An array of arrays containing Cell (or string)
+     * @param Array<(DataCell|string)[]> $rows     An array of arrays containing Cell (or string)
      */
     public function setRows(array $rows): static
     {
-        $this->rows = array_map(fn (array $row) => $this->convertToCell($row, Cell::TYPE_DATA), $rows);
+        $this->rows = array_map(fn (array $row) => $this->convertToCell($row, DataCell::class), $rows);
 
         return $this;
     }
 
     /**
-     * @return Array<Cell[]>
+     * @return Array<DataCell[]>
      */
     public function getRows(): array
     {
@@ -113,11 +155,11 @@ class Table
     }
 
     /**
-     * @param Array<Cell|string> $row
+     * @param Array<DataCell|string> $row
      */
     public function addRow(array $row): static
     {
-        $this->rows[] = $this->convertToCell($row, Cell::TYPE_DATA);
+        $this->rows[] = $this->convertToCell($row, DataCell::class);
 
         return $this;
     }
@@ -136,13 +178,16 @@ class Table
         return $this;
     }
 
-    public function getCellAttributes(Cell $cell): array
+    /**
+     * @internal
+     */
+    public function getCellAttributes(Cell $cell, int $offset): array
     {
-        $attributes = $this->cellAttributes ? call_user_func($this->cellAttributes, $cell) : [];
+        $attributes = $this->cellAttributes ? call_user_func($this->cellAttributes, $cell, $offset) : [];
 
         if(!is_array($attributes)) {
             throw new ErrorException(
-                sprintf("The return type of cell attributes callback must return an array, %s returned instead.", gettype($attributes))
+                sprintf("The return type of cell attributes callback must be an array, %s returned instead.", gettype($attributes))
             );
         }
 
@@ -158,8 +203,10 @@ class Table
 
     /**
      * Note: Return an empty string to get an empty cell
+     * 
+     * @internal
      */
-    public function getCellValueTransformer(Cell $cell): mixed
+    public function getCellValueTransformer(Cell $cell, int $offset): mixed
     {
         $value = $this->cellValueTransformer ? call_user_func($this->cellValueTransformer, $cell) : $cell->getValue();
 
@@ -173,22 +220,65 @@ class Table
     }
 
     /**
+     * Whether to add checkboxes to the table when rendered
+     */
+    public function setBatchActions(bool $batches, ?string $associateIndex = null): static
+    {
+        $this->batchActions = $batches;
+
+        if($this->batchActions && $associateIndex === null) {
+            throw new InvalidArgumentException(
+                sprintf("%s(): requires a associate Index to set values of checkbox inputs", __METHOD__)
+            );
+        }
+
+        $this->associateIndex = $associateIndex;
+
+        return $this;
+    }
+
+    public function hasBatchActions(): bool
+    {
+        return $this->batchActions;
+    }
+
+    public function getAssociateIndex(): ?string
+    {
+        return $this->associateIndex;
+    }
+
+    /**
      * Convert all data in the array into cell instances
      *
      * @param Array<string|Cell> $sequence  A single row of data
+     * @param string $cellFqcn              The fully qualified class name of the cell to convert into
      * @return Cell[]
-     * @throws Exception if datatype cannot be converted into cell
+     * @throws Exception if datatype cannot be converted into cell or the data is not an instance of the specified $cellFqcn
      */
-    private function convertToCell(array $sequence, string $cellType): array
+    private function convertToCell(array $sequence, string $cellFqcn): array
     {
         $container = [];
 
         foreach($sequence as $key => $cell) {
-            if(!($cell instanceof Cell)) {
-                $cell = Cell::new($key)->setValue($cell);
-            }
 
-            $cell->setType($cellType);
+            if(!($cell instanceof $cellFqcn)) {
+                /**
+                 * if `$cell` is an instance of a different object, 
+                 * then it should have the `__toString()` method.
+                 * Otherwise, it will not be able to convert into a cell
+                 */
+                $cell = $cellFqcn::new($key)->setValue($cell);
+            }
+            
+            if(!($cell instanceof $cellFqcn)) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Cell data requires a collection of %s or string, %s given instead.', 
+                        $cellFqcn, 
+                        gettype($cell) == 'object' ? $cell::class : gettype($cell)
+                    )
+                );
+            }
 
             $container[] = $cell;
         }

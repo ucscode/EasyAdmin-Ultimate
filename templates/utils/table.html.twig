@@ -1,35 +1,68 @@
-<table class="table datagrid {{ table.rows|length is empty ? 'datagrid-empty' }}">
+<table class="table datagrid {{ table.rows is empty ? 'datagrid-empty' }}">
     {% if table.rows|length %}
         <thead>
-        {% block table_head %}
-            <tr>
-                {% for column in table.columns %}
-                    <th {{ table.cellAttributes(column)|html_attributes|raw }}>
-                        <span>{{ table.cellValueTransformer(column)|default(column.label) }}</span>
-                    </th>
-                {% endfor %}
-            </tr>
-        {% endblock table_head %}
+            {% block table_head %}
+                <tr>
+                    {% if table.batchActions %}
+                        <th>
+                            <div class="form-check">
+                                <span><input type="checkbox" class="form-check-input form-batch-checkbox-all" id="form-batch-checkbox-{{ table.name|default('all') }}"></span>
+                            </div>
+                        </th>
+                    {% endif %}
+                    {% for column in table.columns %}
+                        <th {{ table.cellAttributes(column, loop.index)|html_attributes|raw }}>
+                            <span>{{ table.cellValueTransformer(column, loop.index)|default(column.label) }}</span>
+                        </th>
+                    {% endfor %}
+                </tr>
+            {% endblock table_head %}
         </thead>
     {% endif %}
 
     <tbody>
-    {% block table_body %}
-        {% for row in table.rows %}
-            <tr data-id="{{ loop.index }}">
-                {% for cell in row %}
-                    <td {{ table.cellAttributes(cell)|html_attributes|raw }}>
-                        <span>{{ table.cellValueTransformer(cell) }}</span>
-                    </td>
-                {% endfor %}
-            </tr>
+        {% block table_body %}
+            {% for row in table.rows %}
+                <tr data-id="cell-group-{{ loop.index }}">
+                    {% if table.batchActions %}
+                        <td class="batch-actions-selector">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input form-batch-checkbox" id="form-batch-checkbox-{{ loop.index0 }}" value="{{ attribute(row, table.associateIndex).value }}">
+                            </div>
+                        </td>
+                    {% endif %}
+                    {% for cell in row %}
+                        <td {{ table.cellAttributes(cell, loop.index)|html_attributes|raw }}>
+                            <span>{{ table.cellValueTransformer(cell, loop.index) }}</span>
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% else %}
+                {# on empty table.rows #}
+                {% block table_body_empty %}
+                    {% for i in range(1, 5) %}
+                        <tr class="empty-row">
+                            {% for x in 1..6 %}
+                                <td><span></span></td>
+                            {% endfor %}
+                        </tr>
 
-        {% endfor %}
-    {% endblock table_body %}
+                        {% if 2 == loop.index %}
+                            <tr class="no-results">
+                                <td colspan="100">
+                                    {{ t('datagrid.no_results', ea.i18n.translationParameters, 'EasyAdminBundle')|trans }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endblock table_body_empty %}
+                {# end empty table.rows #}
+            {% endfor %}
+        {% endblock table_body %}
     </tbody>
 
     <tfoot>
-    {% block table_footer %}
-    {% endblock table_footer %}
+        {% block table_footer %}
+        {% endblock table_footer %}
     </tfoot>
 </table>
