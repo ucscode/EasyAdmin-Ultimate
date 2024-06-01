@@ -31,9 +31,7 @@ class TableBuilder
      */
     protected array $rows = [];
 
-    protected ?Closure $cellAttributes = null;
-
-    protected ?Closure $cellValueTransformer = null;
+    protected ?Closure $configurator = null;
 
     protected bool $batchActions = false;
 
@@ -45,17 +43,14 @@ class TableBuilder
     {
         $this->setName($name);
         $this->paginator = new Paginator();
-        $this->setDefaultCellAttributes();
+        $this->setDefaultConfigurator();
     }
 
     public function setName(?string $name): static
     {
-        // Remove leading digits
-        $name = preg_replace('/^[0-9]+/', '', $name);
-        // Remove invalid characters
-        $name = preg_replace('/[^a-zA-Z0-9_\-:.]/', '', $name);
-        // Ensure it starts with a letter
-        $this->name = preg_replace('/^[^a-zA-Z]+/', '', $name);
+        $name = preg_replace('/^[0-9]+/', '', $name); // Remove leading digits
+        $name = preg_replace('/[^a-zA-Z0-9_\-:.]/', '', $name); // Remove invalid characters
+        $this->name = preg_replace('/^[^a-zA-Z]+/', '', $name); // Ensure it starts with a letter
 
         return $this;
     }
@@ -70,7 +65,7 @@ class TableBuilder
      */
     public function setColumns(array $columns): static
     {
-        $this->columns = $this->convertToCell($columns, ColumnCell::class);
+        $this->columns = $this->cellValues($columns, ColumnCell::class);
 
         return $this;
     }
@@ -99,19 +94,6 @@ class TableBuilder
         return $this;
     }
 
-    public function getColumnBy(string $property, string $value): ?ColumnCell
-    {
-        $method = sprintf('get%s', ucfirst($property));
-        
-        foreach($this->columns as $cell) {
-            if(method_exists($cell, $method) && $cell->{$method}() == $value) {
-                return $cell;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Each row will be iterated and the data will be converted to a cell if it is a string
      *
@@ -120,7 +102,7 @@ class TableBuilder
     public function setRows(array $rows): static
     {
         $this->rows = array_map(function(array $row) {
-            return $this->convertToCell($row, DataCell::class);
+            return $this->cellValues($row, DataCell::class);
         }, $rows);
 
         return $this;
@@ -135,6 +117,17 @@ class TableBuilder
     }
 
     /**
+     * Get a single row from the available rows
+     * 
+     * @param int $index        The index of the row
+     * @return DataCell[]|null  Returns a collection of DataCell objects or null if row is not found.
+     */
+    public function getRow(int $index): ?array
+    {
+        return $this->rows[$index] ?? null;
+    }
+
+    /**
      * Remove a row from the row set.
      *
      * This method receives a callback as parameter and the callback receives an array containing Cells as argument.
@@ -144,7 +137,7 @@ class TableBuilder
      */
     public function removeRows(callable $callback): static
     {
-        $this->rows = array_filter($this->rows, fn (array $row) => call_user_func($callback, $row));
+        $this->rows = array_filter($this->rows, fn(array $row) => call_user_func($callback, $row));
 
         return $this;
     }
@@ -154,54 +147,25 @@ class TableBuilder
      */
     public function addRow(array $row): static
     {
-        $this->rows[] = $this->convertToCell($row, DataCell::class);
+        $this->rows[] = $this->cellValues($row, DataCell::class);
 
         return $this;
     }
 
-    /**
-     * Set HTML attributes for each cell elements.
-     *
-     * The callback receives the current cell being iterated and must return an array representing HTML attributes and values
-     *
-     * @param callable $callback    The callable to dynamically define the cell attributes
-     */
-    public function setCellAttributes(?callable $callback): static
+    public function setConfigurator(?callable $callback): static
     {
         if($callback && !($callback instanceof Closure)) {
             $callback = Closure::fromCallable($callback);
         }
 
-        $this->cellAttributes = $callback;
+        $this->configurator = $callback;
 
         return $this;
     }
 
-    /**
-     * @internal
-     */
-    public function getCellAttributes(Cell $cell, int $offset): array
+    public function getConfigurator(): ?Closure
     {
-        $attributes = $this->cellAttributes ? call_user_func($this->cellAttributes, $cell, $offset) : [];
-
-        if(!is_array($attributes)) {
-            throw new ErrorException(
-                sprintf("The return type of cell attributes callback must be an array, %s returned instead.", gettype($attributes))
-            );
-        }
-
-        return $attributes;
-    }
-
-    public function setCellValueTransformer(?callable $callback): static
-    {
-        if($callback && !($callback instanceof Closure)) {
-            $callback = Closure::fromCallable($callback);
-        }
-
-        $this->cellValueTransformer = $callback;
-
-        return $this;
+        return $this->configurator;
     }
 
     /**
@@ -209,17 +173,16 @@ class TableBuilder
      * 
      * @internal
      */
-    public function getCellValueTransformer(Cell $cell, int $offset): mixed
+    public function configureCell(Cell $cell, int $offset): void
     {
-        $value = $this->cellValueTransformer ? call_user_func($this->cellValueTransformer, $cell) : $cell->getValue();
-
-        if(!is_scalar($value) && !is_null($value)) {
-            throw new ErrorException(
-                sprintf("The return type of formatted cell value must be scalar, %s returned instead.", gettype($value))
+        if($this->configurator) {
+            call_user_func(
+                $this->configurator, 
+                $cell,  
+                $offset, 
+                $this->fetchColumnCell($offset, $cell::class)
             );
         }
-
-        return $value ?? $cell->getValue();
     }
 
     /**
@@ -258,63 +221,58 @@ class TableBuilder
     }
 
     /**
-     * Convert all data in the array into cell instances
+     * Convert all data in the array into Column cell instances
      *
      * @param Array<string|Cell> $sequence  A single row of data
-     * @param string $cellFqcn              The fully qualified class name of the cell to convert into
      * @return Cell[]
-     * @throws Exception if datatype cannot be converted into cell or the data is not an instance of the specified $cellFqcn
      */
-    private function convertToCell(array $sequence, string $cellFqcn): array
+    private function cellValues(array $sequence, string $cellFqcn): array
     {
-        $container = [];
-
-        foreach($sequence as $key => $cell) {
-
-            if(!($cell instanceof $cellFqcn)) {
-                /**
-                 * if `$cell` is an instance of a different object, 
-                 * then it should have the `__toString()` method.
-                 * Otherwise, it will not be able to convert into a cell
-                 */
-                $cell = $cellFqcn::new($key)->setValue($cell);
+        return array_values(array_map(function($value) use($cellFqcn) {
+            if($value instanceof $cellFqcn) {
+                return $value;
             }
-            
-            if(!($cell instanceof $cellFqcn)) {
+
+            if(is_object($value) && !method_exists($value, '__toString')) {
                 throw new InvalidArgumentException(
-                    sprintf(
-                        'Cell data requires a collection of %s or string, %s given instead.', 
-                        $cellFqcn, 
-                        gettype($cell) == 'object' ? $cell::class : gettype($cell)
-                    )
+                    sprintf("%s::__construct() requires ?string argument, %s provided instead", $cellFqcn, $value::class)
                 );
             }
 
-            $container[] = $cell;
-        }
-
-        return $container;
+            return $cellFqcn::new($value);;
+        }, $sequence));
     }
 
-    private function setDefaultCellAttributes(): void
+    private function setDefaultConfigurator(): void
     {
-        $this->setCellAttributes(function (Cell $cell, int $offset): array 
+        $this->setConfigurator(function (Cell $cell, int $offset, ?ColumnCell $columnCell) 
         {
-            $attributes = [
-                'data-cell' => $offset
-            ];
+            $attributes = ['data-cell' => $offset];
 
             if($cell instanceof ColumnCell) {
-                return array_replace($attributes, [
-                    'data-column' => $cell->getLabel() ?: $cell->getValue(),
+                $attributes += [
+                    'data-column' => $cell->getValue(),
                     'class' => 'cell-column',
-                ]);
+                ];
+
+                return $cell->setAttributes($attributes);
             }
             
-            return array_replace($attributes, [
-                'data-label' => $cell->getLabel(),
+            $attributes += [
+                'data-label' => $columnCell?->getValue(),
                 'class' => 'cell-data',
-            ]);
+            ];
+
+            $cell->setAttributes($attributes);
         });
+    }
+
+    private function fetchColumnCell(int $offset, string $cellFqcn): ?ColumnCell
+    {
+        if($cellFqcn === ColumnCell::class) {
+            return null;
+        }
+
+        return $this->columns[$offset] ?? null;
     }
 }

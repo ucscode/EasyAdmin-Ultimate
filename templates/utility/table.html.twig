@@ -11,8 +11,9 @@
                         </th>
                     {% endif %}
                     {% for column in table.columns %}
-                        <th {{ table.cellAttributes(column, loop.index)|html_attributes|raw }}>
-                            <span>{{ table.cellValueTransformer(column, loop.index)|default(column.label) }}</span>
+                        {% do table.configureCell(column, loop.index0) %}
+                        <th {{ column.attributes|html_attributes|raw }}>
+                            <span class="{{ column.get('class') }}">{{ column.value }}</span>
                         </th>
                     {% endfor %}
                 </tr>
@@ -32,8 +33,9 @@
                         </td>
                     {% endif %}
                     {% for cell in row %}
-                        <td {{ table.cellAttributes(cell, loop.index)|html_attributes|raw }}>
-                            <span>{{ table.cellValueTransformer(cell, loop.index) }}</span>
+                        {% do table.configureCell(cell, loop.index0) %}
+                        <td {{ cell.attributes|html_attributes|raw }}>
+                            <span class="{{ cell.get('class') }}">{{ cell.value }}</span>
                         </td>
                     {% endfor %}
                 </tr>

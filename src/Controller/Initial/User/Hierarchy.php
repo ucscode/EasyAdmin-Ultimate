@@ -7,6 +7,7 @@ use App\Entity\User\User;
 use App\Exceptions\AccessForbiddenException;
 use App\Utility\Table\ColumnCell;
 use App\Service\AffiliationService;
+use App\Utility\Table\DataCell;
 use App\Utility\Table\TableBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -96,12 +97,12 @@ class Hierarchy extends AbstractInitialDashboardController
         $table = new TableBuilder('hierarchy');
 
         $table->setColumns([
-            ColumnCell::new('Id'),
-            ColumnCell::new('Email'),
-            ColumnCell::new('Parent'),
-            ColumnCell::new('Level')
+            'id', 
+            'email', 
+            'parent', 
+            'others'
         ]);
-        
+
         // Filter columns
         
         $table
@@ -116,6 +117,7 @@ class Hierarchy extends AbstractInitialDashboardController
             ->setUrlPattern('g/b')
         ;
 
+        // dd($table);
         return $table;
 
     }
