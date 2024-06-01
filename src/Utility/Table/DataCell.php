@@ -1,5 +1,5 @@
 <?php
 
-namespace App\Model\Table;
+namespace App\Utility\Table;
 
 class DataCell extends Cell {}

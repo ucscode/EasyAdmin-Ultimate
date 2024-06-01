@@ -4,7 +4,7 @@
 
     {% for bs_modal in eau.modals(true) %}
 
-        {% include 'utils/modal/item.html.twig' with {
+        {% include 'utility/modal/item.html.twig' with {
             'modalClass': bs_modal.modalClassName,
             'modalId': bs_modal.id,
             'modalName': bs_modal.name,

@@ -5,10 +5,9 @@ namespace App\Controller\Initial\User;
 use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
 use App\Entity\User\User;
 use App\Exceptions\AccessForbiddenException;
-use App\Model\Table\Cell;
-use App\Model\Table\ColumnCell;
-use App\Model\Table\Table;
+use App\Utility\Table\ColumnCell;
 use App\Service\AffiliationService;
+use App\Utility\Table\TableBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -92,9 +91,9 @@ class Hierarchy extends AbstractInitialDashboardController
         return $structure;
     }
 
-    protected function tableFactory(User $nodeEntity): Table
+    protected function tableFactory(User $nodeEntity): TableBuilder
     {
-        $table = new Table('hierarchy');
+        $table = new TableBuilder('hierarchy');
 
         $table->setColumns([
             ColumnCell::new('Id'),
@@ -102,9 +101,20 @@ class Hierarchy extends AbstractInitialDashboardController
             ColumnCell::new('Parent'),
             ColumnCell::new('Level')
         ]);
+        
+        // Filter columns
+        
+        $table
+            ->setRows($this->affiliationService->getChildren($nodeEntity)->fetchAllAssociative())
+        ;
 
-        $table->setRows($this->affiliationService->getChildren($nodeEntity)->fetchAllAssociative());
-        $table->setBatchActions(true, 0);
+        // $table->setBatchActions(true, 0);
+
+        $table
+            ->getPaginator()
+            ->setItemsPerPage(2)
+            ->setUrlPattern('g/b')
+        ;
 
         return $table;
 

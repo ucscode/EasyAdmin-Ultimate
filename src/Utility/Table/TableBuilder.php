@@ -1,13 +1,23 @@
 <?php
 
-namespace App\Model\Table;
+namespace App\Utility\Table;
 
 use Closure;
 use ErrorException;
 use InvalidArgumentException;
 use Ucscode\Paginator\Paginator;
 
-class Table
+/**
+ * A utility class for generating HTML tables dynamically in Symfony applications, designed to be used with Symfony templates.
+ * 
+ * This class facilitates the creation of HTML table structures by providing a fluent interface for defining table columns and rows. 
+ * The resulting table can be rendered in Symfony templates using the provided `utility/table.html.twig` template.
+ * 
+ * The `utility/table.html.twig` template leverages the information provided by an instance of this class to construct a table suitable for use 
+ * in Symfony applications or with Symfony's EasyAdminBundle. It ensures compatibility with various scenarios, including rendering 
+ * tables with no data.
+ */
+class TableBuilder
 {
     protected ?string $name = null;
 
@@ -34,25 +44,8 @@ class Table
     public function __construct(?string $name = '')
     {
         $this->setName($name);
-
-        $this->setCellAttributes(function (Cell $cell, int $offset): array 
-        {
-            $attributes = [
-                'data-cell' => $offset
-            ];
-
-            if($cell instanceof ColumnCell) {
-                return array_replace($attributes, [
-                    'data-column' => $cell->getLabel() ?: $cell->getValue(),
-                    'class' => 'cell-column',
-                ]);
-            }
-            
-            return array_replace($attributes, [
-                'data-label' => $cell->getLabel(),
-                'class' => 'cell-data',
-            ]);
-        });
+        $this->paginator = new Paginator();
+        $this->setDefaultCellAttributes();
     }
 
     public function setName(?string $name): static
@@ -126,7 +119,9 @@ class Table
      */
     public function setRows(array $rows): static
     {
-        $this->rows = array_map(fn (array $row) => $this->convertToCell($row, DataCell::class), $rows);
+        $this->rows = array_map(function(array $row) {
+            return $this->convertToCell($row, DataCell::class);
+        }, $rows);
 
         return $this;
     }
@@ -173,7 +168,11 @@ class Table
      */
     public function setCellAttributes(?callable $callback): static
     {
-        $this->cellAttributes = $callback ? Closure::fromCallable($callback) : null;
+        if($callback && !($callback instanceof Closure)) {
+            $callback = Closure::fromCallable($callback);
+        }
+
+        $this->cellAttributes = $callback;
 
         return $this;
     }
@@ -196,7 +195,11 @@ class Table
 
     public function setCellValueTransformer(?callable $callback): static
     {
-        $this->cellValueTransformer = $callback ? Closure::fromCallable($callback) : null;
+        if($callback && !($callback instanceof Closure)) {
+            $callback = Closure::fromCallable($callback);
+        }
+
+        $this->cellValueTransformer = $callback;
 
         return $this;
     }
@@ -247,6 +250,13 @@ class Table
         return $this->associateIndex;
     }
 
+    public function getPaginator(): Paginator
+    {
+        $this->paginator->setTotalItems(count($this->getRows()));
+
+        return $this->paginator;
+    }
+
     /**
      * Convert all data in the array into cell instances
      *
@@ -284,5 +294,27 @@ class Table
         }
 
         return $container;
+    }
+
+    private function setDefaultCellAttributes(): void
+    {
+        $this->setCellAttributes(function (Cell $cell, int $offset): array 
+        {
+            $attributes = [
+                'data-cell' => $offset
+            ];
+
+            if($cell instanceof ColumnCell) {
+                return array_replace($attributes, [
+                    'data-column' => $cell->getLabel() ?: $cell->getValue(),
+                    'class' => 'cell-column',
+                ]);
+            }
+            
+            return array_replace($attributes, [
+                'data-label' => $cell->getLabel(),
+                'class' => 'cell-data',
+            ]);
+        });
     }
 }

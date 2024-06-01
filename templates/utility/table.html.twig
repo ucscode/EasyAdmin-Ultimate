@@ -22,7 +22,7 @@
 
     <tbody>
         {% block table_body %}
-            {% for row in table.rows %}
+            {% for row in table.rows|slice(table.paginator.currentPageFirstItem - 1, table.paginator.itemsPerPage) %}
                 <tr data-id="cell-group-{{ loop.index }}">
                     {% if table.batchActions %}
                         <td class="batch-actions-selector">
@@ -66,3 +66,11 @@
         {% endblock table_footer %}
     </tfoot>
 </table>
+
+{% if table.rows|length %}
+    <div class="content-panel-footer without-padding without-border pt-3">
+        {% block paginator %}
+            {{ table.paginator.toHtml|raw }}
+        {% endblock paginator %}
+    </div>
+{% endif %}

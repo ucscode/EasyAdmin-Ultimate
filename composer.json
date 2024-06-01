@@ -57,6 +57,7 @@
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
         "ucscode/keygenerator": "^1.0",
+        "ucscode/paginator": "^2.0",
         "webmozart/assert": "^1.11"
     },
     "config": {
