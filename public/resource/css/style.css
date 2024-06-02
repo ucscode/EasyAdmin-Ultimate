@@ -261,6 +261,12 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
 
 /* ----------- /Tree Nodes ------------- */
 
+/* ------------ TableBuilder -------------- */
+.cell-column {
+    text-transform: capitalize;
+}
+/* ------------ /TableBuilder ------------- */
+
 @media (min-width: 992px) {
     .eau-security-wrapper {
         margin: auto;

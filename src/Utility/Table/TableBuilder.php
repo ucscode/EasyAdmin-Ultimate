@@ -5,6 +5,7 @@ namespace App\Utility\Table;
 use Closure;
 use ErrorException;
 use InvalidArgumentException;
+use RuntimeException;
 use Ucscode\Paginator\Paginator;
 
 /**
@@ -19,6 +20,8 @@ use Ucscode\Paginator\Paginator;
  */
 class TableBuilder
 {
+    private const CONFIGURATOR_OFFSET = '@default';
+
     protected ?string $name = null;
 
     /**
@@ -31,7 +34,10 @@ class TableBuilder
      */
     protected array $rows = [];
 
-    protected ?Closure $configurator = null;
+    /**
+     * @var Closure[]
+     */
+    protected array $configurators = [];
 
     protected bool $batchActions = false;
 
@@ -152,35 +158,46 @@ class TableBuilder
         return $this;
     }
 
-    public function setConfigurator(?callable $callback): static
+    public function setConfigurator(string $name, ?callable $callback): static
     {
+        $this->throwConfiguratorException($name, sprintf('Cannot override "%s" configurator', self::CONFIGURATOR_OFFSET));
+
         if($callback && !($callback instanceof Closure)) {
             $callback = Closure::fromCallable($callback);
         }
 
-        $this->configurator = $callback;
+        $this->configurators[$name] = $callback;
 
         return $this;
     }
 
-    public function getConfigurator(): ?Closure
+    public function getConfigurator(string $name): ?Closure
     {
-        return $this->configurator;
+        return $this->configurators[$name] ?? null;
+    }
+
+    public function removeConfigurator(string $name): static
+    {
+        $this->throwConfiguratorException($name, sprintf('Cannot remove "%s" configurator', self::CONFIGURATOR_OFFSET));
+
+        if(array_key_exists($name, $this->configurators)) {
+            unset($this->configurators[$name]);
+        }
+
+        return $this;
     }
 
     /**
-     * Note: Return an empty string to get an empty cell
-     * 
      * @internal
      */
     public function configureCell(Cell $cell, int $offset): void
     {
-        if($this->configurator) {
+        foreach($this->configurators as $configurator) {
             call_user_func(
-                $this->configurator, 
+                $configurator, 
                 $cell,  
                 $offset, 
-                $this->fetchColumnCell($offset, $cell::class)
+                $this->columns[$offset] ?? null
             );
         }
     }
@@ -243,10 +260,20 @@ class TableBuilder
         }, $sequence));
     }
 
+    private function throwConfiguratorException(string $name, string $error): void
+    {
+        if(array_key_exists(self::CONFIGURATOR_OFFSET, $this->configurators) && $name === self::CONFIGURATOR_OFFSET) {
+            throw new RuntimeException($error);
+        }
+    }
+
     private function setDefaultConfigurator(): void
     {
-        $this->setConfigurator(function (Cell $cell, int $offset, ?ColumnCell $columnCell) 
+        $this->setConfigurator(self::CONFIGURATOR_OFFSET, function (Cell $cell, int $offset, ?ColumnCell $columnCell) 
         {
+            // hide first column of table
+            $offset ?: $cell->setHidden(true);
+            
             $attributes = ['data-cell' => $offset];
 
             if($cell instanceof ColumnCell) {
@@ -264,15 +291,20 @@ class TableBuilder
             ];
 
             $cell->setAttributes($attributes);
+            $cell->setMeta("label", $columnCell->getValue());
+
+            if(filter_var($cell->getMeta('value'), FILTER_VALIDATE_EMAIL)) {
+                $cell->setMeta('anchor', [
+                    'href' => sprintf('mailto:%s', $cell->getMeta('value'))
+                ]);
+            }
+
+            if(filter_var($cell->getMeta('value'), FILTER_VALIDATE_URL)) {
+                $cell->setMeta('anchor', [
+                    'href' => $cell->getMeta('value'),
+                    'target' => '_blank',
+                ]);
+            }
         });
-    }
-
-    private function fetchColumnCell(int $offset, string $cellFqcn): ?ColumnCell
-    {
-        if($cellFqcn === ColumnCell::class) {
-            return null;
-        }
-
-        return $this->columns[$offset] ?? null;
     }
 }

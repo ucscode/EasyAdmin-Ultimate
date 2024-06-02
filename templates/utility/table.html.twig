@@ -12,9 +12,11 @@
                     {% endif %}
                     {% for column in table.columns %}
                         {% do table.configureCell(column, loop.index0) %}
-                        <th {{ column.attributes|html_attributes|raw }}>
-                            <span class="{{ column.get('class') }}">{{ column.value }}</span>
-                        </th>
+                        {% if not column.hidden %}
+                            <th {{ column.attributes|default([])|html_attributes|raw }}>
+                                <span class="{{ column.meta('unit-class') }}">{{ column.value }}</span>
+                            </th>
+                        {% endif %}
                     {% endfor %}
                 </tr>
             {% endblock table_head %}
@@ -34,9 +36,15 @@
                     {% endif %}
                     {% for cell in row %}
                         {% do table.configureCell(cell, loop.index0) %}
-                        <td {{ cell.attributes|html_attributes|raw }}>
-                            <span class="{{ cell.get('class') }}">{{ cell.value }}</span>
-                        </td>
+                        {% if not cell.hidden %}
+                            <td {{ cell.attributes|default([])|html_attributes|raw }}>
+                                {% if cell.meta('anchor')|default(false)|is_array %}
+                                    <a {{ cell.meta('anchor')|html_attributes|raw }}>{{ cell.value }}</a>
+                                {% else %}
+                                    <span class="{{ cell.meta('unit-class') }}">{{ cell.value }}</span>
+                                {% endif %}
+                            </td>
+                        {% endif %}
                     {% endfor %}
                 </tr>
             {% else %}
