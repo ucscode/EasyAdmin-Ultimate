@@ -128,18 +128,17 @@ class Hierarchy extends AbstractInitialDashboardController
 
         $table
             ->getPaginator()
-            ->setItemsPerPage(2)
+            ->setItemsPerPage(15)
             ->setUrlPattern($urlPattern)
             ->setCurrentPage($request->query->get('page') ?: 1)
         ;  
 
         $table->setConfigurator("parent-transformer", function(Cell $cell) {
-            if($cell->getMeta('label') === 'parent') {
-                /**
-                 * @var ?User
-                 */
+            if(in_array($cell->getMeta('label'), ['id', 'parent'], true)) {
+                $cell->setHidden(true);
+                /** @var ?User */
                 $parent = $this->entityManager->getRepository(User::class)->find($cell->getMeta('value'));
-                $cell->setValue($parent?->getEmail());
+                !$parent ?: $cell->setValue($parent->getEmail());
             }
         });
 

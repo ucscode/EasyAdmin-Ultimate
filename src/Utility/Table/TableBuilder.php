@@ -192,7 +192,7 @@ class TableBuilder
      */
     public function configureCell(Cell $cell, int $offset): void
     {
-        foreach($this->configurators as $configurator) {
+        foreach($this->configurators as $key => $configurator) {
             call_user_func(
                 $configurator, 
                 $cell,  
@@ -270,10 +270,10 @@ class TableBuilder
     private function setDefaultConfigurator(): void
     {
         $this->setConfigurator(self::CONFIGURATOR_OFFSET, function (Cell $cell, int $offset, ?ColumnCell $columnCell) 
-        {
-            // hide first column of table
-            $offset ?: $cell->setHidden(true);
-            
+        {            
+            // set meta label to column value;
+            $cell->setMeta('label', $columnCell->getMeta('label') ?? $columnCell->getValue());
+
             $attributes = ['data-cell' => $offset];
 
             if($cell instanceof ColumnCell) {
@@ -291,7 +291,6 @@ class TableBuilder
             ];
 
             $cell->setAttributes($attributes);
-            $cell->setMeta("label", $columnCell->getValue());
 
             if(filter_var($cell->getMeta('value'), FILTER_VALIDATE_EMAIL)) {
                 $cell->setMeta('anchor', [
