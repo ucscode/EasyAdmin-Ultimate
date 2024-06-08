@@ -18,7 +18,12 @@ class Media
     private ?int $id = null;
 
     #[Vich\UploadableField(
-        mapping: 'media'
+        mapping: 'media',
+        fileNameProperty: 'embeddedFile.name',
+        size: 'embeddedFile.size',
+        mimeType: 'embeddedFile.mimeType',
+        originalName: 'embeddedFile.originalName',
+        dimensions: 'embeddedFile.dimensions'
     )]
     private ?UploadedFile $uploadedFile = null;
 

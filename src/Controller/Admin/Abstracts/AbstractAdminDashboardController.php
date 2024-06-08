@@ -46,7 +46,7 @@ abstract class AbstractAdminDashboardController extends AbstractInitialDashboard
             ->setController(UserCrudController::class)
             ->setAction(Crud::PAGE_NEW);
 
-        // yield MenuItem::section('settings');
+        // yield MenuItem::section('Media'); 
 
         yield MenuItem::section('Misc');
 

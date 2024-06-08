@@ -39,4 +39,5 @@ symfony.lock
 
 ###< eau ###
 /.todo
+/migrations/
 ###> eau ###
