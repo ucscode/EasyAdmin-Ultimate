@@ -33,6 +33,11 @@ class Media
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    public function __construct()
+    {
+        $this->embeddedFile = new EmbeddedFile();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

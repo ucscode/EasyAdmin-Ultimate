@@ -24,7 +24,6 @@ class NotificationController extends AbstractInitialDashboardController
 
     public function __construct(protected EntityManagerInterface $entityManager)
     {
-
     }
 
     #[Route('/app/notification', self::ROUTE_NAME)]
