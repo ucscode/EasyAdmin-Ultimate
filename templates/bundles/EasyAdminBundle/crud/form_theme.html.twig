@@ -2,6 +2,8 @@
 {# @var eau \App\Context\EauContext #}
 {% extends eau.templatePath('crud/form_theme', true) %}
 
+{# A macro to control how the input siders work #}
+
 {%- macro widget_aside(context) -%}
     {%- if context.type == 'button' %}
         <button {{ context.value.attributes|html_attributes|raw }}>
@@ -22,23 +24,26 @@
     {%- endif -%}
 {%- endmacro -%}
 
+{# This upgrade allows add icon, text or custom button to the side of the input using affix options #}
+
 {%- block form_widget_simple -%}
-    {% set prepend_content = _simple_widget_concat_context(prepend_content|default(null)) %}
-    {% set append_content = _simple_widget_concat_context(append_content|default(null)) %}
-    {%- if prepend_content or append_content -%}
+    {% set affix = _evaluate_widget_affix(affix) %}
+    {%- if affix.prepend or affix.append -%}
         <div class="input-group">
-            {{- prepend_content ? _self.widget_aside(prepend_content) -}}
+            {{- affix.prepend ? _self.widget_aside(affix.prepend) -}}
             {{- parent() -}}
-            {{- append_content ? _self.widget_aside(append_content) -}}
+            {{- affix.append ? _self.widget_aside(affix.append) -}}
         </div>
     {%- else -%}
         {{ parent() }}
     {% endif %}
 {%- endblock form_widget_simple -%}
 
+{# The togglePassword options enables an eye that can be used toggle password #}
+
 {%- block password_widget -%}
     {%- if togglePassword|default(false) -%}
-        {% set append_content = {
+        {% set affix = affix|merge({'append': {
             type: 'button',
             value: {
                 'icon': "fas fa-eye",
@@ -46,7 +51,7 @@
                     'data-password-toggle': '#' ~ id
                 }
             }
-        } %}
+        }}) %}
     {% endif %}
     {{- parent() -}}
 {%- endblock password_widget -%}

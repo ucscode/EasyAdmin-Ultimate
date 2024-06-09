@@ -3,6 +3,8 @@
 namespace App\Twig;
 
 use App\Context\EauContext;
+use App\Form\Extension\Affix\AffixResolver;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
@@ -25,7 +27,7 @@ class EauTwigExtension extends AbstractExtension implements GlobalsInterface
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('_simple_widget_concat_context', fn ($value) => $this->simpleWidgetConcatContext($value)),
+            new TwigFunction('_evaluate_widget_affix', fn ($value) => $this->evaluateWidgetAffix($value)),
             new TwigFunction('dirname', fn (string $path, int $levels = 1) => dirname($path, $levels)),
         ];
     }
@@ -59,33 +61,9 @@ class EauTwigExtension extends AbstractExtension implements GlobalsInterface
         return implode(" ", $aligner);
     }
 
-    protected function simpleWidgetConcatContext(string|array|null $item): ?array
+    protected function evaluateWidgetAffix($value): array
     {
-        if (!is_array($item)) {
-            $item = ['value' => is_scalar($item) && !is_bool($item) ? $item : null];
-        }
-
-        $item['type'] = strtolower($item['type'] ?? 'text');
-
-        if ($item['value'] === null) {
-            return null;
-        }
-
-        switch ($item['type']) {
-            case 'button':
-                $value = is_scalar($item['value']) ? ['label' => $item['value']] : $item['value'];
-                $value['icon'] ??= null;
-                $value['label'] ??= ($value['icon'] ? null : 'BUTTON');
-                $value['attributes'] = ($value['attributes'] ?? []) + [
-                    'type' => 'button',
-                    'class' => 'btn btn-secondary'
-                ];
-                $item['value'] = $value;
-                break;
-            default:
-                $item['value'] = is_scalar($item['value']) && !is_bool($item['value']) ? $item['value'] : null;
-        };
-
-        return $item['value'] !== null ? $item : null;
+        $affixResolver = new AffixResolver();
+        return $affixResolver->resolveAffixTypes(new OptionsResolver(), $value);
     }
 }
