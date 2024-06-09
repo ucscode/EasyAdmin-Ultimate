@@ -82,3 +82,16 @@ Please note that while EasyAdmin Ultimate leverages Symfony and EasyAdmin compon
 
 For official information and resources related to Symfony framework and EasyAdmin bundle, please refer to the [Symfony Documentation](https://symfony.com/doc/current/index.html) and [EasyAdmin Documentation](https://symfony.com/doc/current/bundles/EasyAdminBundle/index.html) respectively.
 
+# DOCS:
+
+- Affix
+- eau config (ConfigurationService)
+- commands (secret-key|initialize)
+- components: Pattern & Permissions
+- Controllers: Admin, User, Initial
+- ModalService
+- PasswordStrengthEstimator
+- AffiliationService
+- JsonRequest
+- TableBuilder Utility
+
