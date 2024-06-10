@@ -5,7 +5,7 @@
     <div class="row">
 
         {% block notification_main %}
-            <div class="col-xxl-6 col-lg-9 col-md-10 mx-auto">
+            <div class="col-xxl-6 col-lg-9 col-md-10 mx-auto" data-notification-delegate>
                         
                 <div class="mb-3 text-end">
                     <button class="btn btn-secondary" data-notification-action="read-all">
@@ -16,12 +16,14 @@
                 <div class="card">
                     <div class='card-body p-md-4'>
 
-                        <div class="notification-global notification-container notification-list mb-3">
+                        <div class="notification-global notification-list mb-3">
+                            <div class="notification-container">
                             {% block notification_list %}
                                 {% for notification in pager %}
                                     {% include eau.templatePath('section/notification_item') with {'notification': notification} %}
                                 {% endfor %}
                             {% endblock %}
+                            </div>
                         </div>
                         
                         {% block notification_nav %}

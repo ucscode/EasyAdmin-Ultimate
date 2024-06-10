@@ -2,7 +2,7 @@
 {% set notification_total = app.user ? app.user.notifications|length %}
 
 {% set header_notification_dropdown %}
-    <ul class="dropdown-menu dropdown-menu-end py-2 px-3 fs-13px">
+    <ul class="dropdown-menu dropdown-menu-end py-2 px-3 fs-13px" data-notification-delegate>
     
         {% block notification_header %}
             <li class='notification-header'>

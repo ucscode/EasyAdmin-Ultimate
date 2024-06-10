@@ -1,76 +1,76 @@
-/**
- * Write custom javascript code here
- * 
- * Note: This file is imported as a module to make it highly compactible with symfony asset mapper
- */
 'use strict';
+
+import { appService } from './app-service.js';
+import { Notification } from './notification.js';
+import ClipboardJs from 'clipboard';
 
 $(function() {
 
-    // get app context
-    const appContext = $("#app-user-context").get(0)?.dataset;
-    
-    // Auto display modal on document load
-    $(".eau-modal[data-bs-visible]").each(function() {
-        const render = $(this).attr('data-bs-visible');
-        if(render === 'true') new bootstrap.Modal(this).show();
-    });
+    new class
+    {
+        constructor()
+        {
+            this.autoDisplayModal();
+            this.togglePasswordVisibility();
+            this.updateUserNotification();
+            this.automateCopyEvent();
+        }
 
-    // Toggle password visibility in one click
-    $("button[data-password-toggle").click(function() {
-        const input = $($(this).attr('data-password-toggle'));
-        if(input.length) input.attr('type', (index, attr) => attr == 'text' ? 'password' : 'text');
-    });
-    
-    // Update user notifications
-    $('[data-notification-action]').click(function(e) {
-        e.preventDefault();
-        
-        const identifier = $(this).parents('[data-notification-identifier]').attr('data-notification-identifier');
+        autoDisplayModal()
+        {
+            // Auto display modal on document load
+            $(".eau-modal[data-bs-visible]").each(function() {
+                const render = $(this).attr('data-bs-visible');
+                if(render === 'true') new bootstrap.Modal(this).show();
+            });
+        }
 
-        fetch(appContext.asyncNotificationRoute, {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                action: this.dataset.notificationAction,
-                token: appContext.userToken,
-                entityId: identifier ? atob(identifier) : '',
-            }).toString()
-        })
-        .then(response => {
-            if(response.status !== 200) {
-                throw Error(`${response.status} ${response.statusText}`);
-            }
-            return response.json();
-        })
-        .then(response => {
-            const topButton = $("[data-notification-anchor]");
-            const container = identifier ? $(`[data-notification-identifier='${identifier}']`) : $('[data-notification-identifier]');
+        togglePasswordVisibility()
+        {
+            // Toggle password visibility in one click
+            $("button[data-password-toggle").on('click', function() {
+                const input = $($(this).attr('data-password-toggle'));
+                if(input.length) input.attr('type', (index, attr) => attr == 'text' ? 'password' : 'text');
+            });
+        }
 
-            if(container.length) {
-                switch(response.action) {
-                    case 'delete':
-                        container
-                            .addClass('deleted')
-                            .find('.btn-notification-control')
-                            .attr('disabled', 'disabled');
-                        break;
-                    default:
-                        // read
-                        container.removeClass('unread');
+        updateUserNotification()
+        {
+            // Update user notifications
+            $('[data-notification-delegate]').on('click', '[data-notification-action]', function(e) {
+                e.preventDefault();
+                new Notification(this);
+            });
+        }
+
+        automateCopyEvent()
+        {
+            new ClipboardJs('[data-file-copy]', {
+
+            });
+            // copy an text or attribute value
+            $("[data-file-copy]").on('click', function(e) {
+                
+                e.preventDefault();
+                try {
+                    let query = this.dataset.copy.split(':');
+                    
+                    if(query.length !== 2) {
+                        throw new TypeError('[data-copy] attribute must be in the format "reference:property"');
+                    }
+
+                    const el = (query[0] === '_self') ? this : document.querySelector(query[0]);
+
+                    if(!el) {
+                        throw new ReferenceError(`[data-copy] cannot find reference to "${query[0]}" element"`)
+                    }
+
+                    const text = appService.propertyAccessor(el, query[1]);
+                    console.log(text)
+                } catch(e) {
+                    console.error(e.message)
                 }
-            }
-            
-            topButton.find("[data-count]").text(response.count);
-
-            if(!response.count) {
-                topButton.find('.icon').removeClass('animate__swing');
-                topButton.find('.badge').addClass('d-none');
-            }
-        })
-        .catch(error => console.error(`${error}: Cannot update notification`));
-    });
+            });
+        }
+    }
 });

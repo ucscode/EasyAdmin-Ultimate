@@ -161,9 +161,6 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
 }
 
 .content-top {
-    position: sticky;
-    top: 0;
-    z-index: 700;
     background-color: var(--bs-white);
 }
 
@@ -287,5 +284,11 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
 
     .notification-global.notification-list .pre-content {
         padding: 0 1rem;
+    }
+
+    .content-top {
+        position: sticky;
+        top: 0;
+        z-index: 1040;
     }
 }

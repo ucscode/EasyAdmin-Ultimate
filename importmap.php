@@ -44,4 +44,7 @@ return [
         'version' => '4.1.1',
         'type' => 'css',
     ],
+    'clipboard' => [
+        'version' => '2.0.11',
+    ],
 ];
