@@ -6,9 +6,13 @@
 import { Notification } from './notification.js';
 import { Toaster } from './toaster.js';
 /**
- * https://github.com/zenorocha/clipboard.js
+ * @see https://github.com/zenorocha/clipboard.js
  */
 import ClipboardJs from 'clipboard';
+/**
+ * @see https://github.com/biati-digital/glightbox
+ */
+import GLightBox from 'glightbox';
 
 $(function() {
 
@@ -20,6 +24,7 @@ $(function() {
             this.togglePasswordVisibility();
             this.updateUserNotification();
             this.automateCopyEvent();
+            this.configureGLightBox();
         }
 
         autoDisplayModal()
@@ -61,6 +66,13 @@ $(function() {
                         placement: Toaster.PLACEMENT_BOTTOM_RIGHT
                     }).show();
                 })
+        }
+
+        configureGLightBox()
+        {
+            let lightbox = GLightBox({
+                selector: '[data-glightbox]'
+            });
         }
     }
 });

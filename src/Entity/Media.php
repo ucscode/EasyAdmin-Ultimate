@@ -12,6 +12,14 @@ use Vich\UploaderBundle\Entity\File as EmbeddedFile;
 #[Vich\Uploadable]
 class Media
 {
+    public const TYPE_APPLICATION = 'application';
+    public const TYPE_AUDIO = 'audio';
+    public const TYPE_IMAGE = 'image';
+    public const TYPE_MESSAGE = 'message';
+    public const TYPE_MULTIPART = 'multipart';
+    public const TYPE_TEXT = 'text';
+    public const TYPE_VIDEO = 'video';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -81,5 +89,15 @@ class Media
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function getMimeParts(?int $index): array|string|null
+    {
+        if($mimeType = $this->getEmbeddedFile()->getMimeType()) {
+            $mimeParts = explode("/", $mimeType);
+            return $index !== null ? ($mimeParts[$index] ?? null) : $mimeParts;
+        }
+
+        return [];
     }
 }

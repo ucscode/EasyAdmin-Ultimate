@@ -2,23 +2,24 @@
 
 namespace App\Controller\Initial\Media;
 
+use App\Controller\Initial\Abstracts\AbstractInitialCrudController;
 use App\Entity\Media;
 use App\Form\Field\VichField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
-class MediaCrudController extends AbstractCrudController
+class MediaCrudController extends AbstractInitialCrudController
 {
     protected const FIELD_FILE_URL = 'fileUrl';
 
-    public function __construct(protected UploaderHelper $uploaderHelper)
+    public function __construct(protected UploaderHelper $uploaderHelper, protected RequestStack $requestStack)
     {
     }
 
@@ -27,35 +28,50 @@ class MediaCrudController extends AbstractCrudController
         return Media::class;
     }
 
-    public function configureCrud(Crud $crud): Crud
-    {
-        return $crud
-            ->overrideTemplates([
-                'crud/index' => 'initial/media/index.html.twig',
-                'crud/new' => 'initial/media/new.html.twig',
-                'crud/edit' => 'initial/media/edit.html.twig',
-            ])
-        ;
-    }
-
     public function configureFields(string $pageName): iterable
     {
         yield FormField::addColumn('col-xl-6 col-xxl-5');
         yield FormField::addFieldset();
 
-        yield VichField::new('uploadedFile', $pageName === Crud::PAGE_NEW ? 'Select File' : 'Uploaded File');
+        yield VichField::new('uploadedFile', $pageName === Crud::PAGE_NEW ? 'Select File' : 'Uploaded File')
+            ->hideOnIndex()    
+        ;
         
+        /**
+         * @var ?Media
+         */
         $entity = $this->getContext()->getEntity()->getInstance();
 
         if($entity) {
-            yield TextField::new(self::FIELD_FILE_URL)
+            $fileUrl = sprintf(
+                '%s%s',
+                $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost(),
+                $this->uploaderHelper->asset($entity, 'uploadedFile'),
+            );
+
+            $fileUrlField = TextField::new(self::FIELD_FILE_URL)
                 ->hideWhenCreating()
                 ->hideOnIndex()
                 ->setFormTypeOptions($this->relativeFieldOptions() + [
                     'mapped' => false,
-                    'data' => $this->uploaderHelper->asset($entity, 'uploadedFile'),
+                    'data' => $fileUrl,
                 ])
+                ->setDisabled()
             ;
+            
+            if(in_array($entity->getMimeParts(0), [Media::TYPE_IMAGE, Media::TYPE_VIDEO])) {
+                $fileUrlField->setHelp(
+                    sprintf(
+                        "<a href='%s' class='text-capitalize' data-glightbox>
+                            <i class='fa fa-image'></i> Preview %s
+                        </a>", 
+                        $fileUrl,
+                        $entity->getMimeParts(0)
+                    )
+                );
+            }
+
+            yield $fileUrlField;
         }
 
         if($pageName !== Crud::PAGE_NEW) {
@@ -65,43 +81,61 @@ class MediaCrudController extends AbstractCrudController
 
             yield TextField::new('embeddedFile.originalName', 'Original Name')
                 ->setFormTypeOptions($this->relativeFieldOptions())
+                ->setDisabled()
             ;
 
             yield TextField::new('embeddedFile.name', 'Saved As')
                 ->setFormTypeOptions($this->relativeFieldOptions())
+                ->setDisabled()
             ;
 
             yield TextField::new('embeddedFile.mimeType', 'Mime-Type')
-                ->setFormTypeOptions($this->relativeFieldOptions())
+                ->setFormTypeOptions($this->relativeFieldOptions([
+                    'affix' => [
+                        'prepend' => [
+                            'type' => 'icon',
+                            'value' => 'fas fa-layer-group',
+                        ],
+                        'append' => null,
+                    ]
+                ]))
+                ->setDisabled()
             ;
 
-            yield IntegerField::new('embeddedFile.size', 'File Size')
-                ->setFormTypeOptions($this->relativeFieldOptions())
-            ;
+            if($entity) {
+                yield IntegerField::new('embeddedFile.size', 'File Size (Bytes)')
+                    ->setFormTypeOptions($this->relativeFieldOptions([
+                        'affix' => [
+                            'prepend' => [
+                                'type' => 'icon',
+                                'value' => 'fas fa-expand',
+                            ],
+                            'append' => null
+                        ]
+                    ]))
+                    ->setDisabled()
+                ;
+            }
 
-            yield DateField::new('updatedAt')
+            yield DateField::new('updatedAt', 'Upload Date')
+                ->setFormTypeOptions($this->relativeFieldOptions([
+                    'affix' => [
+                        'prepend' => [
+                            'type' => 'icon',
+                            'value' => 'fas fa-calendar'
+                        ],
+                        'append' => null,
+                    ]
+                ]))
+                ->setRequired(false)
                 ->setDisabled()
             ;
         }
     }
 
-    public function configureActions(Actions $actions): Actions
+    protected function relativeFieldOptions(array $replacements = []): array
     {
-        $copyUrlAction = Action::new(self::FIELD_FILE_URL, 'Copy File Url')
-            ->setHtmlAttributes(['data-file-copy' => ''])
-            ->linkToUrl(function(Media $entity) {
-                return $this->uploaderHelper->asset($entity, 'uploadedFile');
-            })
-        ;
-
-        return $actions
-            ->add(Crud::PAGE_INDEX, $copyUrlAction)
-        ;
-    }
-
-    protected function relativeFieldOptions(array $attributes = []): array
-    {
-        return [
+        return array_replace_recursive([
             'affix' => [
                 'append' => [
                     'type' => 'button',
@@ -110,13 +144,10 @@ class MediaCrudController extends AbstractCrudController
                         'attributes' => [
                             'title' => 'copy',
                             'data-media-field-copier' => '',
-                        ] + $attributes,
+                        ],
                     ],
                 ],
             ],
-            'attr' => [
-                'disabled' => 'disabled',
-            ]
-        ];
+        ], $replacements);
     }
 }

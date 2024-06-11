@@ -50,4 +50,11 @@ return [
     'bs5-toast' => [
         'version' => '1.0.0',
     ],
+    'glightbox' => [
+        'version' => '3.3.0',
+    ],
+    'glightbox/dist/css/glightbox.min.css' => [
+        'version' => '3.3.0',
+        'type' => 'css',
+    ],
 ];

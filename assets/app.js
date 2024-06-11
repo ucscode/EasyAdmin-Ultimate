@@ -12,3 +12,4 @@ import './bootstrap.js';
  */
 import './styles/app.css';
 import './vendor/animate.css/animate.min.css';
+import './vendor/glightbox/dist/css/glightbox.min.css';
