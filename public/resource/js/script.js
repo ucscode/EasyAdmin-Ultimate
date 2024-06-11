@@ -1,7 +1,14 @@
 'use strict';
 
+/**
+ * Internal Service
+ */
 import { appService } from './app-service.js';
 import { Notification } from './notification.js';
+import { Toaster } from './toaster.js';
+/**
+ * https://github.com/zenorocha/clipboard.js
+ */
 import ClipboardJs from 'clipboard';
 
 $(function() {
@@ -45,32 +52,16 @@ $(function() {
 
         automateCopyEvent()
         {
-            new ClipboardJs('[data-file-copy]', {
-
-            });
-            // copy an text or attribute value
-            $("[data-file-copy]").on('click', function(e) {
-                
-                e.preventDefault();
-                try {
-                    let query = this.dataset.copy.split(':');
-                    
-                    if(query.length !== 2) {
-                        throw new TypeError('[data-copy] attribute must be in the format "reference:property"');
-                    }
-
-                    const el = (query[0] === '_self') ? this : document.querySelector(query[0]);
-
-                    if(!el) {
-                        throw new ReferenceError(`[data-copy] cannot find reference to "${query[0]}" element"`)
-                    }
-
-                    const text = appService.propertyAccessor(el, query[1]);
-                    console.log(text)
-                } catch(e) {
-                    console.error(e.message)
-                }
-            });
+            new ClipboardJs('[data-media-field-copier]', {
+                text: (trigger) => $(trigger).prev().val()
+            })
+                .on('success', (e) => {
+                    new Toaster({
+                        body: 'Copied to clipboard',
+                        type: Toaster.TYPE_INFO,
+                        placement: Toaster.PLACEMENT_BOTTOM_RIGHT,
+                    }).show();
+                })
         }
     }
 });

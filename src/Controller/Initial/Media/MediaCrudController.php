@@ -9,13 +9,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 class MediaCrudController extends AbstractCrudController
 {
-    protected const ACTION_FILE_URL = 'fileUrl';
+    protected const FIELD_FILE_URL = 'fileUrl';
 
     public function __construct(protected UploaderHelper $uploaderHelper)
     {
@@ -39,67 +40,51 @@ class MediaCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('embeddedFile.originalName', 'Original Name')
-            ->setDisabled()
-            ->hideWhenCreating()
-        ;
+        yield FormField::addColumn('col-xl-6 col-xxl-5');
+        yield FormField::addFieldset();
 
-        yield TextField::new('embeddedFile.name', 'Saved As')
-            ->setDisabled()
-            ->hideWhenCreating()
-        ;
-
-        yield TextField::new('embeddedFile.mimeType', 'Mime-Type')
-            ->setDisabled()
-            ->hideWhenCreating()
-        ;
-
-        yield IntegerField::new('embeddedFile.size', 'File Size')
-            ->setDisabled()
-            ->hideWhenCreating()
-            ->setFormTypeOption('affix', [
-                'append' => 'Byte'
-            ])
-        ;
-
-        yield DateField::new('updatedAt')
-            ->setDisabled()
-            ->hideWhenCreating()
-        ;
-
-        yield VichField::new('uploadedFile')
-            
-        ;
+        yield VichField::new('uploadedFile', $pageName === Crud::PAGE_NEW ? 'Select File' : 'Uploaded File');
         
-        yield TextField::new('fileUrl')
-            ->setFormTypeOptions([
+        yield TextField::new(self::FIELD_FILE_URL)
+            ->hideWhenCreating()
+            ->setFormTypeOptions($this->relativeFieldOptions() + [
                 'mapped' => false,
                 'data' => 4,
-                'attr' => [
-                    'id' => 'media-file-url'
-                ],
-                'affix' => [
-                    'append' => [
-                        'type' => 'button',
-                        'value' => [
-                            'label' => 'copy',
-                            'attributes' => [
-                                'data-file-copy' => '#Media_fileUrl'
-                            ]
-                        ]
-                    ]
-                ]
             ])
-            ->setDisabled()
             ->formatValue(function($entity) {
                 return 12; //$this->uploaderHelper->asset($entity, 'name');
             });
 
+        if($pageName !== Crud::PAGE_NEW) {
+            
+            yield FormField::addColumn('col-xl-6 col-xxl-5');
+            yield FormField::addFieldset('File Info', 'fa fa-info-circle');
+
+            yield TextField::new('embeddedFile.originalName', 'Original Name')
+                ->setFormTypeOptions($this->relativeFieldOptions())
+            ;
+
+            yield TextField::new('embeddedFile.name', 'Saved As')
+                ->setFormTypeOptions($this->relativeFieldOptions())
+            ;
+
+            yield TextField::new('embeddedFile.mimeType', 'Mime-Type')
+                ->setFormTypeOptions($this->relativeFieldOptions())
+            ;
+
+            yield IntegerField::new('embeddedFile.size', 'File Size')
+                ->setFormTypeOptions($this->relativeFieldOptions())
+            ;
+
+            yield DateField::new('updatedAt')
+                ->setDisabled()
+            ;
+        }
     }
 
     public function configureActions(Actions $actions): Actions
     {
-        $copyUrlAction = Action::new(self::ACTION_FILE_URL, 'Copy File Url')
+        $copyUrlAction = Action::new(self::FIELD_FILE_URL, 'Copy File Url')
             ->setHtmlAttributes(['data-file-copy' => ''])
             ->linkToUrl(function(Media $entity) {
                 return $this->uploaderHelper->asset($entity, 'uploadedFile');
@@ -109,5 +94,26 @@ class MediaCrudController extends AbstractCrudController
         return $actions
             ->add(Crud::PAGE_INDEX, $copyUrlAction)
         ;
+    }
+
+    protected function relativeFieldOptions(array $attributes = []): array
+    {
+        return [
+            'affix' => [
+                'append' => [
+                    'type' => 'button',
+                    'value' => [
+                        'icon' => 'fas fa-copy',
+                        'attributes' => [
+                            'title' => 'copy',
+                            'data-media-field-copier' => '',
+                        ] + $attributes,
+                    ],
+                ],
+            ],
+            'attr' => [
+                'disabled' => 'disabled',
+            ]
+        ];
     }
 }

@@ -47,4 +47,7 @@ return [
     'clipboard' => [
         'version' => '2.0.11',
     ],
+    'bs5-toast' => [
+        'version' => '1.0.0',
+    ],
 ];
