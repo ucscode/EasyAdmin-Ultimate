@@ -1,0 +1,13 @@
+{% set public = {
+    path: asset(''), 
+    url: absolute_url(asset(''))
+} %}
+
+<div id="app-js-payload-container" 
+    data-js-payload="{{ js_payload }}" 
+    data-public='{{ public|json_encode|raw|base64_encode }}'
+    data-security-token="{{ csrf_token('app-user') }}"
+    {% if app.user and ea is defined -%}
+        data-async-notification-route="{{ path('async_notification') }}"
+    {% endif -%}
+></div>

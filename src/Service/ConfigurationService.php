@@ -22,7 +22,7 @@ class ConfigurationService
         $this->preprocessConfiguration();
     }
 
-    public function get(string $key, string $default = null): mixed
+    public function get(string $key, mixed $default = null): mixed
     {
         $value = $this->accessPropertyValue($key);
 

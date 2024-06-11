@@ -3,6 +3,7 @@
 namespace App\Controller\Initial\Notification;
 
 use App\Entity\User\Notification;
+use App\Exceptions\AccessForbiddenException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +37,7 @@ class AsyncNotificationController extends AbstractController
         }
 
         if(!$this->getUser()) {
-            throw $this->createAccessDeniedException('User not found.');
+            throw new AccessForbiddenException('User not found');
         }
 
         if($request->request->get('action') !== 'read-all') {

@@ -39,12 +39,13 @@ final class EauContext
     /**
      * Get a configuration value defined in /config/eau.yaml
      *
-     * @param string $name  The configuration key (chained with dot)
-     * @return mixed        The configuration value
+     * @param string $name      The configuration key (chained with dot)
+     * @param mixed $default    A default value to use if configuration is not set
+     * @return mixed            The configuration value
      */
-    public function getConfig(string $name): mixed
+    public function getConfig(string $name, mixed $default = null): mixed
     {
-        return $this->configurationService->get($name);
+        return $this->configurationService->get($name, $default);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Twig;
 
 use App\Context\EauContext;
 use App\Form\Extension\Affix\AffixResolver;
+use App\Service\JsPayload;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -12,15 +13,16 @@ use Twig\TwigFunction;
 
 class EauTwigExtension extends AbstractExtension implements GlobalsInterface
 {
-    public function __construct(protected EauContext $eauContext)
+    public function __construct(protected EauContext $eauContext, protected JsPayload $javascriptContext)
     {
-
+        //
     }
 
     public function getGlobals(): array
     {
         return [
             'eau' => $this->eauContext,
+            'js_payload' => base64_encode(json_encode($this->javascriptContext->all()))
         ];
     }
 

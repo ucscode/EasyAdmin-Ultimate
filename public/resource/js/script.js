@@ -3,7 +3,6 @@
 /**
  * Internal Service
  */
-import { appService } from './app-service.js';
 import { Notification } from './notification.js';
 import { Toaster } from './toaster.js';
 /**
@@ -58,7 +57,7 @@ $(function() {
                 .on('success', (e) => {
                     new Toaster({
                         body: 'Copied to clipboard',
-                        type: Toaster.TYPE_INFO,
+                        type: Toaster.TYPE_WARNING,
                         placement: Toaster.PLACEMENT_BOTTOM_RIGHT,
                     }).show();
                 })

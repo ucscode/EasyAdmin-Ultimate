@@ -38,7 +38,7 @@ export class Notification
             },
             body: new URLSearchParams({
                 action: this.#element.dataset.notificationAction,
-                token: appService.getContext().userToken,
+                token: appService.getContext().securityToken,
                 entityId: this.#identifier ? atob(this.#identifier) : '',
             }).toString()
         })
