@@ -26,7 +26,6 @@ export class Toaster extends bs5.Toast
     static PLACEMENT_BOTTOM_LEFT = 'bottom-left';
     static PLACEMENT_DEFAULT = Toaster.PLACEMENT_TOP_RIGHT;
 
-    static TYPE_DEFAULT = '';
     static TYPE_SUCCESS = 'text-bg-success';
     static TYPE_PRIMARY = 'text-bg-primary';
     static TYPE_SECONDARY = 'text-bg-secondary';
@@ -45,14 +44,18 @@ export class Toaster extends bs5.Toast
      * @param {ToasterArgument} param 
      */
     constructor(param) {
-        const type = param.type || Toaster.TYPE_DEFAULT;
+        const type = param.type || Toaster.TYPE_INFO;
         param.btnCloseWhite = (type && type.trim().length && ![Toaster.TYPE_WARNING, Toaster.TYPE_INFO, Toaster.TYPE_LIGHT].includes(type) && !param.header) || param.btnCloseWhite;
         super(param);
-        this.#type = type;
+        this.#type = `${type} opacity-75`;
     }
 
     show() {
-        !this.#type || this.element.classList.add(this.#type);
+        if(this.#type) {
+            for(let className of this.#type.split(' ')) {
+                this.element.classList.add(className);
+            }
+        }
         super.show();
     }
 }

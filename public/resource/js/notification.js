@@ -2,6 +2,7 @@
 
 import $ from 'jquery';
 import { appService } from "./app-service.js";
+import { Toaster } from './toaster.js';
 
 export class Notification
 {
@@ -20,7 +21,7 @@ export class Notification
         this.#sendRequest()
             .then(response => this.#getResponseObject(response))
             .then(response => this.#updateDocumentElements(response))
-            .catch(error => console.error(`${error}: Cannot update notification`));
+            .catch(error => this.#catchError(error));
     }
 
     /**
@@ -89,5 +90,15 @@ export class Notification
             topButton.find('.icon').removeClass('animate__swing');
             topButton.find('.badge').addClass('d-none');
         }
+    }
+
+    #catchError(error)
+    {
+        console.error(`Cannot Update Notification: ${error.message}`);
+
+        new Toaster({
+            body: 'Notification Update Failed',
+            type: Toaster.TYPE_WARNING
+        }).show()
     }
 }

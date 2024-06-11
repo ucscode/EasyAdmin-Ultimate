@@ -45,15 +45,18 @@ class MediaCrudController extends AbstractCrudController
 
         yield VichField::new('uploadedFile', $pageName === Crud::PAGE_NEW ? 'Select File' : 'Uploaded File');
         
-        yield TextField::new(self::FIELD_FILE_URL)
-            ->hideWhenCreating()
-            ->setFormTypeOptions($this->relativeFieldOptions() + [
-                'mapped' => false,
-                'data' => 4,
-            ])
-            ->formatValue(function($entity) {
-                return 12; //$this->uploaderHelper->asset($entity, 'name');
-            });
+        $entity = $this->getContext()->getEntity()->getInstance();
+
+        if($entity) {
+            yield TextField::new(self::FIELD_FILE_URL)
+                ->hideWhenCreating()
+                ->hideOnIndex()
+                ->setFormTypeOptions($this->relativeFieldOptions() + [
+                    'mapped' => false,
+                    'data' => $this->uploaderHelper->asset($entity, 'uploadedFile'),
+                ])
+            ;
+        }
 
         if($pageName !== Crud::PAGE_NEW) {
             

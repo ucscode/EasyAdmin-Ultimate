@@ -58,7 +58,7 @@ $(function() {
                     new Toaster({
                         body: 'Copied to clipboard',
                         type: Toaster.TYPE_WARNING,
-                        placement: Toaster.PLACEMENT_BOTTOM_RIGHT,
+                        placement: Toaster.PLACEMENT_BOTTOM_RIGHT
                     }).show();
                 })
         }
