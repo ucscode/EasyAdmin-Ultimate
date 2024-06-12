@@ -21,6 +21,8 @@ use Ucscode\KeyGenerator\KeyGenerator;
 
 class RegistrationController extends AbstractSecurityController
 {
+    public const ROUTE_NAME = 'app_register';
+
     protected KeyGenerator $keyGenerator;
 
     public function __construct(
@@ -32,7 +34,7 @@ class RegistrationController extends AbstractSecurityController
         $this->keyGenerator = new KeyGenerator();
     }
 
-    #[Route('/register', name: 'app_register')]
+    #[Route('/register', name: self::ROUTE_NAME)]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
@@ -50,8 +52,7 @@ class RegistrationController extends AbstractSecurityController
 
             // Generate Uniqid
             $user->setUniqueId($this->keyGenerator->generateKey(7));
-
-            $user->setParent($this->affiliationService->getRequestReferrer());
+            $user->setParent($this->affiliationService->getReferrerFromRequest());
 
             $entityManager->persist($user);
             $entityManager->flush();

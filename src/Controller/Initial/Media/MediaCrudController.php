@@ -4,6 +4,7 @@ namespace App\Controller\Initial\Media;
 
 use App\Controller\Initial\Abstracts\AbstractInitialCrudController;
 use App\Entity\Media;
+use App\Form\Extension\Affix\AffixTypeExtension;
 use App\Form\Field\VichField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -151,16 +152,7 @@ class MediaCrudController extends AbstractInitialCrudController
     {
         return array_replace_recursive([
             'affix' => [
-                'append' => [
-                    'type' => 'button',
-                    'value' => [
-                        'icon' => 'fas fa-copy',
-                        'attributes' => [
-                            'title' => 'copy',
-                            'data-media-field-clip' => '',
-                        ],
-                    ],
-                ],
+                'append' => AffixTypeExtension::CLIP_COPY_BUTTON,
             ],
         ], $replacements);
     }

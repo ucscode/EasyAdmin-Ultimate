@@ -15,7 +15,7 @@
         module.exports = factory();
     } else {
         // Browser globals
-        root.MyClass = factory();
+        root.TreeDataNext = factory();
     }
 }(typeof self !== 'undefined' ? self : this, function () {
 

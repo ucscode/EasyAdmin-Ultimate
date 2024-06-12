@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Controller\Security\RegistrationController;
 use App\Entity\User\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
@@ -9,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Webmozart\Assert\Assert;
 
 class AffiliationService
@@ -24,7 +26,8 @@ class AffiliationService
     public function __construct(
         protected RequestStack $requestStack,
         protected EntityManagerInterface $entityManager,
-        protected ConfigurationService $configurationService
+        protected ConfigurationService $configurationService,
+        protected UrlGeneratorInterface $urlGenerator
     ) {
         $this->connection = $this->entityManager->getConnection();
         $this->classMetaData = $this->entityManager->getClassMetadata(User::class);
@@ -40,12 +43,22 @@ class AffiliationService
         return !!$this->configurationService->get('affiliation.enabled');
     }
 
+    public function getReferralLink(?User $user, string $routeName = RegistrationController::ROUTE_NAME, array $parameters = []): ?string
+    {
+        if($user) {
+            return $this->urlGenerator->generate($routeName, [
+                self::REQUEST_QUERY_KEY => $user->getUniqueId(),
+            ] + $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+        return null;
+    }
+
     /**
      * Retrieves the referrer user from the current request, if available.
      *
      * @return User|null Returns the referrer user if found, null otherwise.
      */
-    public function getRequestReferrer(): ?User
+    public function getReferrerFromRequest(): ?User
     {
         $referralId =
             $this->requestStack->getCurrentRequest()->query->get(self::REQUEST_QUERY_KEY) ??

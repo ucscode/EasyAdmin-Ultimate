@@ -10,6 +10,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AffixTypeExtension extends AbstractTypeExtension
 {
+    public const CLIP_COPY_BUTTON = [
+        'type' => 'button',
+        'value' => [
+            'icon' => 'fas fa-copy',
+            'attributes' => [
+                'data-crud-field-clip' => '',
+                'title' => 'Copy value'
+            ],
+        ],
+    ];
+
     public static function getExtendedTypes(): iterable
     {
         return [

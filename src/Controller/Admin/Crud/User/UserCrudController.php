@@ -8,6 +8,7 @@ use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Controller\Initial\User\Hierarchy;
 use App\Entity\User\User;
+use App\Form\Extension\Affix\AffixTypeExtension;
 use App\Repository\User\UserRepository;
 use App\Security\PasswordStrengthEstimator;
 use App\Service\AffiliationService;
@@ -23,6 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -52,6 +54,16 @@ class UserCrudController extends AbstractAdminCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        /**
+         * @var ?User
+         */
+        $entity = $this->getContext()->getEntity()->getInstance();
+
+        yield FormField::addTab('Basic Info', 'fas fa-info-circle')
+            ->setHelp($this->getTabHelp())
+            // Basic Tab
+        ;
+
         yield TextField::new('uniqueId')
             ->setDisabled()
             ->onlyOnForms()
@@ -60,15 +72,13 @@ class UserCrudController extends AbstractAdminCrudController
 
         yield EmailField::new('email');
 
+        yield BooleanField::new('isVerified', 'Verified')
+            ->renderAsSwitch(false)
+        ;
+
         yield TextField::new('username');
 
         yield $this->passwordFieldFactory($pageName);
-
-        yield ImageField::new('avatar')
-            ->setUploadDir(FilePathConstants::USER_IMAGE_UPLOAD_DIR)
-            ->setBasePath(FilePathConstants::USER_IMAGE_BASE_PATH)
-            ->setUploadedFileNamePattern(FilePathConstants::USER_IMAGE_UPLOAD_FILE_PATTERN)
-        ;
 
         yield DateTimeField::new('registrationTime')
             ->hideOnIndex()
@@ -81,16 +91,37 @@ class UserCrudController extends AbstractAdminCrudController
             })
         ;
 
+        yield FormField::addTab('Advance Info', 'fas fa-user-tie')
+            ->setHelp($this->getTabHelp())
+            # Advance Info Tab
+        ;
+
+        yield ImageField::new('avatar')
+            ->setUploadDir(FilePathConstants::USER_IMAGE_UPLOAD_DIR)
+            ->setBasePath(FilePathConstants::USER_IMAGE_BASE_PATH)
+            ->setUploadedFileNamePattern(FilePathConstants::USER_IMAGE_UPLOAD_FILE_PATTERN)
+        ;
+
         yield ChoiceField::new('roles')
             ->allowMultipleChoices()
             ->setChoices($this->getAllowedRoles())
         ;
 
-        yield BooleanField::new('isVerified', 'verified')
-            ->renderAsSwitch(false)
-        ;
-
         if($this->affiliationService->isEnabled()) {
+            
+            yield TextField::new('referral_link')
+                ->setFormTypeOptions([
+                    'mapped' => false,
+                    'required' => false,
+                    'data' => $this->affiliationService->getReferralLink($entity),
+                    'affix' => [
+                        'append' => AffixTypeExtension::CLIP_COPY_BUTTON
+                    ]
+                ])
+                ->setHtmlAttribute('readonly', 'readonly')
+                ->onlyOnForms()
+                ->hideWhenCreating()
+            ;
 
             $parentField = AssociationField::new('parent')
                 ->setCrudController(self::class)
@@ -140,20 +171,29 @@ class UserCrudController extends AbstractAdminCrudController
             );
         ;
 
-        $hierarchyAction = Action::new('hierarchy', 'Hierarchy')
-            ->linkToUrl(function (User $entity) {
-                return $this->adminUrlGenerator
-                    ->setRoute(Hierarchy::ROUTE_NAME, [
-                        'entityId' => $entity->getId(),
-                    ])
-                ;
-            })
-        ;
+        $actions->add(Crud::PAGE_INDEX, $propertyAction);
 
-        return $actions
-            ->add(Crud::PAGE_INDEX, $propertyAction)
-            ->add(Crud::PAGE_INDEX, $hierarchyAction)
-        ;
+        if($this->affiliationService->isEnabled()) {
+            // create hierarchy action
+            $hierarchyAction = Action::new('hierarchy', 'Hierarchy')
+                ->linkToUrl(function (User $entity) {
+                    return $this->adminUrlGenerator
+                        ->setRoute(Hierarchy::ROUTE_NAME, [
+                            'entityId' => $entity->getId(),
+                        ])
+                    ;
+                })
+            ;
+
+            $actions->add(Crud::PAGE_INDEX, $hierarchyAction);
+        }
+
+        $actions->reorder(Crud::PAGE_INDEX, [
+            Action::EDIT,
+            'property'
+        ]);
+
+        return $actions;
     }
 
     public function createEntity(string $entityFqcn): User
@@ -240,16 +280,35 @@ class UserCrudController extends AbstractAdminCrudController
         return $passwordField;
     }
 
+    /**
+     * Retrieves an array of allowed roles.
+     *
+     * The method returns a predefined list of roles mapped to display values.
+     * If no specific roles are defined in the array, it defaults to returning all roles
+     * starting with 'ROLE_' from RoleConstants::getChoices().
+     *
+     * @return array An associative array where the key is the display value and the value is the role constant.
+     */
     protected function getAllowedRoles(): array
     {
-        /**
-         * Get the array of allowed user roles.
-         * If the array is empty, all roles will be returned.
-         */
-        $allowedRoles = [
-            // 'Display Value' => UserRole::ROLE_ADMIN
-        ];
+        return [
+            // 'Display Value' => RoleConstants::ROLE_ADMIN
+            
+        ] ?: RoleConstants::getChoices('ROLE_');
+    }
 
-        return $allowedRoles ?: RoleConstants::getChoices('ROLE_');
+    protected function getTabHelp(): string
+    {
+        /**
+         * @var ?User
+         */
+        $entity = $this->getContext()->getEntity()->getInstance();
+
+        return !$entity?->getEmail() ? '' : sprintf(
+            "<div class='text-bg-light my-3 p-2 rounded'>
+                @user &lt;%s&gt;
+            </div>",
+            $entity->getEmail(),
+        );
     }
 }

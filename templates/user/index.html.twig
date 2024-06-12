@@ -11,7 +11,7 @@
             {% if eau.config('affiliation.enabled') %}
                 <div class="my-3">
                     <h5>Your Referral Link is</h5>
-                    {{ absolute_url(path('app_register', {ref: app.user.uniqueId})) }}
+                    {{ reflink }}
                 </div>
             {% endif %}
             <p class="col-lg-6 mx-auto">

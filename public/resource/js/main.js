@@ -63,9 +63,9 @@ $(function() {
                     placement: Toaster.PLACEMENT_BOTTOM_RIGHT
                 });
             }
-
-            new ClipboardJs('[data-media-field-clip]', {
-                text: (el) => $(el).prev().val()
+            
+            new ClipboardJs('[data-crud-field-clip]', {
+                text: (el) => $(el).parent().find('.form-control,.form-select').val()
             })
                 .on('success', () => toastFactory().show());
                 
