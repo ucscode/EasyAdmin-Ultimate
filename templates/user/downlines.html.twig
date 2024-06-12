@@ -4,6 +4,22 @@
     <div class="container-fluid">
         <div class="row">
 
+            <div class="col-xl-6 col-xxl-5">
+                <div class="field-text form-group">
+                    <label class="form-control-label">My Referral Link</label>
+                    <div class="form-widget">
+                        <div class="input-group">
+                            <input type="text" readonly="readonly" class="form-control" value="{{ reflink }}">        
+                            <button data-crud-field-clip="" title="Copy Link" type="button" class="btn btn-secondary">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>          
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 border-top mb-4"></div>
+
             <div class="col-xl-6 mb-4">
                 <h4 class='mb-3'>My Downlines</h4>
 
@@ -17,7 +33,7 @@
 
                 <div class='border-top pt-3'>
                     {% if table.rows|length %}
-                        {% include 'utility/table.html.twig' with {table: table} %}
+                        {{ block('table') }}
                     {% else %} 
                         <div class="fs-6 text-center text-bg-light rounded-2 p-2">
                             <i class="fas fa-network-wired"></i> No downline 
@@ -27,7 +43,8 @@
             </div>
 
             <div class="col-xl-6">
-                {{ tree_node_html }}
+                {% set nodes_class = '_user' %}
+                {{ block('nodes_item') }}
             </div>
             
         </div>

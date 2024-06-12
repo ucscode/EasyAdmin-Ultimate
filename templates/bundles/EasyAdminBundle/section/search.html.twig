@@ -1,0 +1,48 @@
+{% set searchIndex = 'query' %}
+
+{% macro render_hidden_fields(name, value) %}
+    {% if value is iterable %}
+        {% for subkey, subvalue in value %}
+            {{ _self.render_hidden_fields(name ~ '[' ~ subkey ~ ']', subvalue) }}
+        {% endfor %}
+    {% else %}
+        <input type="hidden" name="{{ name }}" value="{{ value|escape('url') }}">
+    {% endif %}
+{% endmacro %}
+
+<div class="content-search">
+    <form class="form-action-search" method="get">
+        {% block search_form %}
+
+            {% for key, value in app.request.query.all %}
+                {% if key != searchIndex %}
+                    {{ _self.render_hidden_fields(key, value) }}
+                {% endif %}
+            {% endfor %}
+
+            <div class="form-group">
+                <div class="form-widget">
+                    <i class="fas fa-search content-search-icon"></i>
+
+                    <label class="content-search-label" data-value="{{ app.request.get(searchIndex) }}">
+                        <input 
+                            class="form-control {{ app.request.get(searchIndex) is null ? 'is-blank' }}" 
+                            type="search" 
+                            name="{{ searchIndex }}" 
+                            value="{{ app.request.get(searchIndex) ?? '' }}" 
+                            placeholder="{{ t('action.search', ea.i18n.translationParameters, 'EasyAdminBundle')|trans }}" 
+                            spellcheck="false" 
+                            autocorrect="off" 
+                            onInput="this.parentNode.dataset.value=this.value">
+                    </label>
+
+                    {% if app.request.get(searchIndex) %}
+                        <a href="{{ ea_url().unset(searchIndex) }}" class="content-search-reset">
+                            <i class="fas fa-fw fa-times"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endblock %}
+    </form>
+</div>

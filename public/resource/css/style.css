@@ -166,6 +166,19 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
 
 /* ----------- Tree Nodes -------------- */
 
+.nodes-item {
+    border: 1px solid var(--bs-gray-300); 
+    padding: 1rem;
+    background-color: var(--bs-gray-100); 
+    border-radius: 0.4rem;
+}
+
+#tree-nodes {
+    /* transform: scale(0.8); */
+}
+
+/* ---------- [ Genealogy Container Section ] --------- */
+
 /* Reset some basic styles */
 .tree-list ul, 
 .tree-list li {
@@ -191,15 +204,17 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
 
 /* Links within tree items */
 .tree-list .tree-anchor {
+    --anchor-color: #6d6f71;
     text-decoration: none;
-    color: #2c3e50;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 4px;
+    color: var(--anchor-color);
+    font-weight: 500;
+    padding: 7px;
+    border-radius: 2px;
     transition: background 0.3s, color 0.3s;
     display: block;
     border: 1px dotted var(--bs-gray-500);
-    margin: 10px auto;
+    margin: 7px auto;
+    font-size: small;
 }
 
 .tree-list .tree-anchor:hover {

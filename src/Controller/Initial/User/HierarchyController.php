@@ -66,6 +66,7 @@ class HierarchyController extends AbstractInitialDashboardController
             'structure' => base64_encode(json_encode($structure)),
             'table' => $tableBuilder,
             'node' => $this->nodeEntity,
+            'reflink' => $this->affiliationService->getReferralLink($this->currentUser)
         ]);
     }
 

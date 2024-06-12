@@ -5,28 +5,34 @@
     <link rel="stylesheet" href="{{ asset('vendor/TreeDataNext/TreeDataNext.css') }}">
 {% endblock %}
 
-{% set tree_node_html %}
-    <div class="tree-node {% block tree_node_html_class 'border p-3 bg-light rounded-3 mb-4' %}">
-        <div id="tree-nodes" class="overflow-auto py-3"></div>
-    </div>
-{% endset %}
+{% block search_wrapper %}
+    {% include eau.templatePath('section/search') %}
+{% endblock %}
 
 {% block main %}
     <div class="container">
         <div class="row mb-5">
 
             <div class="col-xl-8 mb-4">
-                <div class="">
-                    {{ tree_node_html }}
-                </div>
-                <div class="border border-3 p-4">
-                    <h3 class="fw-light mb-3">
-                        <i class="fas fa-sitemap me-2"></i> Referrals
-                    </h3>
-                    <div class="">
-                        {% include 'utility/table.html.twig' with {table: table} %}
+
+                {% block nodes_item %}
+                    <div class="nodes-item {{ nodes_class|default('mb-3') }}">
+                        <div id="tree-nodes" class="overflow-auto py-3"></div>
                     </div>
+                {% endblock %}
+
+                <div class="border p-4">
+                    <h5 class="fw-light mb-3">
+                        <i class="fas fa-sitemap me-2"></i> Referrals
+                    </h5>
+                    <div class='text-bg-success opacity-50 mb-2 p-2 rounded'>
+                        Anchor &lt;{{ node.email }}&gt;
+                    </div>
+                    {% block table %}
+                        {% include 'utility/table.html.twig' with {table: table} %}
+                    {% endblock %}
                 </div>
+
             </div>
             
             <div class="col-xl-4">

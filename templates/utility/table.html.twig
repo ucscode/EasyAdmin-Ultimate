@@ -77,7 +77,7 @@
     </tfoot>
 </table>
 
-{% if table.rows|length %}
+{% if table.rows|length and table.paginator.numPages > 1 %}
     <div class="content-panel-footer without-padding without-border pt-3">
         {% block paginator %}
             {{ table.paginator.toHtml|raw }}
