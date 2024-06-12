@@ -23,7 +23,7 @@ $(function() {
             this.autoDisplayModal();
             this.togglePasswordVisibility();
             this.updateUserNotification();
-            this.automateCopyEvent();
+            this.clipboardEvents();
             this.configureGLightBox();
         }
 
@@ -54,18 +54,27 @@ $(function() {
             });
         }
 
-        automateCopyEvent()
+        clipboardEvents()
         {
-            new ClipboardJs('[data-media-field-copier]', {
-                text: (trigger) => $(trigger).prev().val()
+            const toastFactory = (text = 'Copied to clipboard') => {
+                return new Toaster({
+                    body: text,
+                    type: Toaster.TYPE_WARNING,
+                    placement: Toaster.PLACEMENT_BOTTOM_RIGHT
+                });
+            }
+
+            new ClipboardJs('[data-media-field-clip]', {
+                text: (el) => $(el).prev().val()
             })
-                .on('success', (e) => {
-                    new Toaster({
-                        body: 'Copied to clipboard',
-                        type: Toaster.TYPE_WARNING,
-                        placement: Toaster.PLACEMENT_BOTTOM_RIGHT
-                    }).show();
-                })
+                .on('success', () => toastFactory().show());
+                
+            new ClipboardJs('[data-media-index-clip]', {
+                text: (el) => el.href
+            })
+                .on('success', () => toastFactory('File link copied').show())
+            
+            $('table').on('click', '[data-media-index-clip]', e => e.preventDefault());
         }
 
         configureGLightBox()

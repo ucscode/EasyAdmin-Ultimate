@@ -42,19 +42,13 @@ class MediaCrudController extends AbstractInitialCrudController
          */
         $entity = $this->getContext()->getEntity()->getInstance();
 
-        if($entity) {
-            $fileUrl = sprintf(
-                '%s%s',
-                $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost(),
-                $this->uploaderHelper->asset($entity, 'uploadedFile'),
-            );
-
+        if($pageName === Crud::PAGE_EDIT && $entity) {
             $fileUrlField = TextField::new(self::FIELD_FILE_URL)
                 ->hideWhenCreating()
                 ->hideOnIndex()
                 ->setFormTypeOptions($this->relativeFieldOptions() + [
                     'mapped' => false,
-                    'data' => $fileUrl,
+                    'data' => $this->getFileUrl($entity),
                 ])
                 ->setDisabled()
             ;
@@ -65,7 +59,7 @@ class MediaCrudController extends AbstractInitialCrudController
                         "<a href='%s' class='text-capitalize' data-glightbox>
                             <i class='fa fa-image'></i> Preview %s
                         </a>", 
-                        $fileUrl,
+                        $this->getFileUrl($entity),
                         $entity->getMimeParts(0)
                     )
                 );
@@ -133,6 +127,26 @@ class MediaCrudController extends AbstractInitialCrudController
         }
     }
 
+    public function configureActions(Actions $actions): Actions
+    {
+        $copyAction = Action::new(self::FIELD_FILE_URL, 'Copy Link')
+            ->linkToUrl(function(Media $entity) {
+                return $this->getFileUrl($entity);
+            })
+            ->setHtmlAttributes([
+                'data-media-index-clip' => ''
+            ])
+        ;
+
+        return $actions
+            ->add(Crud::PAGE_INDEX, $copyAction)
+            ->reorder(Crud::PAGE_INDEX, [
+                Action::EDIT,
+                self::FIELD_FILE_URL,
+            ])
+        ;
+    }
+
     protected function relativeFieldOptions(array $replacements = []): array
     {
         return array_replace_recursive([
@@ -143,11 +157,20 @@ class MediaCrudController extends AbstractInitialCrudController
                         'icon' => 'fas fa-copy',
                         'attributes' => [
                             'title' => 'copy',
-                            'data-media-field-copier' => '',
+                            'data-media-field-clip' => '',
                         ],
                     ],
                 ],
             ],
         ], $replacements);
+    }
+
+    protected function getFileUrl(Media $entity): string
+    {
+        return sprintf(
+            '%s%s',
+            $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost(),
+            $this->uploaderHelper->asset($entity, 'uploadedFile'),
+        );
     }
 }
