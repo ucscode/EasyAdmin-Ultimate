@@ -5,14 +5,19 @@
     <link rel="stylesheet" href="{{ asset('vendor/TreeDataNext/TreeDataNext.css') }}">
 {% endblock %}
 
+{% set tree_node_html %}
+    <div class="tree-node {% block tree_node_html_class 'border p-3 bg-light rounded-3 mb-4' %}">
+        <div id="tree-nodes" class="overflow-auto py-3"></div>
+    </div>
+{% endset %}
+
 {% block main %}
-
     <div class="container">
-
         <div class="row mb-5">
+
             <div class="col-xl-8 mb-4">
-                <div class="border p-3 bg-light rounded-3 mb-4">
-                    <div id="tree-nodes" class="overflow-auto py-4"></div>
+                <div class="">
+                    {{ tree_node_html }}
                 </div>
                 <div class="border border-3 p-4">
                     <h3 class="fw-light mb-3">
@@ -23,6 +28,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-xl-4">
                 <h5>Linear Tree View</h5>
                 <hr>
@@ -30,8 +36,8 @@
                     <div class="tree-list overflow-auto" id="tree-list"></div>
                 </div>
             </div>
+            
         </div>
-
     </div>
 {% endblock %}
 

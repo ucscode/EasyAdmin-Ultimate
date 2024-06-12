@@ -14,13 +14,13 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * For example, to get all the context stored in the ParameterBag, you can use `appService.getContext()`.
  *
  * ## Usage (Service):
- * 
+ *
  * ```php
  * $this->jsPayload->set("name", "John Doe")
  * ```
- * 
- * To use this service, import and utilize the appService in your JavaScript code. 
- * 
+ *
+ * To use this service, import and utilize the appService in your JavaScript code.
+ *
  * ```javascript
  * import { appService } from "/resource/js/app-service.js";
  * const context = appService.getContext();
@@ -29,4 +29,5 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * @package App\Service
  */
 class JsPayload extends ParameterBag
-{}
+{
+}

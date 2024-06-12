@@ -21,11 +21,11 @@ class Cell
 
     /**
      * The constructor saves the original value into the metadata.
-     * 
+     *
      * For safety and to prevent unexpected behavior, it is advised not to change this original value.
      * Many configurators may update the $value property, but they will always rely on the original
      * metadata value for data retrieval and persistence.
-     * 
+     *
      * @param ?string $value The original value to be stored in the metadata.
      */
     public function __construct(protected ?string $value = null)

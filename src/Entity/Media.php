@@ -45,7 +45,7 @@ class Media
     {
         $this->embeddedFile = new EmbeddedFile();
     }
-    
+
     public function getId(): ?int
     {
         return $this->id;

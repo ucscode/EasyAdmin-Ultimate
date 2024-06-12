@@ -10,12 +10,12 @@ use Ucscode\Paginator\Paginator;
 
 /**
  * A utility class for generating HTML tables dynamically in Symfony applications, designed to be used with Symfony templates.
- * 
- * This class facilitates the creation of HTML table structures by providing a fluent interface for defining table columns and rows. 
+ *
+ * This class facilitates the creation of HTML table structures by providing a fluent interface for defining table columns and rows.
  * The resulting table can be rendered in Symfony templates using the provided `utility/table.html.twig` template.
- * 
- * The `utility/table.html.twig` template leverages the information provided by an instance of this class to construct a table suitable for use 
- * in Symfony applications or with Symfony's EasyAdminBundle. It ensures compatibility with various scenarios, including rendering 
+ *
+ * The `utility/table.html.twig` template leverages the information provided by an instance of this class to construct a table suitable for use
+ * in Symfony applications or with Symfony's EasyAdminBundle. It ensures compatibility with various scenarios, including rendering
  * tables with no data.
  */
 class TableBuilder
@@ -44,7 +44,7 @@ class TableBuilder
     protected ?string $associateIndex = null;
 
     protected Paginator $paginator;
-    
+
     public function __construct(?string $name = '')
     {
         $this->setName($name);
@@ -107,7 +107,7 @@ class TableBuilder
      */
     public function setRows(array $rows): static
     {
-        $this->rows = array_map(function(array $row) {
+        $this->rows = array_map(function (array $row) {
             return $this->cellValues($row, DataCell::class);
         }, $rows);
 
@@ -124,7 +124,7 @@ class TableBuilder
 
     /**
      * Get a single row from the available rows
-     * 
+     *
      * @param int $index        The index of the row
      * @return DataCell[]|null  Returns a collection of DataCell objects or null if row is not found.
      */
@@ -143,7 +143,7 @@ class TableBuilder
      */
     public function removeRows(callable $callback): static
     {
-        $this->rows = array_filter($this->rows, fn(array $row) => call_user_func($callback, $row));
+        $this->rows = array_filter($this->rows, fn (array $row) => call_user_func($callback, $row));
 
         return $this;
     }
@@ -194,9 +194,9 @@ class TableBuilder
     {
         foreach($this->configurators as $key => $configurator) {
             call_user_func(
-                $configurator, 
-                $cell,  
-                $offset, 
+                $configurator,
+                $cell,
+                $offset,
                 $this->columns[$offset] ?? null
             );
         }
@@ -225,6 +225,9 @@ class TableBuilder
         return $this->batchActions;
     }
 
+    /**
+     * @internal
+     */
     public function getAssociateIndex(): ?string
     {
         return $this->associateIndex;
@@ -245,7 +248,7 @@ class TableBuilder
      */
     private function cellValues(array $sequence, string $cellFqcn): array
     {
-        return array_values(array_map(function($value) use($cellFqcn) {
+        return array_values(array_map(function ($value) use ($cellFqcn) {
             if($value instanceof $cellFqcn) {
                 return $value;
             }
@@ -256,7 +259,8 @@ class TableBuilder
                 );
             }
 
-            return $cellFqcn::new($value);;
+            return $cellFqcn::new($value);
+            ;
         }, $sequence));
     }
 
@@ -269,8 +273,7 @@ class TableBuilder
 
     private function setDefaultConfigurator(): void
     {
-        $this->setConfigurator(self::CONFIGURATOR_OFFSET, function (Cell $cell, int $offset, ?ColumnCell $columnCell) 
-        {            
+        $this->setConfigurator(self::CONFIGURATOR_OFFSET, function (Cell $cell, int $offset, ?ColumnCell $columnCell) {
             // set meta label to column value;
             $cell->setMeta('label', $columnCell->getMeta('label') ?? $columnCell->getValue());
 
@@ -284,7 +287,7 @@ class TableBuilder
 
                 return $cell->setAttributes($attributes);
             }
-            
+
             $attributes += [
                 'data-label' => $columnCell?->getValue(),
                 'class' => 'cell-data',

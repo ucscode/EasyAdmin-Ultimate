@@ -2,4 +2,6 @@
 
 namespace App\Utility\Table;
 
-class DataCell extends Cell {}
+class DataCell extends Cell
+{
+}

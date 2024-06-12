@@ -19,6 +19,8 @@ use ZxcvbnPhp\Zxcvbn;
  */
 class PasswordStrengthEstimator
 {
+    public const MIN_LENGTH = 8;
+
     protected Zxcvbn $estimator;
 
     /**
@@ -27,6 +29,13 @@ class PasswordStrengthEstimator
     public function __construct()
     {
         $this->estimator = new Zxcvbn();
+    }
+
+    public static function getConstraint(string $atPath, int $minScore = PasswordStrength::STRENGTH_MEDIUM, string $message = ''): Callback
+    {
+        $callable = (new self())->getCallbackConstraintArgument($atPath, $minScore, $message);
+
+        return new Callback($callable);
     }
 
     /**

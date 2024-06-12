@@ -37,7 +37,7 @@ class AffixTypeExtension extends AbstractTypeExtension
 
     /**
      * Add extra option to input field which allows dynamic side icon, text or button: Example
-     * 
+     *
      * affix:
      *  - prepend
      *      - type: button

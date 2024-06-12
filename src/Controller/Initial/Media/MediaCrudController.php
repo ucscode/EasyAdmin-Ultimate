@@ -35,9 +35,9 @@ class MediaCrudController extends AbstractInitialCrudController
         yield FormField::addFieldset();
 
         yield VichField::new('uploadedFile', $pageName === Crud::PAGE_NEW ? 'Select File' : 'Uploaded File')
-            ->hideOnIndex()    
+            ->hideOnIndex()
         ;
-        
+
         /**
          * @var ?Media
          */
@@ -53,13 +53,13 @@ class MediaCrudController extends AbstractInitialCrudController
                 ])
                 ->setDisabled()
             ;
-            
+
             if(in_array($entity->getMimeParts(0), [Media::TYPE_IMAGE, Media::TYPE_VIDEO])) {
                 $fileUrlField->setHelp(
                     sprintf(
                         "<a href='%s' class='text-capitalize' data-glightbox>
                             <i class='fa fa-image'></i> Preview %s
-                        </a>", 
+                        </a>",
                         $this->getFileUrl($entity),
                         $entity->getMimeParts(0)
                     )
@@ -70,7 +70,7 @@ class MediaCrudController extends AbstractInitialCrudController
         }
 
         if($pageName !== Crud::PAGE_NEW) {
-            
+
             yield FormField::addColumn('col-xl-6 col-xxl-5');
             yield FormField::addFieldset('File Info', 'fa fa-info-circle');
 
@@ -131,7 +131,7 @@ class MediaCrudController extends AbstractInitialCrudController
     public function configureActions(Actions $actions): Actions
     {
         $copyAction = Action::new(self::FIELD_FILE_URL, 'Copy Link')
-            ->linkToUrl(function(Media $entity) {
+            ->linkToUrl(function (Media $entity) {
                 return $this->getFileUrl($entity);
             })
             ->setHtmlAttributes([

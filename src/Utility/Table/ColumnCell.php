@@ -2,4 +2,6 @@
 
 namespace App\Utility\Table;
 
-class ColumnCell extends Cell {}
+class ColumnCell extends Cell
+{
+}

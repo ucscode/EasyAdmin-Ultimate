@@ -2,6 +2,7 @@
 
 namespace App\Form\Security;
 
+use App\Security\PasswordStrengthEstimator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -31,12 +32,12 @@ class ChangePasswordFormType extends AbstractType
                             'message' => 'Please enter a password',
                         ]),
                         new Length([
-                            'min' => 12,
+                            'min' => PasswordStrengthEstimator::MIN_LENGTH,
                             'minMessage' => 'Your password should be at least {{ limit }} characters',
                             // max length allowed by Symfony for security reasons
                             'max' => 4096,
                         ]),
-                        new PasswordStrength(),
+                        PasswordStrengthEstimator::getConstraint('plainPassword'),
                         new NotCompromisedPassword(),
                     ],
                     'label' => 'New password',

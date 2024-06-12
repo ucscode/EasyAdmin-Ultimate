@@ -2,9 +2,11 @@
 
 namespace App\Controller\Admin\Abstracts;
 
+use App\Controller\Admin\Crud\ContentSlotCrudController;
 use App\Controller\Admin\Crud\User\UserCrudController;
 use App\Controller\Admin\Interfaces\AdminControllerInterface;
 use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
+use App\Controller\Initial\Media\MediaCrudController;
 use App\Entity\ContentSlot;
 use App\Entity\Media;
 use App\Entity\User\User;
@@ -46,11 +48,15 @@ abstract class AbstractAdminDashboardController extends AbstractInitialDashboard
         yield MenuItem::linkToCrud('Add User', 'fas fa-user-plus', User::class)
             ->setController(UserCrudController::class)
             ->setAction(Crud::PAGE_NEW);
-        
+
         yield MenuItem::section('Misc');
 
-        yield MenuItem::linkToCrud('Media', 'fa fa-camera', Media::class);
-        yield MenuItem::linkToCrud('Slots', 'fa fa-code', ContentSlot::class);
+        yield MenuItem::linkToCrud('Media', 'fa fa-camera', Media::class)
+            ->setController(MediaCrudController::class);
+
+        yield MenuItem::linkToCrud('Slots', 'fa fa-code', ContentSlot::class)
+            ->setController(ContentSlotCrudController::class);
+
         yield MenuItem::linkToLogout('Logout', 'fas fa-arrow-right-from-bracket');
     }
 

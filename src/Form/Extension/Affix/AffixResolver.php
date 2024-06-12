@@ -17,7 +17,7 @@ class AffixResolver
             ->setDefault(self::AFFIX_KEY, null)
             ->setAllowedTypes(self::AFFIX_KEY, ['array', 'null'])
             ->setNormalizer(
-                self::AFFIX_KEY, 
+                self::AFFIX_KEY,
                 fn (Options $options, ?array $value) => $this->resolveAffixTypes(new OptionsResolver(), $value ?? [])
             )
         ;
@@ -44,7 +44,7 @@ class AffixResolver
 
     /**
      * $key = 'prepend' or 'append'
-     * 
+     *
      * - affix[$key]['type']
      * - affix[$key]['value']
      */
@@ -75,13 +75,13 @@ class AffixResolver
             ->setAllowedTypes('icon', ['string', 'null'])
             ->setAllowedTypes('label', self::SCALAR_VALUES)
             ->setAllowedTypes('attributes', 'array')
-            ->setNormalizer('attributes', function(Options $options, array $value): array {
+            ->setNormalizer('attributes', function (Options $options, array $value): array {
                 return $value + [
                     'type' => 'button',
                     'class' => 'btn btn-secondary'
                 ];
             })
-            ->setNormalizer('label', function(Options $options, ?string $value): ?string {
+            ->setNormalizer('label', function (Options $options, ?string $value): ?string {
                 return $value ?? ($options['icon'] ? null : 'BUTTON');
             })
         ;
@@ -101,7 +101,7 @@ class AffixResolver
         return $value;
     }
 
-    protected function normalizeAffixTypeOptions(mixed $value, Options $options): string|array 
+    protected function normalizeAffixTypeOptions(mixed $value, Options $options): string|array
     {
         if($options['type'] === 'button') {
             is_array($value) ?: $value = [

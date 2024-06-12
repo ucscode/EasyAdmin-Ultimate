@@ -12,7 +12,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -20,7 +19,7 @@ use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 class RegistrationFormType extends AbstractType
 {
-    public function __construct(protected RouterInterface $router, protected PasswordStrengthEstimator $passwordStrengthEstimator)
+    public function __construct(protected RouterInterface $router)
     {
 
     }
@@ -41,17 +40,12 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Please enter a password',
                     ]),
                     new Length([
-                        'min' => 6,
+                        'min' => PasswordStrengthEstimator::MIN_LENGTH,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
-                    new Callback(
-                        $this->passwordStrengthEstimator->getCallbackConstraintArgument(
-                            'plainPassword',
-                            PasswordStrength::STRENGTH_MEDIUM
-                        )
-                    ),
+                    PasswordStrengthEstimator::getConstraint('plainPassword'),
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [

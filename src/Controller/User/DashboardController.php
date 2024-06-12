@@ -11,7 +11,7 @@ class DashboardController extends AbstractUserDashboardController
 {
     public function __construct(protected AffiliationService $affiliationService)
     {
-        
+
     }
 
     #[Route('/user', name: 'app_user')]

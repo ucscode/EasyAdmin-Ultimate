@@ -3,6 +3,7 @@
 namespace App\Controller\User\Abstracts;
 
 use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
+use App\Controller\Initial\User\HierarchyController;
 use App\Controller\User\Crud\PasswordCrudController;
 use App\Controller\User\Crud\ProfileCrudController;
 use App\Controller\User\Interfaces\UserControllerInterface;
@@ -54,6 +55,10 @@ abstract class AbstractUserDashboardController extends AbstractInitialDashboardC
             ->setEntityId($user->getId())
         ;
 
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+        yield MenuItem::linkToRoute('My Downlines', 'fas fa-users', HierarchyController::ROUTE_NAME);
+
+        yield MenuItem::section('Exit');
+
+        yield MenuItem::linkToLogout('Logout', 'fas fa-moon');
     }
 }

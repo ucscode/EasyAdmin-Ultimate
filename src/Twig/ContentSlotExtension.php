@@ -4,8 +4,8 @@ namespace App\Twig;
 
 use App\Configuration\ContentSlotPattern;
 use App\Entity\ContentSlot;
+use App\Service\RequestManager;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
@@ -17,7 +17,8 @@ class ContentSlotExtension extends AbstractExtension
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected RequestStack $requestStack,
-        protected ContentSlotPattern $contentSlotPattern
+        protected ContentSlotPattern $contentSlotPattern,
+        protected RequestManager $requestManager
     ) {
         //
     }
@@ -88,14 +89,14 @@ class ContentSlotExtension extends AbstractExtension
 
                 if($parentFQCN === null) {
                     // ensure that current controller is not part of the ancestors container
-                    if(!$this->isSubClassOf($this->getControllerClassName(), $ancestorsContainer)) {
+                    if(!$this->isSubClassOf($this->requestManager->getCurrentControllerFqcn(), $ancestorsContainer)) {
                         return $entityInstance->getContent();
                     }
 
                     continue;
                 }
 
-                if($this->isSubClassOf($this->getControllerClassName(), [$parentFQCN])) {
+                if($this->isSubClassOf($this->requestManager->getCurrentControllerFqcn(), [$parentFQCN])) {
                     return $entityInstance->getContent();
                 }
             }
@@ -122,36 +123,5 @@ class ContentSlotExtension extends AbstractExtension
         }
 
         return false;
-    }
-
-    /**
-     * Retrieves the fully qualified class name (FQCN) of the current controller.
-     *
-     * This method first checks if the request is within the EasyAdmin context and retrieves the dashboard controller FQCN.
-     * If not, it falls back to retrieving the original controller from the request attributes.
-     *
-     * @return string|null The FQCN of the current controller, or null if it cannot be determined.
-     */
-    private function getControllerClassName(): ?string
-    {
-        /**
-         * @var \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext|null
-         */
-        $easyAdminContext = $this->requestStack->getCurrentRequest()->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
-
-        if($easyAdminContext) {
-            return $easyAdminContext->getDashboardControllerFqcn();
-        };
-
-        $originalController = $this->requestStack->getCurrentRequest()->attributes->get('_controller');
-
-        if(is_array($originalController)) {
-            // get only the class name (@ignore method)
-            $originalController = $originalController[0];
-        }
-
-        $controllerClass = explode('::', $originalController)[0];
-
-        return $controllerClass ?: null;
     }
 }

@@ -6,7 +6,7 @@ use App\Constants\FilePathConstants;
 use App\Constants\RoleConstants;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
-use App\Controller\Initial\User\Hierarchy;
+use App\Controller\Initial\User\HierarchyController;
 use App\Entity\User\User;
 use App\Form\Extension\Affix\AffixTypeExtension;
 use App\Repository\User\UserRepository;
@@ -108,7 +108,7 @@ class UserCrudController extends AbstractAdminCrudController
         ;
 
         if($this->affiliationService->isEnabled()) {
-            
+
             yield TextField::new('referral_link')
                 ->setFormTypeOptions([
                     'mapped' => false,
@@ -178,7 +178,7 @@ class UserCrudController extends AbstractAdminCrudController
             $hierarchyAction = Action::new('hierarchy', 'Hierarchy')
                 ->linkToUrl(function (User $entity) {
                     return $this->adminUrlGenerator
-                        ->setRoute(Hierarchy::ROUTE_NAME, [
+                        ->setRoute(HierarchyController::ROUTE_NAME, [
                             'entityId' => $entity->getId(),
                         ])
                     ;
@@ -293,7 +293,7 @@ class UserCrudController extends AbstractAdminCrudController
     {
         return [
             // 'Display Value' => RoleConstants::ROLE_ADMIN
-            
+
         ] ?: RoleConstants::getChoices('ROLE_');
     }
 
