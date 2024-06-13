@@ -55,4 +55,4 @@ When applied to a `simple_widget` field, the `affix` option converts the field i
 
 The `affix` feature in EasyAdminUltimate provides powerful customization options for form fields, allowing you to create input groups with appended or prepended content such as buttons or icons. This flexibility enhances usability and user experience across your Symfony applications.
 
-For more detailed configuration options and examples, please refer to the EasyAdminUltimate documentation and internal source code.
+For more detailed configuration options and examples, please refer to the EasyAdminUltimate documentation and internal source code.V

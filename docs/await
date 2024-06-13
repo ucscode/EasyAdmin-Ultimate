@@ -1,5 +1,3 @@
 - commands (secret-key|initialize)
 - components: Pattern & Permissions
 - Controllers: Admin, User, Initial
-- PasswordStrengthEstimator
-- TableBuilder Utility
