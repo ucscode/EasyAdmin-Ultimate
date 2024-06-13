@@ -256,7 +256,7 @@ class UserCrudController extends AbstractAdminCrudController
                 'constraints' => [
                     new Callback(function (?string $password, ExecutionContextInterface $context): void {
                         if($password) {
-                            $callable = $this->passwordStrengthEstimator->getCallbackConstraintArgument(
+                            $callable = $this->passwordStrengthEstimator->getConstraintArgument(
                                 'password',
                                 PasswordStrength::STRENGTH_MEDIUM,
                                 'The new password is not strong enough'

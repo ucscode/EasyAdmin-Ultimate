@@ -33,7 +33,7 @@ class PasswordStrengthEstimator
 
     public static function getConstraint(string $atPath, int $minScore = PasswordStrength::STRENGTH_MEDIUM, ?string $message = null): Callback
     {
-        $callable = (new self())->getCallbackConstraintArgument($atPath, $minScore, $message);
+        $callable = (new self())->getConstraintArgument($atPath, $minScore, $message);
 
         return new Callback($callable);
     }
@@ -63,7 +63,7 @@ class PasswordStrengthEstimator
     /**
      * Returns a callable that should passed as an argument to the Callback Constraint constructor
      *
-     * $callback = $estimator->getCallbackConstraintArgument(...);
+     * $callback = $estimator->getConstraintArgument(...);
      *
      * new Callback($callback);
      *
@@ -71,7 +71,7 @@ class PasswordStrengthEstimator
      * @param int $minScore    The minimum required strength for password validation
      * @param string $message  The default message supplied when the password does not reach the minimum required score.
      */
-    public function getCallbackConstraintArgument(string $atPath, int $minScore, ?string $message = null): callable
+    public function getConstraintArgument(string $atPath, int $minScore, ?string $message = null): callable
     {
         Assert::range($minScore, PasswordStrength::STRENGTH_VERY_WEAK, PasswordStrength::STRENGTH_VERY_STRONG);
 

@@ -3,7 +3,6 @@
 namespace App\Utility\Table;
 
 use Closure;
-use ErrorException;
 use InvalidArgumentException;
 use RuntimeException;
 use Ucscode\Paginator\Paginator;
