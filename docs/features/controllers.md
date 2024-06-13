@@ -10,7 +10,7 @@ EasyAdminUltimate provides a structured approach to managing different types of 
 6. **AbstractUserDashboardController**
 7. **AbstractSecurityController**
 
-### Base Controllers
+## Base Controllers
 
 #### AbstractInitialDashboardController
 
@@ -42,7 +42,7 @@ abstract class AbstractInitialCrudController extends AbstractCrudController
 }
 ```
 
-### Admin Controllers
+## Admin Controllers
 
 #### AbstractAdminCrudController
 
@@ -76,7 +76,7 @@ abstract class AbstractAdminDashboardController extends AbstractInitialDashboard
 }
 ```
 
-### User Controllers
+## User Controllers
 
 #### AbstractUserCrudController
 
@@ -110,7 +110,7 @@ abstract class AbstractUserDashboardController extends AbstractInitialDashboardC
 }
 ```
 
-### Security Controllers
+## Security Controllers
 
 #### AbstractSecurityController
 
@@ -128,7 +128,7 @@ abstract class AbstractSecurityController extends AbstractInitialDashboardContro
 }
 ```
 
-### Interfaces
+## Marker Interfaces
 
 #### AdminControllerInterface
 
@@ -169,7 +169,9 @@ interface SecurityControllerInterface
 }
 ```
 
-### Example Implementations
+---
+
+## Example Implementations
 
 #### Admin CRUD Controller Example
 
