@@ -2,12 +2,12 @@
 
 namespace App\Controller\Admin\Crud\User;
 
-use App\Configuration\UserPropertyPattern;
 use App\Constants\ModeConstants;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User\Property;
 use App\Entity\User\User;
+use App\Service\Configuration\UserPropertyFieldManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -28,6 +28,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class PropertyCrudController extends AbstractAdminCrudController
 {
     protected ?User $propertyOwner;
+    protected UserPropertyFieldManager $userPropertyFieldManager;
 
     public function __construct(
         protected EntityManagerInterface $entityManager,
@@ -36,6 +37,7 @@ class PropertyCrudController extends AbstractAdminCrudController
         protected KernelInterface $kernel
     ) {
         $this->setPropertyOwner();
+        $this->userPropertyFieldManager = UserPropertyFieldManager::getInstance();
     }
 
     public static function getEntityFqcn(): string
@@ -61,8 +63,6 @@ class PropertyCrudController extends AbstractAdminCrudController
      */
     public function configureFields(string $pageName): iterable
     {
-        $propertyPattern =  new UserPropertyPattern();
-
         if(in_array($pageName, [Crud::PAGE_EDIT])) {
             yield $this->getDynamicFormFields();
             return;
@@ -70,7 +70,7 @@ class PropertyCrudController extends AbstractAdminCrudController
 
         yield TextField::new('metaKey', 'Property')
             ->setDisabled()
-            ->formatValue(fn (string $value) => $propertyPattern->getPattern($value)?->get('label'))
+            ->formatValue(fn (string $value) => $this->userPropertyFieldManager->getItem($value)->getLabel())
         ;
 
         yield Field::new('metaValueAsString', 'Value')
@@ -130,7 +130,7 @@ class PropertyCrudController extends AbstractAdminCrudController
         if(Crud::PAGE_EDIT === $responseParameters->get('pageName')) {
             /** @var Property */
             $property = $responseParameters->get('entity')->getInstance();
-            $responseParameters->set('property_pattern', (new UserPropertyPattern())->getPattern($property->getMetaKey()));
+            $responseParameters->set('fieldConfig', $this->userPropertyFieldManager->getItem($property->getMetaKey()));
         }
 
         return $responseParameters;
@@ -150,9 +150,9 @@ class PropertyCrudController extends AbstractAdminCrudController
             ));
         }
 
-        $parameters = (new UserPropertyPattern())->getPattern($entity->getMetaKey());
-
-        return $parameters->get('field');
+        $fieldItem = $this->userPropertyFieldManager->getItem($entity->getMetaKey());
+        
+        return $fieldItem->getFieldInstance();
     }
 
     private function setPropertyOwner(): void

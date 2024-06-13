@@ -2,9 +2,9 @@
 
 namespace App\Command;
 
-use App\Configuration\UserPropertyPattern;
 use App\Entity\User\Property;
 use App\Entity\User\User;
+use App\Service\Configuration\UserPropertyFieldManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Exception;
@@ -112,7 +112,7 @@ class EauInitializeCommand extends Command
 
         $userRepository = $this->entityManager->getRepository(User::class);
 
-        foreach((new UserPropertyPattern())->getPatterns() as $metaKey => $pattern) {
+        foreach(UserPropertyFieldManager::getInstance()->getItems() as $metaKey => $fieldConfig) {
 
             $query = $userRepository->createQueryBuilder('U')
                 ->leftJoin(Property::class, 'P', Join::WITH, 'U = P.user')
@@ -129,8 +129,8 @@ class EauInitializeCommand extends Command
 
                 $property = new Property(
                     $metaKey,
-                    $pattern->get('value'),
-                    $pattern->get('mode')
+                    $fieldConfig->getValue(),
+                    $fieldConfig->getMode()
                 );
 
                 $user->addProperty($property);

@@ -16,7 +16,7 @@
     {% endblock %}
 
     {% block alert %}
-        {% set description = property_pattern ? property_pattern.get('description') : null %}
+        {% set description = fieldConfig ? fieldConfig.description : null %}
         {% if description %}
             <div class="alert alert-info mb-3">
                 {{ description }}

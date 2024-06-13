@@ -2,10 +2,10 @@
 
 namespace App\Event\Listener\User;
 
-use App\Configuration\UserPropertyPattern;
 use App\Constants\ModeConstants;
 use App\Entity\User\Property;
 use App\Entity\User\User;
+use App\Service\Configuration\UserPropertyFieldManager;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
@@ -29,13 +29,8 @@ class PrePersistListener
 
     public function prePersist(User $user, PrePersistEventArgs $args): void
     {
-        $pattern = new UserPropertyPattern();
-
-        /**
-         * @var \Symfony\Component\HttpFoundation\ParameterBag $parameterBag
-         */
-        foreach($pattern->getPatterns() as $name => $parameterBag) {
-            $property = new Property($name, $parameterBag->get('value'), $parameterBag->get('mode'));
+        foreach(UserPropertyFieldManager::getInstance()->getItems() as $name => $fieldConfig) {
+            $property = new Property($name, $fieldConfig->getValue(), $fieldConfig->getMode());
             $user->addProperty($property);
         }
     }
