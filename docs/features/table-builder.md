@@ -157,7 +157,7 @@ This method is used to check if the cell is hidden. For example: `$isHidden = $c
 This method is used to set a custom data passed to the cell for custom references, actions, or purposes. This is used to add extra information about the cell that may be used later in the future (especially in the configurator). For example: 
 
 ```php
-$cell->setMeta('hide-later', true);
+$cell->setMeta('custom-key', true);
 ```
 
 #### `Cell::getMeta()`:
@@ -165,12 +165,12 @@ $cell->setMeta('hide-later', true);
 This method is used to retrieve the meta data that was previously set using `setMeta`. For example: 
 
 ```php
-$meta = $cell->getMeta();
+$meta = $cell->getMeta('custom-key'); // true
 ```
 
 ## Configurator
 
-The `Configurator` is a vital part of the `TableBuilder` that give you an outstanding means of rendering your table professionally. Configurators are callables that are called for each cell just before rendering, allowing you to make adequate modifications to each cell property. A `TableBuilder` can have more than one configurator and each will be called sequentially to configure the cell before it is rendered.
+The `Configurator` is a vital part of the `TableBuilder` that provides a means for you to render your table professionally. Configurators are callables that are executed on each cell just before rendering, allowing you to make adequate modifications to each cell property. A `TableBuilder` can have more than one configurator and each will be called sequentially to configure the cell before it is rendered.
 
 ### Setting a configurator
 
@@ -220,7 +220,9 @@ If the value of the cell is "john", setting the anchor meta for the cell will re
 After configuring the `TableBuilder`, it will not automatically be rendered. You'll need to include the `utility/table.html.twig` into your template and pass the table instance. For example:
 
 ```php
-$this->render('my-template.html.twig', [
+// src/Controller/MyController.php
+
+$this->render('my_template.html.twig', [
   'table_instance' => $table  
 ]);
 ```
@@ -228,6 +230,8 @@ $this->render('my-template.html.twig', [
 Then within your template:
 
 ```twig
+{# my_template.html.twig #}
+
 {% include 'utlitiy/table.html.twig' with {table: table_instance} %}
 ```
 
