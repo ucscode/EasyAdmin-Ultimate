@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Crud;
 
-use App\Configuration\ContentSlotPattern;
+use App\Configuration\Factory\ContentSlotPattern;
 use App\Constants\SlotConstants;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Entity\ContentSlot;
@@ -12,7 +12,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\String\UnicodeString;
 
 class ContentSlotCrudController extends AbstractAdminCrudController
 {

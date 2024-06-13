@@ -2,7 +2,7 @@
 
 namespace App\Twig;
 
-use App\Configuration\ContentSlotPattern;
+use App\Configuration\Factory\ContentSlotPattern;
 use App\Entity\ContentSlot;
 use App\Service\RequestManager;
 use Doctrine\ORM\EntityManagerInterface;

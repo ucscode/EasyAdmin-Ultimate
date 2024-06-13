@@ -2,10 +2,9 @@
 
 namespace App\Event\Listener\User;
 
-use App\Constants\ModeConstants;
+use App\Configuration\Factory\UserPropertyFieldVOFactory;
 use App\Entity\User\Property;
 use App\Entity\User\User;
-use App\Service\Configuration\UserPropertyFieldManager;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
@@ -29,7 +28,7 @@ class PrePersistListener
 
     public function prePersist(User $user, PrePersistEventArgs $args): void
     {
-        foreach(UserPropertyFieldManager::getInstance()->getItems() as $name => $fieldConfig) {
+        foreach(UserPropertyFieldVOFactory::getInstance()->getItems() as $name => $fieldConfig) {
             $property = new Property($name, $fieldConfig->getValue(), $fieldConfig->getMode());
             $user->addProperty($property);
         }

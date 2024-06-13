@@ -1,46 +1,46 @@
 <?php
 
-namespace App\Service\Configuration;
+namespace App\Configuration\Factory;
 
 use App\Component\Traits\SingletonTrait;
+use App\Configuration\AbstractConfigurationPattern;
+use App\Configuration\ValueObject\UserPropertyFieldVO;
 use App\Constants\ModeConstants;
-use App\Model\Configuration\UserPropertyField;
-use App\Service\Abstracts\AbstractConfigurationPattern;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use Symfony\Component\String\UnicodeString;
 
 /**
- * @method UserPropertyField getItem(string $name)
- * @method self setItem(string name, UserPropertyField $value)
- * @method UserPropertyField[] getItems()
+ * @method UserPropertyFieldVO getItem(string $name)
+ * @method self setItem(string $name, UserPropertyFieldVO $value)
+ * @method UserPropertyFieldVO[] getItems()
  */
-class UserPropertyFieldManager extends AbstractConfigurationPattern
+class UserPropertyFieldVOFactory extends AbstractConfigurationPattern
 {
     use SingletonTrait;
     
     public static function getItemFqcn(): string
     {
-        return UserPropertyField::class;
+        return UserPropertyFieldVO::class;
     }
 
     protected function configureItems(): void
     {
-        $this->setItem('first_name', new UserPropertyField());
+        $this->setItem('first_name', new UserPropertyFieldVO());
 
-        $this->setItem('last_name', new UserPropertyField());
+        $this->setItem('last_name', new UserPropertyFieldVO());
 
         $this->setItem(
             'about', 
-            (new UserPropertyField())
+            (new UserPropertyFieldVO())
                 ->setDescription('Please enter your user biography here')
                 ->setFieldFqcn(TextareaField::class)
         );
 
         $this->setItem(
             'balance',
-            (new UserPropertyField())
+            (new UserPropertyFieldVO())
                 ->setLabel('Balance (USD)')
                 ->setValue(0)
                 ->setFieldFqcn(MoneyField::class)
@@ -52,7 +52,7 @@ class UserPropertyFieldManager extends AbstractConfigurationPattern
 
         $this->setItem(
             'has_premium_account',
-            (new UserPropertyField())
+            (new UserPropertyFieldVO())
                 ->setFieldFqcn(BooleanField::class)
                 ->setValue(false)
                 ->setMode(ModeConstants::NO_PERMISSION)
@@ -60,7 +60,7 @@ class UserPropertyFieldManager extends AbstractConfigurationPattern
     }
 
     /**
-     * @param UserPropertyField $value
+     * @param UserPropertyFieldVO $value
      */
     protected function normalizeItem(string $name, $value): void
     {

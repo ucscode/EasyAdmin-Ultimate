@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\Configuration;
+namespace App\Configuration\ValueObject;
 
 use App\Constants\ModeConstants;
 use Closure;
@@ -8,7 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Webmozart\Assert\Assert;
 
-class UserPropertyField
+class UserPropertyFieldVO
 {
     protected ?string $name = null;
     protected ?string $label = null;

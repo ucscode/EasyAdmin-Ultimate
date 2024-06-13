@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Abstracts;
+namespace App\Configuration;
 
 use Webmozart\Assert\Assert;
 

@@ -2,9 +2,9 @@
 
 namespace App\Command;
 
+use App\Configuration\Factory\UserPropertyFieldVOFactory;
 use App\Entity\User\Property;
 use App\Entity\User\User;
-use App\Service\Configuration\UserPropertyFieldManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Exception;
@@ -112,7 +112,7 @@ class EauInitializeCommand extends Command
 
         $userRepository = $this->entityManager->getRepository(User::class);
 
-        foreach(UserPropertyFieldManager::getInstance()->getItems() as $metaKey => $fieldConfig) {
+        foreach(UserPropertyFieldVOFactory::getInstance()->getItems() as $metaKey => $fieldConfig) {
 
             $query = $userRepository->createQueryBuilder('U')
                 ->leftJoin(Property::class, 'P', Join::WITH, 'U = P.user')

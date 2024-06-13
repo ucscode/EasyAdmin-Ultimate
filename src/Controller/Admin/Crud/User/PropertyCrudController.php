@@ -2,12 +2,12 @@
 
 namespace App\Controller\Admin\Crud\User;
 
+use App\Configuration\Factory\UserPropertyFieldVOFactory;
 use App\Constants\ModeConstants;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User\Property;
 use App\Entity\User\User;
-use App\Service\Configuration\UserPropertyFieldManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -28,7 +28,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class PropertyCrudController extends AbstractAdminCrudController
 {
     protected ?User $propertyOwner;
-    protected UserPropertyFieldManager $userPropertyFieldManager;
+    protected UserPropertyFieldVOFactory $userPropertyFieldManager;
 
     public function __construct(
         protected EntityManagerInterface $entityManager,
@@ -37,7 +37,7 @@ class PropertyCrudController extends AbstractAdminCrudController
         protected KernelInterface $kernel
     ) {
         $this->setPropertyOwner();
-        $this->userPropertyFieldManager = UserPropertyFieldManager::getInstance();
+        $this->userPropertyFieldManager = UserPropertyFieldVOFactory::getInstance();
     }
 
     public static function getEntityFqcn(): string

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Configuration;
+namespace App\Configuration\Factory;
 
 use App\Component\Abstracts\AbstractPattern;
 use App\Component\Traits\ConstantTrait;
