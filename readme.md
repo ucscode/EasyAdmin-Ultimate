@@ -84,14 +84,4 @@ For official information and resources related to Symfony framework and EasyAdmi
 
 # DOCS:
 
-- Affix
-- eau config (ConfigurationService)
-- commands (secret-key|initialize)
-- components: Pattern & Permissions
-- Controllers: Admin, User, Initial
-- ModalService
-- PasswordStrengthEstimator
-- AffiliationService
-- JsonRequest
-- TableBuilder Utility
-
+[Take time to explore some feature usage](./docs/index.md)

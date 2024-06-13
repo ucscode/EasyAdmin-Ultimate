@@ -2,11 +2,11 @@
 
 class AppService
 {
-    #context;
+    #payload;
 
     constructor()
     {
-        this.#context = this.#setPayloadContext();
+        this.#payload = this.#setPayloadContext();
     }
 
     propertyAccessor(obj, path) 
@@ -14,9 +14,9 @@ class AppService
         return path.split('.').reduce((acc, part) => acc && acc[part], obj);
     }
 
-    getContext()
+    getPayload()
     {
-        return this.#context;
+        return this.#payload;
     }
 
     #setPayloadContext() 

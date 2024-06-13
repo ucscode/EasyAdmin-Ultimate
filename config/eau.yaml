@@ -11,10 +11,10 @@
 
 app:
 
-  name: 'User Synthetics'
+  name: 'EasyAdmin Ultimate'
 
   # if not using cdn or external link, logo must reside inside public/ directory
-  logo: '/resource/images/system/golden-logo-template-free-png.webp'
+  logo: '/resource/images/system/origin.png'
 
   slogan: 'Empower Your Admin Experience with %self(app.name)%'
 

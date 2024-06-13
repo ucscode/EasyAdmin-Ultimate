@@ -31,7 +31,7 @@ export class Notification
      */
     #sendRequest()
     {
-        return fetch(appService.getContext().asyncNotificationRoute, {
+        return fetch(appService.getPayload().asyncNotificationRoute, {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
@@ -39,7 +39,7 @@ export class Notification
             },
             body: new URLSearchParams({
                 action: this.#element.dataset.notificationAction,
-                token: appService.getContext().securityToken,
+                token: appService.getPayload().securityToken,
                 entityId: this.#identifier ? atob(this.#identifier) : '',
             }).toString()
         })
