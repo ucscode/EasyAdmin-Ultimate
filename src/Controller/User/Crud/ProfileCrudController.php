@@ -25,7 +25,6 @@ class ProfileCrudController extends AbstractUserCrudController
     {
         return $crud
             ->setPageTitle(Crud::PAGE_EDIT, 'My Profile')
-            ->overrideTemplate('crud/edit', 'user/profile.html.twig')
         ;
     }
 

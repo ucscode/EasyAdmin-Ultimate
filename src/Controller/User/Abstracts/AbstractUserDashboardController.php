@@ -8,6 +8,7 @@ use App\Controller\User\Crud\PasswordCrudController;
 use App\Controller\User\Crud\ProfileCrudController;
 use App\Controller\User\Interfaces\UserControllerInterface;
 use App\Entity\User\User;
+use App\Service\ConfigurationService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -55,7 +56,14 @@ abstract class AbstractUserDashboardController extends AbstractInitialDashboardC
             ->setEntityId($user->getId())
         ;
 
-        yield MenuItem::linkToRoute('My Downlines', 'fas fa-users', HierarchyController::ROUTE_NAME);
+        /**
+         * @var ConfigurationService
+         */
+        $configurationService = $this->container->get(ConfigurationService::class);
+
+        if($configurationService->get('affiliation.enabled')) {
+            yield MenuItem::linkToRoute('My Downlines', 'fas fa-users', HierarchyController::ROUTE_NAME);
+        }
 
         yield MenuItem::section('Exit');
 

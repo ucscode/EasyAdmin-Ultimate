@@ -115,7 +115,7 @@ class HierarchyController extends AbstractInitialDashboardController
 
         if($this->nodeEntity) {
 
-            if($this->nodeEntity != $this->currentUser && !$this->hasSufficientNodeAuthority()) {
+            if($this->nodeEntity != $this->currentUser && !$this->hasSufficientNodeViewAuthority()) {
                 throw new AccessForbiddenException('You do not have permission to access this node.');
             }
 
@@ -223,7 +223,7 @@ class HierarchyController extends AbstractInitialDashboardController
         return $container;
     }
 
-    private function hasSufficientNodeAuthority(): bool
+    private function hasSufficientNodeViewAuthority(): bool
     {
         return $this->currentUser && (
             // User has {$this->nodeEntity} as child
