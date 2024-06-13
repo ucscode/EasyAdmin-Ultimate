@@ -49,15 +49,7 @@ class HierarchyController extends AbstractInitialDashboardController
 
         $this->parameters = new ParameterBag($request->query->all('routeParams'));
         $this->currentUser = $this->getUser();
-        $this->nodeEntity = $this->currentUser;
-
-        if($this->parameters->get('entityId')) {
-            $this->nodeEntity = $this->entityManager->getRepository(User::class)->find($this->parameters->get('entityId'));
-
-            if(!$this->nodeEntity) {
-                throw new NotFoundHttpException(sprintf('User with id "%s" not found', $this->parameters->get('entityId')));
-            }
-        }
+        $this->nodeEntity = $this->getNodeEntity();
 
         $structure = $this->getGenealogyStructure();
         $tableBuilder = $this->createTableBuilder($request);
@@ -68,6 +60,46 @@ class HierarchyController extends AbstractInitialDashboardController
             'node' => $this->nodeEntity,
             'reflink' => $this->affiliationService->getReferralLink($this->currentUser)
         ]);
+    }
+
+    protected function getNodeEntity(): ?User
+    {
+        $searchText = trim($this->requestManager->getRequestStack()->getCurrentRequest()->query->get('query'));
+
+        if(!empty($searchText)) {
+            /**
+             * @var ?User
+             */
+            $entity = $this->entityManager->getRepository(User::class)->createQueryBuilder("entity")
+                ->where("entity.email = :search")
+                ->orWhere("entity.uniqueId = :search")
+                ->orWhere("entity.username = :search")
+                ->setParameter("search", $searchText)
+                ->getQuery()
+                ->getOneOrNullResult()
+            ;
+
+            if(!$entity) {
+                throw new NotFoundHttpException('No result found for the search');
+            }
+
+            return $entity;
+        }
+
+        if($this->parameters->get('entityId')) {
+            /**
+             * @var ?User
+             */
+            $entity = $this->entityManager->getRepository(User::class)->find($this->parameters->get('entityId'));
+
+            if(!$entity) {
+                throw new NotFoundHttpException(sprintf('User with id "%s" not found', $this->parameters->get('entityId')));
+            }
+
+            return $entity;
+        }
+
+        return $this->currentUser;
     }
 
     /**
