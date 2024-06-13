@@ -112,7 +112,7 @@ The `DataCell` and `ColumnCell` both extend the `Cell` class. This cell provides
 
 Sure, here's the information in a listed markdown format:
 
-#### `TableBuilder::setValue()`:
+#### `Cell::setValue()`:
 
 This method is used to assign a specific value to a cell. The value you set using this method is what will be displayed inside the table cell when it is rendered. For example: 
 
@@ -120,11 +120,11 @@ This method is used to assign a specific value to a cell. The value you set usin
 $cell->setValue('John');
 ```
 
-#### `TableBuilder::getValue()`:
+#### `Cell::getValue()`:
 
 This method is used to retrieve the value that was previously set using `setValue`. When you call this method, it returns the current value of the cell. 
 
-#### `TableBuilder::setAttributes()`:
+#### `Cell::setAttributes()`:
 
 This method is used to set an array that will be converted to HTML attributes for the cell. For example, 
 
@@ -134,11 +134,11 @@ $cell->setAttributes(['data-code' => 123]);
 
 will render as `<td data-code="123">...</td>` for the particular table cell, the node name depends on whether it's a `ColumnCell` or `DataCell`.
 
-#### `TableBuilder::getAttributes()`:
+#### `Cell::getAttributes()`:
 
 This method is used to retrieve the attributes that were previously set using `setAttributes`.
 
-#### `TableBuilder::setHidden()`:
+#### `Cell::setHidden()`:
 
 This method is used to set whether the cell should be hidden or not. For example, if you want a cell not to be part of the table based on some condition, you can easily check 
 
@@ -148,11 +148,11 @@ if($cell->value() == 'password') {
 }
 ```
 
-#### `TableBuilder::isHidden()`:
+#### `Cell::isHidden()`:
 
 This method is used to check if the cell is hidden. For example: `$isHidden = $cell->isHidden();`
 
-#### `TableBuilder::setMeta()`:
+#### `Cell::setMeta()`:
 
 This method is used to set a custom data passed to the cell for custom references, actions, or purposes. This is used to add extra information about the cell that may be used later in the future (especially in the configurator). For example: 
 
@@ -160,7 +160,7 @@ This method is used to set a custom data passed to the cell for custom reference
 $cell->setMeta('hide-later', true);
 ```
 
-#### `TableBuilder::getMeta()`:
+#### `Cell::getMeta()`:
 
 This method is used to retrieve the meta data that was previously set using `setMeta`. For example: 
 
