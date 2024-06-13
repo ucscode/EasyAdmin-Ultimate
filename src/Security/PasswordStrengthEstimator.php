@@ -31,7 +31,7 @@ class PasswordStrengthEstimator
         $this->estimator = new Zxcvbn();
     }
 
-    public static function getConstraint(string $atPath, int $minScore = PasswordStrength::STRENGTH_MEDIUM, string $message = ''): Callback
+    public static function getConstraint(string $atPath, int $minScore = PasswordStrength::STRENGTH_MEDIUM, ?string $message = null): Callback
     {
         $callable = (new self())->getCallbackConstraintArgument($atPath, $minScore, $message);
 
