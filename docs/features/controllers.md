@@ -1,4 +1,4 @@
-### Controllers in EasyAdminUltimate
+# Controllers in EasyAdminUltimate
 
 EasyAdminUltimate provides a structured approach to managing different types of controllers within the application. The system is designed with various abstract base controllers and interfaces to streamline configuration and ensure consistent behavior across different panels (admin, user, security, etc.). Below is an overview of these controllers and their roles:
 
