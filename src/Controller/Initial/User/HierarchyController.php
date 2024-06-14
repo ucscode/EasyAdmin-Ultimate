@@ -24,7 +24,7 @@ class HierarchyController extends AbstractInitialDashboardController
     public const ROUTE_NAME = 'app_user_hierarchy';
 
     protected ParameterBag $parameters;
-    protected User $currentUser;
+    protected ?User $currentUser;
     protected ?User $nodeEntity;
 
     public function __construct(
@@ -114,7 +114,7 @@ class HierarchyController extends AbstractInitialDashboardController
         $structure = [];
 
         if($this->nodeEntity) {
-
+            
             if($this->nodeEntity != $this->currentUser && !$this->hasSufficientNodeViewAuthority()) {
                 throw new AccessForbiddenException('You do not have permission to access this node.');
             }
