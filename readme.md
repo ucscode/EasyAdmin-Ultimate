@@ -40,11 +40,15 @@ If you make any changes to symfony's default directory structure, remember to ru
 composer update 
 ```
 
-@see also https://stackoverflow.com/a/69060581/9463084
+@see also https://stackoverflow.com/a/69060581/9463084 for deployment on shared hosting
 
 > Remember to create `.env.local` file with `APP_ENV=dev` for local development
 
 ## Documentation
+
+For a comprehensive guide on utilizing custom features in EasyAdminUltimate, [take time to explore this mini documentation](./docs/index.md).
+
+---
 
 For detailed usage instructions and documentation, please refer to the following resources:
 
@@ -53,8 +57,6 @@ For detailed usage instructions and documentation, please refer to the following
 - [EasyAdmin Documentation](https://symfony.com/doc/current/bundles/EasyAdminBundle/index.html): Official documentation for EasyAdmin bundle, offering detailed documentation on installation, configuration, and usage of EasyAdmin for Symfony applications.
 
 - [EasyAdmin SymfonyCast](https://symfonycasts.com/screencast/easyadminbundle/install): Official video screening page, providing step by step video footages on how to use EasyAdmin.
-
-You can also explore the features and components included in EasyAdmin Ultimate and start leveraging them in your Symfony projects to facilitate development workflows.
 
 ## License
 
@@ -82,6 +84,3 @@ Please note that while EasyAdmin Ultimate leverages Symfony and EasyAdmin compon
 
 For official information and resources related to Symfony framework and EasyAdmin bundle, please refer to the [Symfony Documentation](https://symfony.com/doc/current/index.html) and [EasyAdmin Documentation](https://symfony.com/doc/current/bundles/EasyAdminBundle/index.html) respectively.
 
-# DOCS:
-
-[Take time to explore some feature usage](./docs/index.md)

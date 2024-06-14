@@ -1,7 +1,7 @@
 "use strict";
 
 import $ from 'jquery';
-import { appService } from "./app-service.js";
+import { service } from "./service.js";
 import { Toaster } from './toaster.js';
 
 export class Notification
@@ -31,7 +31,7 @@ export class Notification
      */
     #sendRequest()
     {
-        return fetch(appService.getPayload().asyncNotificationRoute, {
+        return fetch(service.getPayload().asyncNotificationRoute, {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
@@ -39,7 +39,7 @@ export class Notification
             },
             body: new URLSearchParams({
                 action: this.#element.dataset.notificationAction,
-                token: appService.getPayload().securityToken,
+                token: service.getPayload().securityToken,
                 entityId: this.#identifier ? atob(this.#identifier) : '',
             }).toString()
         })

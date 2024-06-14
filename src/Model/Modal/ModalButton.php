@@ -8,10 +8,10 @@ class ModalButton
     protected array $attributes;
     protected ?string $label;
 
-    public function __construct(?string $name = null, array $attributes = [])
+    public function __construct(?string $name = null, ?string $label = null, array $attributes = [])
     {
         $this->name = $name;
-        $this->label = $name ?? 'close';
+        $this->label = $label ?? ($name ?? 'close');
 
         $this->attributes = $attributes + [
             'type' => 'button',

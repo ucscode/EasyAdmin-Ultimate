@@ -2,13 +2,15 @@
 
 EasyAdminUltimate provides a structured approach to managing different types of controllers within the application. The system is designed with various abstract base controllers and interfaces to streamline configuration and ensure consistent behavior across different panels (admin, user, security, etc.). Below is an overview of these controllers and their roles:
 
-1. **AbstractInitialDashboardController**
-2. **AbstractInitialCrudController**
-3. **AbstractAdminCrudController**
-4. **AbstractAdminDashboardController**
-5. **AbstractUserCrudController**
-6. **AbstractUserDashboardController**
-7. **AbstractSecurityController**
+### Table of Contents
+
+- [Base Controllers](#base-controllers)
+- [Admin Controllers](#admin-controllers)
+- [User Controllers](#user-controllers)
+- [Security Controllers](#security-controllers)
+- [Marker Interfaces](#marker-interfaces)
+- [Example Implementations](#example-implementations)
+
 
 ## Base Controllers
 
@@ -213,13 +215,11 @@ namespace App\Controller\User;
 
 use App\Controller\User\Abstracts\AbstractUserDashboardController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class DashboardController extends AbstractUserDashboardController
 {
-    /**
-     * @Route("/user/dashboard", name="user_dashboard")
-     */
+    #[Route("/user/dashboard")]
     public function index(): Response
     {
         return $this->render('user/dashboard.html.twig');
@@ -235,13 +235,11 @@ namespace App\Controller\Security;
 use App\Controller\Security\Abstracts\AbstractSecurityController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class LoginController extends AbstractSecurityController
 {
-    /**
-     * @Route("/login", name="app_login")
-     */
+    #[Route("/login", name="app_login")]
     public function login(Request $request): Response
     {
         // Handle login logic
@@ -253,3 +251,5 @@ class LoginController extends AbstractSecurityController
 ### Summary
 
 By utilizing these abstract controllers and interfaces, EasyAdminUltimate ensures a clear separation of concerns and consistent configurations across different parts of the application. This structure helps maintain a clean and scalable codebase, making it easier to manage and extend. For detailed implementation and advanced usage, please refer to the internal source code and documentation of EasyAdminUltimate.
+
+[Back To Documentation Homepage](../index.md)

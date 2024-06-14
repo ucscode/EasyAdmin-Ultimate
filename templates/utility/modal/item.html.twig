@@ -44,9 +44,9 @@
     tabindex="-1" 
     aria-labelledby="{{ modalName|default('undefined') }}" 
     aria-hidden="true"
-    data-bs-backdrop="{{ modalBackdrop|bool_string }}"
-    data-bs-keyboard="{{ modalKeyboard|default(false)|boolean_as_string }}"
-    data-bs-visible="{{ modalVisible|default(false)|boolean_as_string }}"
+    data-bs-backdrop="{{ modalBackdrop|boolean_string }}"
+    data-bs-keyboard="{{ modalKeyboard|default(false)|boolean_string }}"
+    data-bs-visible="{{ modalVisible|default(false)|boolean_string }}"
 >
 
     <div class="modal-dialog {{ modalDialogClass|default('') }}">

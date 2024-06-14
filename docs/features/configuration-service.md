@@ -21,22 +21,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MyController extends AbstractController
 {
-    protected ConfigurationService $configurationService;
-
-    public function __construct(ConfigurationService $configurationService)
+    public function __construct(protected ConfigurationService $configurationService)
     {
-        $this->configurationService = $configurationService;
+        // Using symfony autowire mechanism
     }
 
-    public function yourMethod()
+    public function customMethod()
     {
         $name = $this->configurationService->get('app.name'); // EasyAdmin Ultimate
     }
 }
 ```
 
-In this example, the `ConfigurationService` is injected into the controller through the constructor. The `yourMethod` function demonstrates how to use the `get` method of the `ConfigurationService` to retrieve the value of `app.name` from the `eau.yaml` configuration file.
+In this example, the `ConfigurationService` is injected into the controller through the constructor. The `customMethod` function demonstrates how to use the `get` method of the `ConfigurationService` to retrieve the value of `app.name` from the `eau.yaml` configuration file.
 
 ---
 
 This concludes the overview of the `ConfigurationService`. For more detailed information and advanced usage, please refer to the internal source code of EasyAdminUltimate.
+
+[Back To Documentation Homepage](../index.md)

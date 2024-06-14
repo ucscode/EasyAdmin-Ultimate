@@ -1,6 +1,6 @@
 "use strict";
 
-class AppService
+class Service
 {
     #payload;
 
@@ -34,4 +34,4 @@ class AppService
     }
 }
 
-export const appService = new AppService();
+export const service = new Service();

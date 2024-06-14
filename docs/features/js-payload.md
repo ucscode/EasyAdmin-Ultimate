@@ -1,14 +1,6 @@
 # JsPayload
 
-The `JsPayload` class in EasyAdminUltimate extends `ParameterBag` and facilitates passing data directly from PHP to JavaScript without needing explicit exports. This feature simplifies communication between server-side and client-side environments by allowing easy access to PHP-defined variables in JavaScript modules through a unified context.
-
-## Features
-
-### 1. Seamless Data Transfer
-JsPayload enables seamless transfer of data from PHP backend to JavaScript frontend, ensuring that all data set in the payload is directly accessible in the JavaScript context.
-
-### 2. Integration with ParameterBag
-By extending Symfony's `ParameterBag`, JsPayload inherits functionalities for managing and accessing data within the application, enhancing flexibility and ease of use.
+The `JsPayload` class in EasyAdminUltimate is a servce that extends `ParameterBag` and facilitates passing data directly from PHP to JavaScript without needing explicit exports. This feature simplifies communication between server-side and client-side environments by allowing easy access to PHP-defined variables in JavaScript modules through a unified context.
 
 ## Example Usage
 
@@ -22,23 +14,26 @@ use App\Service\JsPayload;
 
 class MyController extends AbstractController
 {
-    protected JsPayload $jsPayload;
-
-    public function __construct(JsPayload $jsPayload)
+    public function __construct(protected JsPayload $jsPayload)
     {
-        $this->jsPayload = $jsPayload;
+        // Using symfony autowire mechanism
     }
 
-    public function yourMethod()
+    public function customMethod()
     {
+        // Add multiple data
         $this->jsPayload->add([
             'name' => 'John',
             'age' => 20,
         ]);
 
+        // set a single data
         $this->jsPayload->set('meal', ['key' => 'yes']);
 
-        // No need to pass $this->jsPayload to render method
+        /**
+         * No need to pass $this->jsPayload to the render method
+         * It is handled internally by Eau Twig Extension
+         */
 
         return $this->render('your_template.html.twig');
     }
@@ -50,14 +45,14 @@ In this example:
 - The `add` method is used to add multiple variables (`'name'` and `'age'`).
 - The `set` method is used to set a specific variable `'meal'` with an array value `['key' => 'yes']`.
 
-### Accessing in JavaScript
+## Accessing in JavaScript
 
-You can access the data directly in JavaScript by importing `appService` module:
+You can access the data directly in JavaScript by importing `service` module:
 
 ```javascript
-import { appService } from '/resource/js/app-service.js';
+import { service } from '/resource/js/service.js';
 
-const payload = appService.getPayload();
+const payload = service.getPayload();
 
 console.log(payload.name); // John
 console.log(payload.age); // 20
@@ -66,6 +61,16 @@ console.log(payload.meal.key); // yes
 
 In this example, `appService.getPayload()` retrieves the entire payload set in PHP, allowing direct access to all variables like `'name'`, `'age'`, and `'meal'` with their respective values.
 
+## Please Note:
+
+If your template does not directly (or indirectly) extend `bundles/EasyAdminBundle/layout.html.twig`, then you must add the following line of code to your template:
+
+```twig
+{% include 'bundles/EasyAdminBundle/section/js_payload.html.twig' %}
+```
+
 ---
 
 This concludes the overview of `JsPayload`. For more detailed information and advanced usage, please refer to the internal source code of EasyAdminUltimate.
+
+[Back To Documentation Homepage](../index.md)

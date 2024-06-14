@@ -235,5 +235,6 @@ Then within your template:
 {% include 'utlitiy/table.html.twig' with {table: table_instance} %}
 ```
 
-This documentation covers the core features and usage of the TableBuilder class in EasyAdmin Ultimate. Use it to build powerful, customizable tables tailored to your application's needs.  
-Reference the source code for indepth detail
+This documentation covers the core features and usage of the TableBuilder class in EasyAdmin Ultimate. Use it to build powerful, customizable tables tailored to your application's needs. Reference the source code for indepth detail
+
+[Back To Documentation Homepage](../index.md)

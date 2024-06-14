@@ -1,17 +1,12 @@
-# ModalService
+# Modal Service
 
-The `ModalService` in EasyAdminUltimate provides functionality to display modal dialogs in a manner similar to Symfony's flash messages but tailored for more interactive and persistent displays. This service allows you to define and manage modals that can be shown once or persistently across different parts of your application.
+The `ModalService` in EasyAdminUltimate offers the ability to present modal dialogs. While it shares similarities with the flash messages feature in Symfony, it's specifically designed for more engaging and enduring displays. This service empowers you to establish and control modals that can be displayed either once or continuously throughout various sections of your application. 
 
 ## Features
 
-### 1. Display Modals
-ModalService facilitates the display of modal dialogs to convey important messages, forms, or user interactions without navigating away from the current page.
-
-### 2. Customizable Content
-You can customize modal content, including headers, buttons, and additional features to suit specific application needs.
-
-### 3. Persistent Display
-Modals can be configured to persist across page loads until dismissed by the user, providing a persistent way to communicate information or gather user input.
+- **Display Modals:** ModalService facilitates the display of modal dialogs to convey important messages, forms, or user interactions without need to explicitly write javascript code
+- **Customizable Content:** You can customize modal content, including headers, buttons, and additional features to suit specific application needs.
+- **Persistent Display:** Modals can be configured to persist across page loads, providing a persistent way to communicate information or gather user input.
 
 ## Example Usage
 
@@ -27,20 +22,28 @@ use App\Service\ModalService;
 
 class MyController extends AbstractController
 {
-    protected ModalService $modalService;
-
-    public function __construct(ModalService $modalService)
+    public function __construct(protected ModalService $modalService)
     {
-        $this->modalService = $modalService;
+        // Using symfony autowire mechanism
     }
 
-    public function yourMethod()
+    public function customMethod()
     {
+        // optionally create custom button with custom attributes
+        
+        $customButton = new ModalButton('name', 'Label', [
+            'class' => 'btn btn-success', 
+            'data-bs-dismiss' => "modal",
+            'onclick' => 'alert(`You clicked a custom modal button`)'
+        ]);
+
+        // create and configure a modal object
+
         $modal = (new Modal())
-            ->setContent('Show this in modal')
+            ->setContent('Show this HTML in modal')
             ->setTitle('An optional header')
-            ->setVisible(true); // To render the modal immediately when the page loads
-            ->addButton(new ModalButton('Close', 'btn-secondary', 'data-bs-dismiss="modal"'))
+            ->setVisible(true) // To render the modal immediately when the page loads
+            ->addButton($customButton)
             // Add more buttons or customize as needed
             // other configurations
         ;
@@ -48,37 +51,37 @@ class MyController extends AbstractController
         $this->modalService->addModal($modal);
 
         /**
-         * Optionally, render a template that includes modal-wrappers.html.twig for display
-         * if your template extends the custom Easyadmin layout, the modal-wrappers will be available already
+         * No need to pass the modal service to the template
+         * It is handled internally by Eau Twig Extension
          */
         return $this->render('your_template.html.twig');
     }
 }
 ```
 
-In this example:
-- `ModalService` is injected into the controller through the constructor.
-- A new `Modal` instance is created and configured with content, title, visibility settings, and optional buttons using `ModalButton`.
-- `addModal` method of `ModalService` is used to add the modal for display.
+### Preview Result
+
+![Modal Preview](../images/screenshot/screenshot-modal.png)
 
 ### Integration with Twig Templates
 
-If your template does not inherit the utility directly, you can include the modal wrappers template to render modals:
+If your template does not extends `bundles/EasyAdminBundle/layout.html.twig` by any means, you will need to include the modal utility template manually to render modals:
 
 ```twig
 {# your_template.html.twig #}
 
 {% block body %}
     {# Render any other content #}
-
-    {% include 'utility/modals/modal-wrappers.html.twig' %}
+    {% include 'utility/modal/modals.html.twig' %}
 {% endblock %}
 ```
 
 In this Twig template:
-- `utility/modals/modal-wrappers.html.twig` is included to render modals added via `ModalService`.
+- `utility/modal/modals.html.twig` is included to render modals added via `ModalService`.
 - The included template ensures that all modals added through `ModalService` are rendered appropriately.
 
 ---
 
 This concludes the overview of `ModalService` in EasyAdminUltimate. For more detailed information and advanced usage, please refer to the internal source code and documentation of EasyAdminUltimate.
+
+[Back To Documentation Homepage](../index.md)

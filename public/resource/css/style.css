@@ -286,7 +286,7 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     }
 
     .sidebar {
-        --sidebar-z-index: 1030;
+        --sidebar-z-index: 1045;
         position: fixed;
         left: 0;
         width: 100%;

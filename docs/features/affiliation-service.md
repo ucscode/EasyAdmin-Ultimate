@@ -1,23 +1,20 @@
-# AffiliationService
+# Affiliation Service
 
-The `AffiliationService` in EasyAdminUltimate is designed to manage downlines and hierarchical structures using the adjacency list model to track referrals. This service provides various methods to handle user relationships, such as retrieving children or ancestors of a user, generating user referral links, and verifying parent-child relationships at any level.
+The `AffiliationService` within EasyAdminUltimate is a robust tool for managing affiliate networks in applications. It utilizes the adjacency list model, which is an efficient way to represent hierarchical data like referral chains in a database. This service simplifies complex tasks such as tracking user referrals, retrieving the referral chain, and managing affiliate relationships. 
+
+By injecting the `AffiliationService`, you can ensure that your application accurately reflects the dynamics of user interactions and referrals, which is crucial for any platform that relies on network growth and user engagement.
 
 ## Features
 
-### 1. Manage Downlines and Hierarchies
-The `AffiliationService` facilitates the management of downlines and hierarchical structures, enabling effective tracking and organization of user relationships.
+- Downline and hierarchy management
+- Adjacency list model for referral structures
+- Retrieval of children or ancestors
+- Generation of referral links
+- Verification of parent-child relationships
 
-### 2. Adjacency List Model
-EasyAdminUltimate uses the adjacency list model to maintain and manage the referral structure. This model is efficient for managing hierarchical data and is suitable for applications that require such relationships.
+## Screenshot
 
-### 3. Retrieve Children or Ancestors
-With this service, you can easily fetch all the children or ancestors of a particular user, allowing for detailed examination and management of user hierarchies.
-
-### 4. Generate Referral Links
-The `AffiliationService` provides methods to generate referral links for users, streamlining the process of affiliate marketing and user invitations.
-
-### 5. Verify Parent-Child Relationships
-You can use this service to check if a user has a specific child or parent at any level within the hierarchy, ensuring accurate and reliable relationship management.
+![Affiliate Tree](../images/screenshot/screenshot-affiliate-tree.png)
 
 ## Example Usage
 
@@ -31,18 +28,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MyController extends AbstractController
 {
-    protected AffiliationService $affiliationService;
-
-    public function __construct(AffiliationService $affiliationService)
+    public function __construct(protected AffiliationService $affiliationService)
     {
-        $this->affiliationService = $affiliationService;
+        // Using symfony autowire mechanism
     }
 
-    public function yourMethod()
+    public function customMethod()
     {
-        $childEntity = ...; // Retrieve or define the child entity
-        $hasChild = $this->affiliationService->hasChild($this->getUser(), $childEntity);
-        // $hasChild will be true or false
+        // Retrieve or define the child entity
+        $childEntity = ...; 
+        // Check if current user has the entity as child
+        $hasChild = $this->affiliationService->hasChild($this->getUser(), $childEntity); // true|false
     }
 }
 ```
@@ -52,3 +48,5 @@ This example shows how to inject the `AffiliationService` into a class and use t
 ---
 
 This concludes the overview of the `AffiliationService`. For more detailed information and advanced usage, please refer to the intenral code.
+
+[Back To Documentation Homepage](../index.md)
