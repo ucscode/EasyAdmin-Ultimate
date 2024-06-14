@@ -2,7 +2,8 @@
 
 namespace App\Twig;
 
-use App\Configuration\Factory\ContentSlotPattern;
+use App\Configuration\Factory\ContentSlotVOFactory;
+use App\Configuration\ValueObject\ContentSlotVO;
 use App\Entity\ContentSlot;
 use App\Service\RequestManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +18,7 @@ class ContentSlotExtension extends AbstractExtension
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected RequestStack $requestStack,
-        protected ContentSlotPattern $contentSlotPattern,
+        protected ContentSlotVOFactory $contentSlotVOFactory,
         protected RequestManager $requestManager
     ) {
         //
@@ -73,8 +74,8 @@ class ContentSlotExtension extends AbstractExtension
 
         $ancestorsContainer = array_filter(
             array_map(
-                fn (ParameterBag $pattern) => $pattern->get(ContentSlotPattern::ACCESS_PARENT_FQCN), // (string) ancestor class
-                $this->contentSlotPattern->getPatterns() // (array) patterns
+                fn (ContentSlotVO $slotDesign) => $slotDesign->getMarkerInterface(),
+                $this->contentSlotVOFactory->getItems()
             ),
             fn (?string $parentFQCN) => $parentFQCN !== null
         );
@@ -83,9 +84,9 @@ class ContentSlotExtension extends AbstractExtension
 
         foreach($entityInstance->getTargets() as $patternKey) {
 
-            if($pattern = $this->contentSlotPattern->getPattern($patternKey)) {
+            if($slotDesign = $this->contentSlotVOFactory->getItem($patternKey)) {
 
-                $parentFQCN = $pattern->get(ContentSlotPattern::ACCESS_PARENT_FQCN); // (string) single parent
+                $parentFQCN = $slotDesign->getMarkerInterface();
 
                 if($parentFQCN === null) {
                     // ensure that current controller is not part of the ancestors container
