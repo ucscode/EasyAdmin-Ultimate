@@ -4,7 +4,7 @@ namespace App\Configuration;
 
 use Webmozart\Assert\Assert;
 
-abstract class AbstractConfigurationPattern
+abstract class AbstractConfigurationFactory
 {
     abstract static function getItemFqcn(): string;
     abstract protected function configureItems(): void;

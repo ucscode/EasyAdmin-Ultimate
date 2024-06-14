@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Crud;
 
-use App\Configuration\Factory\ContentSlotVOFactory;
+use App\Configuration\Factory\ContentSlotDesignFactory;
 use App\Constants\SlotConstants;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Entity\ContentSlot;
@@ -18,7 +18,7 @@ class ContentSlotCrudController extends AbstractAdminCrudController
     protected string $title;
     protected array $slotChoices;
 
-    public function __construct(protected ContentSlotVOFactory $contentSlotVOFactory)
+    public function __construct(protected ContentSlotDesignFactory $contentSlotVOFactory)
     {
         $this->slotChoices =  SlotConstants::getChoices('SLOT_', null, function (string $value) {
             $label = preg_replace(sprintf('/^%s/', preg_quote('SLOT_', '/')), '', $value);

@@ -2,8 +2,8 @@
 
 namespace App\Twig;
 
-use App\Configuration\Factory\ContentSlotVOFactory;
-use App\Configuration\ValueObject\ContentSlotVO;
+use App\Configuration\Factory\ContentSlotDesignFactory;
+use App\Configuration\Design\ContentSlotDesign;
 use App\Entity\ContentSlot;
 use App\Service\RequestManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,10 +16,10 @@ use Webmozart\Assert\Assert;
 class ContentSlotExtension extends AbstractExtension
 {
     public function __construct(
-        protected EntityManagerInterface $entityManager,
-        protected RequestStack $requestStack,
-        protected ContentSlotVOFactory $contentSlotVOFactory,
-        protected RequestManager $requestManager
+        protected EntityManagerInterface   $entityManager,
+        protected RequestStack             $requestStack,
+        protected ContentSlotDesignFactory $contentSlotVOFactory,
+        protected RequestManager           $requestManager
     ) {
         //
     }
@@ -74,7 +74,7 @@ class ContentSlotExtension extends AbstractExtension
 
         $ancestorsContainer = array_filter(
             array_map(
-                fn (ContentSlotVO $slotDesign) => $slotDesign->getMarkerInterface(),
+                fn (ContentSlotDesign $slotDesign) => $slotDesign->getMarkerInterface(),
                 $this->contentSlotVOFactory->getItems()
             ),
             fn (?string $parentFQCN) => $parentFQCN !== null

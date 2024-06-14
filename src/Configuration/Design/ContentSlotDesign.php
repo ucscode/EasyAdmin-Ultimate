@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Configuration\ValueObject;
+namespace App\Configuration\Design;
 
-class ContentSlotVO
+class ContentSlotDesign
 {
     protected  ?string $name = null;
     protected ?string $title = null;

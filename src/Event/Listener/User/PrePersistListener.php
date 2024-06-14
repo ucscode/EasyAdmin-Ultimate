@@ -2,7 +2,7 @@
 
 namespace App\Event\Listener\User;
 
-use App\Configuration\Factory\UserPropertyFieldVOFactory;
+use App\Configuration\Factory\UserPropertyFieldDesignFactory;
 use App\Entity\User\Property;
 use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
@@ -28,7 +28,7 @@ class PrePersistListener
 
     public function prePersist(User $user, PrePersistEventArgs $args): void
     {
-        foreach(UserPropertyFieldVOFactory::getInstance()->getItems() as $name => $fieldConfig) {
+        foreach(UserPropertyFieldDesignFactory::getInstance()->getItems() as $name => $fieldConfig) {
             $property = new Property($name, $fieldConfig->getValue(), $fieldConfig->getMode());
             $user->addProperty($property);
         }

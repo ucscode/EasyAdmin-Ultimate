@@ -2,57 +2,57 @@
 
 namespace App\Configuration\Factory;
 
-use App\Configuration\AbstractConfigurationPattern;
-use App\Configuration\ValueObject\ContentSlotVO;
+use App\Configuration\AbstractConfigurationFactory;
+use App\Configuration\Design\ContentSlotDesign;
 use App\Controller\Admin\Interfaces\AdminControllerInterface;
 use App\Controller\Security\Interfaces\SecurityControllerInterface;
 use App\Controller\User\Interfaces\UserControllerInterface;
 
 /**
  * @method self setItem(string $name, mixed $value)
- * @method ContentSlotVO getItem(string $name)
- * @method ContentSlotVO[] getItems()
+ * @method ContentSlotDesign getItem(string $name)
+ * @method ContentSlotDesign[] getItems()
  */
-class ContentSlotVOFactory extends AbstractConfigurationPattern
+class ContentSlotDesignFactory extends AbstractConfigurationFactory
 {
     public static function getItemFqcn(): string
     {
-        return ContentSlotVO::class;
+        return ContentSlotDesign::class;
     }
 
     protected function configureItems(): void
     {
         $this->setItem(
             'TARGET_ADMIN',
-            (new ContentSlotVO())
+            (new ContentSlotDesign())
                 ->setTitle('Admin Interface')
                 ->setMarkerInterface(AdminControllerInterface::class)
         );
 
         $this->setItem(
             'TARGET_USER',
-            (new ContentSlotVO())
+            (new ContentSlotDesign())
                 ->setTitle('User Interface')
                 ->setMarkerInterface(UserControllerInterface::class)
         );
 
         $this->setItem(
             'TARGET_SECURITY',
-            (new ContentSlotVO())
+            (new ContentSlotDesign())
                 ->setTitle('Security Interface')
                 ->setMarkerInterface(SecurityControllerInterface::class)
         );
 
         $this->setItem(
             'TARGET_OTHERS',
-            (new ContentSlotVO())
+            (new ContentSlotDesign())
                 ->setTitle('Other Interfaces')
         );
     }
 
     /**
      * @param string $name
-     * @param ContentSlotVO $value
+     * @param ContentSlotDesign $value
      * @return void
      */
     protected function normalizeItem(string $name, $value): void

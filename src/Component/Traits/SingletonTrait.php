@@ -23,5 +23,4 @@ trait SingletonTrait
             parent::__construct(...$args);
         }
     }
-
 }
