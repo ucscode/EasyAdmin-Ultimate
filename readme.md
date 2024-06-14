@@ -2,6 +2,8 @@
 
 EasyAdmin Ultimate is a comprehensive enhancement package built on top of the Symfony framework and integrates the EasyAdmin bundle, providing a rich set of tools, components, utilities, and additional features. It’s designed to simplify development workflows and accelerate project delivery.
 
+![Illustration Image](./docs/3356780.webp)
+
 ## Features
 
 - **Enhanced Symfony Setup**: Optimized setup that comes with necessary packages and configurations right out of the box.
