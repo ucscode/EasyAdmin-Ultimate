@@ -48,6 +48,8 @@ composer update
 
 For a comprehensive guide on utilizing custom features in EasyAdminUltimate, [take time to explore this mini documentation](./docs/index.md).
 
+[![Documentation Image](./docs/images/document-vector.png)](./docs/index.md)
+
 ---
 
 For detailed usage instructions and documentation, please refer to the following resources:
