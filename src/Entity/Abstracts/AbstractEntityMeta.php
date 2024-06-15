@@ -35,6 +35,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Uchenna Ajah
  * @link https://github.com/ucscode
  */
+#[ORM\MappedSuperclass]
 abstract class AbstractEntityMeta extends AbstractPermission
 {
     #[ORM\Id]
