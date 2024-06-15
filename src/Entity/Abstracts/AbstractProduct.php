@@ -18,10 +18,6 @@ abstract class AbstractProduct
 
     #[ORM\Column(type: Types::TEXT)]
     protected ?string $description = null;
-    
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    protected ?Media $image = null;
 
     #[ORM\Column]
     protected ?\DateTimeImmutable $createdAt = null;
@@ -33,13 +29,17 @@ abstract class AbstractProduct
     protected ?string $status = null;
 
     #[ORM\Column]
-    protected ?int $originalPrice = null;
+    protected ?int $originalPrice = 0;
 
     #[ORM\Column]
-    protected ?int $salePrice = null;
+    protected ?int $salePrice = 0;
 
     #[ORM\Column(length: 20)]
     protected ?string $sku = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    protected ?Media $image = null;
 
     public function __construct()
     {
@@ -71,18 +71,6 @@ abstract class AbstractProduct
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getImage(): ?Media
-    {
-        return $this->image;
-    }
-
-    public function setImage(Media $image): static
-    {
-        $this->image = $image;
 
         return $this;
     }
@@ -155,6 +143,18 @@ abstract class AbstractProduct
     public function setSku(string $sku): static
     {
         $this->sku = $sku;
+
+        return $this;
+    }
+
+    public function getImage(): ?Media
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Media $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }
