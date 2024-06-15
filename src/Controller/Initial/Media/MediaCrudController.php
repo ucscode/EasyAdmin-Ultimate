@@ -6,6 +6,7 @@ use App\Controller\Initial\Abstracts\AbstractInitialCrudController;
 use App\Entity\Media;
 use App\Form\Extension\Affix\AffixTypeExtension;
 use App\Form\Field\VichField;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -33,6 +34,10 @@ class MediaCrudController extends AbstractInitialCrudController
     {
         yield FormField::addColumn('col-xl-6 col-xxl-5');
         yield FormField::addFieldset();
+
+        yield TextField::new('title')
+            ->setRequired($pageName === Crud::PAGE_EDIT)
+        ;
 
         yield VichField::new('uploadedFile', $pageName === Crud::PAGE_NEW ? 'Select File' : 'Uploaded File')
             ->hideOnIndex()
@@ -77,6 +82,7 @@ class MediaCrudController extends AbstractInitialCrudController
             yield TextField::new('embeddedFile.originalName', 'Original Name')
                 ->setFormTypeOptions($this->relativeFieldOptions())
                 ->setDisabled()
+                ->hideOnIndex()
             ;
 
             yield TextField::new('embeddedFile.name', 'Saved As')
@@ -146,6 +152,19 @@ class MediaCrudController extends AbstractInitialCrudController
                 self::FIELD_FILE_URL,
             ])
         ;
+    }
+
+    /**
+     * @param Media $entityInstance
+     */
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if(empty($entityInstance->getTitle())) {
+            $filename = pathinfo($entityInstance->getUploadedFile()->getClientOriginalName(), PATHINFO_FILENAME);
+            $entityInstance->setTitle($filename);
+        }
+        
+        parent::persistEntity($entityManager, $entityInstance);
     }
 
     protected function relativeFieldOptions(array $replacements = []): array

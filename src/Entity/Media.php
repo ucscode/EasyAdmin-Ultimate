@@ -41,9 +41,17 @@ class Media
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
     public function __construct()
     {
         $this->embeddedFile = new EmbeddedFile();
+    }
+
+    public function __toString()
+    {
+        return $this->title;
     }
 
     public function getId(): ?int
@@ -51,6 +59,9 @@ class Media
         return $this->id;
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+     */
     public function getUploadedFile(): ?UploadedFile
     {
         return $this->uploadedFile;
@@ -99,5 +110,17 @@ class Media
         }
 
         return [];
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
     }
 }
