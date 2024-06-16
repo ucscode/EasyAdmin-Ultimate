@@ -18,7 +18,7 @@ abstract class AbstractProduct
      *
      * @return string The static identifier of the product entity.
      */
-    abstract public function getIdentifier(): string;
+    abstract public function getEntityIdentifier(): string;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
