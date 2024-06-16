@@ -11,5 +11,12 @@ class Sample extends Product
 {
     public const IDENTIFIER = 'sample';
 
-    // Define custom properties here...
+    // Define custom properties
+
+    public function __toString()
+    {
+        return $this->title;
+    }
+
+    // Define setters & getters
 }

@@ -3,12 +3,16 @@
 namespace App\Controller\Admin\Abstracts;
 
 use App\Controller\Admin\Crud\ContentSlotCrudController;
+use App\Controller\Admin\Crud\Product\ReviewCrudController;
+use App\Controller\Admin\Crud\Product\SampleCrudController;
 use App\Controller\Admin\Crud\User\UserCrudController;
 use App\Controller\Admin\Interfaces\AdminControllerInterface;
 use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
 use App\Controller\Initial\Media\MediaCrudController;
 use App\Entity\ContentSlot;
 use App\Entity\Media;
+use App\Entity\Product\Review;
+use App\Entity\Product\Sample;
 use App\Entity\User\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -49,6 +53,14 @@ abstract class AbstractAdminDashboardController extends AbstractInitialDashboard
             ->setController(UserCrudController::class)
             ->setAction(Crud::PAGE_NEW);
 
+        yield MenuItem::section('Product');
+
+        yield MenuItem::linkToCrud('Sample', 'fas fa-box-open', Sample::class)
+            ->setController(SampleCrudController::class);
+
+        yield MenuItem::linkToCrud('Review', 'fas fa-star', Review::class)
+            ->setController(ReviewCrudController::class);
+
         yield MenuItem::section('Misc');
 
         yield MenuItem::linkToCrud('Media', 'fa fa-camera', Media::class)
@@ -56,6 +68,8 @@ abstract class AbstractAdminDashboardController extends AbstractInitialDashboard
 
         yield MenuItem::linkToCrud('Slots', 'fa fa-code', ContentSlot::class)
             ->setController(ContentSlotCrudController::class);
+
+        yield MenuItem::section('Exit');
 
         yield MenuItem::linkToLogout('Logout', 'fas fa-arrow-right-from-bracket');
     }
