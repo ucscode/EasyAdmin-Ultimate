@@ -2,7 +2,7 @@
 
 namespace App\Constants;
 
-use App\Component\Traits\ConstantTrait;
+use App\Traits\ConstantTrait;
 
 /**
  * This class is used to maintain consistency in slot management.

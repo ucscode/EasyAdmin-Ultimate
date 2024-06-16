@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Component\Abstracts;
+namespace App\Traits;
 
 use App\Constants\ModeConstants;
 
 /**
  * Abstract class representing a bitwise mode for granting permissions.
  *
- * The AbstractPermission class serves as a foundation for implementing bitwise mode
+ * The PermissionTrait class serves as a foundation for implementing bitwise mode
  * representations used to grant permissions such as read, write, and execute on various
  * resources or entities within a system. The bitwise mode is represented as an integer
  * value where each bit corresponds to a specific permission.
@@ -24,14 +24,14 @@ use App\Constants\ModeConstants;
  * - Read and Write Permissions: 6 (binary 110)
  * - Read, Write, and Execute Permissions: 7 (binary 111)
  *
- * Concrete implementations of classes extending AbstractPermission can define additional
+ * Concrete implementations of classes extending PermissionTrait can define additional
  * permission modes or customize the behavior of permission handling based on specific
  * requirements of the system or application.
  *
  * @author Uchenna Ajah <Ucscode>
  * @link https://github.com/ucscode
  */
-abstract class AbstractPermission
+trait PermissionTrait
 {
     protected int $mode = 0;
 

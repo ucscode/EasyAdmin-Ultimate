@@ -2,8 +2,8 @@
 
 namespace App\Entity\Abstracts;
 
-use App\Component\Abstracts\AbstractPermission;
 use App\Constants\ModeConstants;
+use App\Traits\PermissionTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
  * - metaTimestamp: The timestamp indicating when the meta information was created.
  * - mode: The bitwise mode representing access permissions for the meta entity.
  *
- * @see \App\Component\Abstracts\AbstractPermission
+ * @see PermissionTrait
  *
  * Concrete implementations of classes extending AbstractEntityMeta can define additional
  * attributes or customize the behavior of meta management based on specific requirements
@@ -36,8 +36,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @link https://github.com/ucscode
  */
 #[ORM\MappedSuperclass]
-abstract class AbstractEntityMeta extends AbstractPermission
+abstract class AbstractEntityMeta
 {
+    use PermissionTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

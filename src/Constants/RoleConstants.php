@@ -2,7 +2,7 @@
 
 namespace App\Constants;
 
-use App\Component\Traits\ConstantTrait;
+use App\Traits\ConstantTrait;
 
 /**
  * This is just a template to reduce your thinking process by listing common roles.

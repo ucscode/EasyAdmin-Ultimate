@@ -2,10 +2,10 @@
 
 namespace App\Configuration\Factory;
 
-use App\Component\Traits\SingletonTrait;
 use App\Configuration\AbstractConfigurationFactory;
 use App\Configuration\Design\UserPropertyFieldDesign;
 use App\Constants\ModeConstants;
+use App\Traits\SingletonTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
