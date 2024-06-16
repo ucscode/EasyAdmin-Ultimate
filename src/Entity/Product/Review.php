@@ -102,12 +102,12 @@ class Review
         return $this;
     }
 
-    public function getProduct(): ?Ebook
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
 
-    public function setProduct(?Ebook $product): static
+    public function setProduct(?Product $product): static
     {
         $this->product = $product;
 
