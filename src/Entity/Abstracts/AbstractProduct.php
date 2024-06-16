@@ -9,17 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\MappedSuperclass]
 abstract class AbstractProduct
 {
-    /**
-     * Get the identifier for the product entity.
-     *
-     * This identifier should be a static string that is unique for each type of product entity.
-     * It should not be dynamic or changeable. This ensures that even if the details of a product
-     * change, its type can still be reliably identified.
-     *
-     * @return string The static identifier of the product entity.
-     */
-    abstract public function getEntityIdentifier(): string;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
