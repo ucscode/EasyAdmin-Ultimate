@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Abstracts;
+namespace App\Entity\Contract;
 
 use App\Constants\ModeConstants;
 use App\Traits\PermissionTrait;
@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Abstract class representing a meta entity with key-value pairs, timestamp, and access mode.
  *
- * The AbstractEntityMeta class serves as a foundation for managing meta information associated
+ * The AbstractMeta class serves as a foundation for managing meta information associated
  * with entities in a system. Meta information typically includes attributes such as key,
  * value, timestamp, and access mode (permissions).
  *
@@ -28,7 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @see PermissionTrait
  *
- * Concrete implementations of classes extending AbstractEntityMeta can define additional
+ * Concrete implementations of classes extending AbstractMeta can define additional
  * attributes or customize the behavior of meta management based on specific requirements
  * of the system or application.
  *
@@ -36,14 +36,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @link https://github.com/ucscode
  */
 #[ORM\MappedSuperclass]
-abstract class AbstractEntityMeta
+abstract class AbstractMeta
 {
     use PermissionTrait;
-
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    protected ?int $id = null;
 
     #[ORM\Column(length: 255)]
     protected ?string $metaKey = null;
@@ -53,10 +48,7 @@ abstract class AbstractEntityMeta
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     protected ?\DateTimeInterface $metaTimestamp = null;
-
-    #[ORM\Column(type: Types::SMALLINT, length: 3)]
-    protected int $mode = 0;
-
+    
     public function __construct(?string $key = null, mixed $value = null, int $mode = ModeConstants::READ)
     {
         if(!is_null($key)) {
@@ -66,11 +58,6 @@ abstract class AbstractEntityMeta
 
         $this->setMetaTimestamp(new \DateTime());
         $this->addMode($mode);
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getMetaKey(): ?string

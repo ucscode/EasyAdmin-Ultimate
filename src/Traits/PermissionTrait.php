@@ -3,6 +3,8 @@
 namespace App\Traits;
 
 use App\Constants\ModeConstants;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Abstract class representing a bitwise mode for granting permissions.
@@ -33,6 +35,8 @@ use App\Constants\ModeConstants;
  */
 trait PermissionTrait
 {
+    // Entity safe definition
+    #[ORM\Column(type: Types::SMALLINT, length: 3)]
     protected int $mode = 0;
 
     public function getMode(): int

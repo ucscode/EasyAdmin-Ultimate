@@ -1,13 +1,23 @@
 <?php
 
-namespace App\Entity\Abstracts;
+namespace App\Entity\Contract;
 
 use App\Entity\Media;
+use App\Entity\Product\Sample;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
+use Doctrine\ORM\Mapping\InheritanceType;
 
-#[ORM\MappedSuperclass]
-abstract class AbstractProduct
+#[ORM\Entity]
+#[InheritanceType(value: "SINGLE_TABLE")]
+#[DiscriminatorColumn(name: "type", type: "string")]
+#[DiscriminatorMap(value: [
+    "sample" => Sample::class,
+    // add more product classes here
+])]
+class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -41,9 +51,6 @@ abstract class AbstractProduct
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     protected ?Media $image = null;
-
-    #[ORM\Column]
-    protected ?string $type = null;
 
     public function __construct()
     {
@@ -159,18 +166,6 @@ abstract class AbstractProduct
     public function setImage(?Media $image): static
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(?string $type): static
-    {
-        $this->type = $type;
 
         return $this;
     }
