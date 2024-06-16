@@ -42,7 +42,7 @@ class HierarchyController extends AbstractInitialDashboardController
         if($request->attributes->get('_route') === self::ROUTE_NAME) {
             throw new AccessForbiddenException();
         }
-        
+
         if(!$this->affiliationService->isEnabled()) {
             throw new AccessForbiddenException('You are not allowed to access this page');
         }
@@ -114,7 +114,7 @@ class HierarchyController extends AbstractInitialDashboardController
         $structure = [];
 
         if($this->nodeEntity) {
-            
+
             if($this->nodeEntity != $this->currentUser && !$this->hasSufficientNodeViewAuthority()) {
                 throw new AccessForbiddenException('You do not have permission to access this node.');
             }

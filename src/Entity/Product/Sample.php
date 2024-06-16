@@ -9,5 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SampleRepository::class)]
 class Sample extends Product
 {
+    public const IDENTIFIER = 'sample';
+
     // Define custom properties here...
 }

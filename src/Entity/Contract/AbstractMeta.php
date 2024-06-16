@@ -48,7 +48,7 @@ abstract class AbstractMeta
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     protected ?\DateTimeInterface $metaTimestamp = null;
-    
+
     public function __construct(?string $key = null, mixed $value = null, int $mode = ModeConstants::READ)
     {
         if(!is_null($key)) {

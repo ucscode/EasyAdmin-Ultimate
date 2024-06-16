@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
 #[InheritanceType(value: "SINGLE_TABLE")]
 #[DiscriminatorColumn(name: "type", type: "string")]
 #[DiscriminatorMap(value: [
-    "sample" => Sample::class,
+    Sample::IDENTIFIER => Sample::class,
     // add more product classes here
 ])]
 class Product

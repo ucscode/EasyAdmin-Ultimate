@@ -140,7 +140,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if(is_array($role)) {
             return !empty(array_intersect($role, $this->getRoles()));
         }
-        
+
         return in_array($role, $this->getRoles(), true);
     }
 

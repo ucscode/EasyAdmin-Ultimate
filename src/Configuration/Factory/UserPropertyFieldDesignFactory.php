@@ -19,7 +19,7 @@ use Symfony\Component\String\UnicodeString;
 class UserPropertyFieldDesignFactory extends AbstractConfigurationFactory
 {
     use SingletonTrait;
-    
+
     public static function getItemFqcn(): string
     {
         return UserPropertyFieldDesign::class;
@@ -32,7 +32,7 @@ class UserPropertyFieldDesignFactory extends AbstractConfigurationFactory
         $this->setItem('last_name', new UserPropertyFieldDesign());
 
         $this->setItem(
-            'about', 
+            'about',
             (new UserPropertyFieldDesign())
                 ->setDescription('Please enter your user biography here')
                 ->setFieldFqcn(TextareaField::class)
@@ -45,7 +45,7 @@ class UserPropertyFieldDesignFactory extends AbstractConfigurationFactory
                 ->setValue(0)
                 ->setFieldFqcn(MoneyField::class)
                 ->setDescription('User balance are saved as integer to avoid rounding errors! Therefore 9 USD will be saved as 900')
-                ->setConfig(function(MoneyField $field) {
+                ->setConfig(function (MoneyField $field) {
                     $field->setCurrency('USD');
                 })
         );
@@ -73,7 +73,7 @@ class UserPropertyFieldDesignFactory extends AbstractConfigurationFactory
 
         $fieldFqcn = $value->getFieldFqcn();
         $value->setFieldInstance($fieldFqcn::new('metaValue', $value->getLabel()));
-        
+
         if($value->getConfig()) {
             ($value->getConfig())($value->getFieldInstance());
         }

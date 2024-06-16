@@ -6,7 +6,7 @@ use Webmozart\Assert\Assert;
 
 abstract class AbstractConfigurationFactory
 {
-    abstract static function getItemFqcn(): string;
+    abstract public static function getItemFqcn(): string;
     abstract protected function configureItems(): void;
 
     private array $items = [];
@@ -51,5 +51,6 @@ abstract class AbstractConfigurationFactory
     }
 
     protected function normalizeItem(string $name, $value): void
-    {}
+    {
+    }
 }

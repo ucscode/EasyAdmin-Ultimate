@@ -10,7 +10,7 @@ class RequestManager
 {
     public function __construct(protected RequestStack $requestStack)
     {
-        
+
     }
 
     public function getRequestStack(): RequestStack

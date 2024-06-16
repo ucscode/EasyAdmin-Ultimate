@@ -15,7 +15,7 @@ class UserPropertyFieldDesign
     protected mixed $value = null;
     protected string $fieldFqcn = TextField::class;
     protected ?FieldInterface $fieldInstance = null;
-    protected int $mode = ModeConstants::READ|ModeConstants::WRITE;
+    protected int $mode = ModeConstants::READ | ModeConstants::WRITE;
     protected ?string $description = null;
     private ?Closure $config = null;
 

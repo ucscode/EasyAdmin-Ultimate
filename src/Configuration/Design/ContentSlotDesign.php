@@ -4,7 +4,7 @@ namespace App\Configuration\Design;
 
 class ContentSlotDesign
 {
-    protected  ?string $name = null;
+    protected ?string $name = null;
     protected ?string $title = null;
     protected ?string $markerInterface = null;
 

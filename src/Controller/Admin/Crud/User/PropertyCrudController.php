@@ -151,7 +151,7 @@ class PropertyCrudController extends AbstractAdminCrudController
         }
 
         $fieldItem = $this->userPropertyFieldManager->getItem($entity->getMetaKey());
-        
+
         return $fieldItem->getFieldInstance();
     }
 

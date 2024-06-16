@@ -163,7 +163,7 @@ class MediaCrudController extends AbstractInitialCrudController
             $filename = pathinfo($entityInstance->getUploadedFile()->getClientOriginalName(), PATHINFO_FILENAME);
             $entityInstance->setTitle($filename);
         }
-        
+
         parent::persistEntity($entityManager, $entityInstance);
     }
 
