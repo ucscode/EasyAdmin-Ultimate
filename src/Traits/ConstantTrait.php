@@ -39,9 +39,15 @@ trait ConstantTrait
             );
         }
 
-        $arrayKeys = $formatKey ? array_map($formatKey, array_keys($constants)) : array_keys($constants);
+        $formatKey ??= fn ($value) => self::keyFormatter($value, $withPrefix ?? '');
+        $arrayKeys = array_map($formatKey, array_keys($constants));
         $arrayValues = $formatValue ? array_map($formatValue, array_values($constants)) : array_values($constants);
 
         return array_combine($arrayKeys, $arrayValues); // Display Value => Submit Value
+    }
+
+    private static function keyFormatter(string $value, string $prefix): string
+    {
+        return str_replace('_', ' ', substr($value, strlen($prefix)));
     }
 }
