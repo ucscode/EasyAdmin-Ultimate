@@ -42,6 +42,9 @@ abstract class AbstractProduct
     #[ORM\JoinColumn(nullable: false)]
     protected ?Media $image = null;
 
+    #[ORM\Column]
+    protected ?string $type = null;
+
     public function __construct()
     {
         $this->updatedAt = new \DateTimeImmutable();
@@ -156,6 +159,18 @@ abstract class AbstractProduct
     public function setImage(?Media $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }
