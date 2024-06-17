@@ -15,6 +15,9 @@ class Cart
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+    
+    #[ORM\Column(length: 10, unique: true)]
+    private ?string $cartId = null;
 
     /**
      * @var Collection<int, Item>
@@ -119,6 +122,18 @@ class Cart
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCartId(): ?string
+    {
+        return $this->cartId;
+    }
+
+    public function setCartId(string $cartId): static
+    {
+        $this->cartId = $cartId;
 
         return $this;
     }
