@@ -2,7 +2,7 @@
 
 namespace App\Event\Subscriber;
 
-use App\Constants\RoleConstants;
+use App\Constants\RoleConstant;
 use App\Service\ConfigurationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -95,7 +95,7 @@ class LoginSubscriber implements EventSubscriberInterface
         $response = new RedirectResponse($this->urlGenerator->generate('app_user'));
 
         $redirections = [
-            RoleConstants::ROLE_ADMIN => 'app_admin',
+            RoleConstant::ROLE_ADMIN => 'app_admin',
             // add more redirection path
         ];
 

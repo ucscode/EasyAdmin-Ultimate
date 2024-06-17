@@ -3,7 +3,7 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Configuration\Factory\ContentSlotDesignFactory;
-use App\Constants\SlotConstants;
+use App\Constants\SlotConstant;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Entity\ContentSlot;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -20,7 +20,7 @@ class ContentSlotCrudController extends AbstractAdminCrudController
 
     public function __construct(protected ContentSlotDesignFactory $contentSlotVOFactory)
     {
-        $this->slotChoices =  SlotConstants::getChoices('SLOT_', null, function (string $value) {
+        $this->slotChoices =  SlotConstant::getChoices('SLOT_', null, function (string $value) {
             $label = preg_replace(sprintf('/^%s/', preg_quote('SLOT_', '/')), '', $value);
             return str_replace('_', ' ', $label);
         });

@@ -2,7 +2,7 @@
 
 namespace App\Constants;
 
-final class FilePathConstants
+final class PathConstant
 {
     public const SYSTEM_IMAGE_UPLOAD_DIR = 'public/resource/images/system';
     public const SYSTEM_IMAGE_BASE_PATH = 'resource/images/system';

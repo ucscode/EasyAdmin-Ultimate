@@ -2,7 +2,7 @@
 
 namespace App\Constants;
 
-final class ModeConstants
+final class ModeConstant
 {
     public const READ = 4;
     public const WRITE = 2;

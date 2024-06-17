@@ -2,7 +2,7 @@
 
 namespace App\Entity\User;
 
-use App\Constants\RoleConstants;
+use App\Constants\RoleConstant;
 use App\Repository\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -78,7 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->properties = new ArrayCollection();
         $this->setRegistrationTime(new \DateTime());
         $this->setLastSeen(new \DateTime());
-        $this->addRole(RoleConstants::ROLE_USER);
+        $this->addRole(RoleConstant::ROLE_USER);
     }
 
     public function __toString()

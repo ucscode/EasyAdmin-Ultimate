@@ -4,7 +4,7 @@ namespace App\Configuration\Factory;
 
 use App\Configuration\AbstractConfigurationFactory;
 use App\Configuration\Design\UserPropertyFieldDesign;
-use App\Constants\ModeConstants;
+use App\Constants\ModeConstant;
 use App\Traits\SingletonTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
@@ -55,7 +55,7 @@ class UserPropertyFieldDesignFactory extends AbstractConfigurationFactory
             (new UserPropertyFieldDesign())
                 ->setFieldFqcn(BooleanField::class)
                 ->setValue(false)
-                ->setMode(ModeConstants::NO_PERMISSION)
+                ->setMode(ModeConstant::NO_PERMISSION)
         );
     }
 

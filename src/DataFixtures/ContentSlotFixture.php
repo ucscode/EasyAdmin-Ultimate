@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Constants\SlotConstants;
+use App\Constants\SlotConstant;
 use App\Entity\ContentSlot;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -12,7 +12,7 @@ class ContentSlotFixture extends Fixture
     public const SCRIPT_CONTENT = [
         [
             'title' => 'Example 1',
-            'slots' => [SlotConstants::SLOT_HEADER],
+            'slots' => [SlotConstant::SLOT_HEADER],
             'targets' => [
                 'TARGET_ADMIN',
                 'TARGET_USER',
@@ -22,7 +22,7 @@ class ContentSlotFixture extends Fixture
         ],
         [
             'title' => 'Example 2',
-            'slots' => [SlotConstants::SLOT_HEADER],
+            'slots' => [SlotConstant::SLOT_HEADER],
             'targets' => [
                 'TARGET_OTHERS',
             ],
@@ -31,7 +31,7 @@ class ContentSlotFixture extends Fixture
         ],
         [
             'title' => 'Example 3',
-            'slots' => [SlotConstants::SLOT_FOOTER],
+            'slots' => [SlotConstant::SLOT_FOOTER],
             'targets' => [
                 'TARGET_ADMIN',
                 'TARGET_USER',

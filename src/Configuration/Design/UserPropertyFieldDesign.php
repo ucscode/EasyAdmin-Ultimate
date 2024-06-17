@@ -2,7 +2,7 @@
 
 namespace App\Configuration\Design;
 
-use App\Constants\ModeConstants;
+use App\Constants\ModeConstant;
 use Closure;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -15,7 +15,7 @@ class UserPropertyFieldDesign
     protected mixed $value = null;
     protected string $fieldFqcn = TextField::class;
     protected ?FieldInterface $fieldInstance = null;
-    protected int $mode = ModeConstants::READ | ModeConstants::WRITE;
+    protected int $mode = ModeConstant::READ | ModeConstant::WRITE;
     protected ?string $description = null;
     private ?Closure $config = null;
 

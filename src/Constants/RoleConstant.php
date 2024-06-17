@@ -9,7 +9,7 @@ use App\Traits\ConstantTrait;
  * Basically, not all roles listed here will be useful in your project but having them is beneficial.
  * You can add new roles to it or remove existing roles from it based on your preference or project requirements
  */
-final class RoleConstants
+final class RoleConstant
 {
     use ConstantTrait;
 

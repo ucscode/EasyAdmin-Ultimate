@@ -2,7 +2,7 @@
 
 namespace App\Entity\Contract;
 
-use App\Constants\ModeConstants;
+use App\Constants\ModeConstant;
 use App\Traits\PermissionTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -49,7 +49,7 @@ abstract class AbstractMeta
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     protected ?\DateTimeInterface $metaTimestamp = null;
 
-    public function __construct(?string $key = null, mixed $value = null, int $mode = ModeConstants::READ)
+    public function __construct(?string $key = null, mixed $value = null, int $mode = ModeConstant::READ)
     {
         if(!is_null($key)) {
             $this->setMetaKey($key);

@@ -30,7 +30,7 @@ Here's an example:
 namespace App\Configuration\Factory;
 
 use App\Configuration\Design\UserPropertyFieldDesign;
-use App\Constants\ModeConstants;
+use App\Constants\ModeConstant;
 ...
 
 protected function configureItems(): void {
@@ -52,7 +52,7 @@ protected function configureItems(): void {
             ->setConfig(function(MoneyField $fieldInstance) {
                 $fieldInstance->setCurrency('USD');
             })
-            ->setMode(ModeConstants::READ) // set as read-only
+            ->setMode(ModeConstant::READ) // set as read-only
     );
 }
 ```

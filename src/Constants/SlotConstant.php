@@ -10,7 +10,7 @@ use App\Traits\ConstantTrait;
  * Both within database, application context or twig environment.
  * It define slot names that can be used with the _slot() twig function
  */
-final class SlotConstants
+final class SlotConstant
 {
     use ConstantTrait;
 

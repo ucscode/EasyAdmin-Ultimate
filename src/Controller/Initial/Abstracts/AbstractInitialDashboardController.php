@@ -2,7 +2,7 @@
 
 namespace App\Controller\Initial\Abstracts;
 
-use App\Constants\FilePathConstants;
+use App\Constants\PathConstant;
 use App\Controller\Initial\Traits\InitialControllerTrait;
 use App\Entity\User\User;
 use App\Service\ConfigurationService;
@@ -73,9 +73,9 @@ abstract class AbstractInitialDashboardController extends AbstractDashboardContr
 
             ->addAssetMapperEntry(Asset::new('app'))
 
-            ->addCssFile(Asset::new(FilePathConstants::SYSTEM_CSS_FILE))
+            ->addCssFile(Asset::new(PathConstant::SYSTEM_CSS_FILE))
 
-            ->addJsFile(Asset::new(FilePathConstants::SYSTEM_JS_FILE)->htmlAttr('type', 'module'))
+            ->addJsFile(Asset::new(PathConstant::SYSTEM_JS_FILE)->htmlAttr('type', 'module'))
 
         ;
     }

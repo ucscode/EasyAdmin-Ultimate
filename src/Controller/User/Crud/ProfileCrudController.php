@@ -2,7 +2,7 @@
 
 namespace App\Controller\User\Crud;
 
-use App\Constants\FilePathConstants;
+use App\Constants\PathConstant;
 use App\Controller\User\Abstracts\AbstractUserCrudController;
 use App\Entity\User\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -36,8 +36,8 @@ class ProfileCrudController extends AbstractUserCrudController
         $user = $this->getUser();
 
         yield ImageField::new('avatar')
-            ->setUploadDir(FilePathConstants::USER_IMAGE_UPLOAD_DIR)
-            ->setBasePath(FilePathConstants::USER_IMAGE_BASE_PATH)
+            ->setUploadDir(PathConstant::USER_IMAGE_UPLOAD_DIR)
+            ->setBasePath(PathConstant::USER_IMAGE_BASE_PATH)
         ;
 
         yield TextField::new('username')

@@ -3,7 +3,7 @@
 namespace App\Controller\Admin\Crud\User;
 
 use App\Configuration\Factory\UserPropertyFieldDesignFactory;
-use App\Constants\ModeConstants;
+use App\Constants\ModeConstant;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Entity\User\Property;
@@ -92,7 +92,7 @@ class PropertyCrudController extends AbstractAdminCrudController
 
                 return $action
 
-                    ->displayIf(fn (Property $entity) => $entity->hasMode(ModeConstants::WRITE))
+                    ->displayIf(fn (Property $entity) => $entity->hasMode(ModeConstant::WRITE))
 
                     ->linkToUrl(function (Property $entity) {
 
@@ -121,7 +121,7 @@ class PropertyCrudController extends AbstractAdminCrudController
             ->andWhere('entity.user = :user')
             ->andWhere('entity.mode >= :mode')
             ->setParameter('user', $this->propertyOwner)
-            ->setParameter('mode', ModeConstants::READ)
+            ->setParameter('mode', ModeConstant::READ)
         ;
     }
 
@@ -143,7 +143,7 @@ class PropertyCrudController extends AbstractAdminCrudController
          * */
         $entity = $this->getContext()->getEntity()?->getInstance();
 
-        if(!$entity->hasMode(ModeConstants::WRITE)) {
+        if(!$entity->hasMode(ModeConstant::WRITE)) {
             throw new \RuntimeException(sprintf(
                 'You do not have permission to modify the "%s" property',
                 $entity->getMetaKey()

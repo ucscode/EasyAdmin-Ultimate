@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin\Crud\User;
 
-use App\Constants\FilePathConstants;
-use App\Constants\RoleConstants;
+use App\Constants\PathConstant;
+use App\Constants\RoleConstant;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
 use App\Controller\Admin\DashboardController;
 use App\Controller\Initial\User\HierarchyController;
@@ -97,9 +97,9 @@ class UserCrudController extends AbstractAdminCrudController
         ;
 
         yield ImageField::new('avatar')
-            ->setUploadDir(FilePathConstants::USER_IMAGE_UPLOAD_DIR)
-            ->setBasePath(FilePathConstants::USER_IMAGE_BASE_PATH)
-            ->setUploadedFileNamePattern(FilePathConstants::USER_IMAGE_UPLOAD_FILE_PATTERN)
+            ->setUploadDir(PathConstant::USER_IMAGE_UPLOAD_DIR)
+            ->setBasePath(PathConstant::USER_IMAGE_BASE_PATH)
+            ->setUploadedFileNamePattern(PathConstant::USER_IMAGE_UPLOAD_FILE_PATTERN)
         ;
 
         yield ChoiceField::new('roles')
@@ -285,16 +285,16 @@ class UserCrudController extends AbstractAdminCrudController
      *
      * The method returns a predefined list of roles mapped to display values.
      * If no specific roles are defined in the array, it defaults to returning all roles
-     * starting with 'ROLE_' from RoleConstants::getChoices().
+     * starting with 'ROLE_' from RoleConstant::getChoices().
      *
      * @return array An associative array where the key is the display value and the value is the role constant.
      */
     protected function getAllowedRoles(): array
     {
         return [
-            // 'Display Value' => RoleConstants::ROLE_ADMIN
+            // 'Display Value' => RoleConstant::ROLE_ADMIN
 
-        ] ?: RoleConstants::getChoices('ROLE_');
+        ] ?: RoleConstant::getChoices('ROLE_');
     }
 
     protected function getTabHelp(): string

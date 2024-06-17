@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Constants\ModeConstants;
+use App\Constants\ModeConstant;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -70,22 +70,22 @@ trait PermissionTrait
 
     public function isReadable(): bool
     {
-        return $this->hasMode(ModeConstants::READ);
+        return $this->hasMode(ModeConstant::READ);
     }
 
     public function isWritable(): bool
     {
-        return $this->hasMode(ModeConstants::WRITE);
+        return $this->hasMode(ModeConstant::WRITE);
     }
 
     public function isExecutable(): bool
     {
-        return $this->hasMode(ModeConstants::EXECUTE);
+        return $this->hasMode(ModeConstant::EXECUTE);
     }
 
     protected function normalizeMode(int $mode): int
     {
-        if($mode & ModeConstants::EXECUTE | ModeConstants::READ | ModeConstants::WRITE) {
+        if($mode & ModeConstant::EXECUTE | ModeConstant::READ | ModeConstant::WRITE) {
             return $mode;
         }
 

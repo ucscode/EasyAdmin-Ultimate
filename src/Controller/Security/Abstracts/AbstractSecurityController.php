@@ -2,7 +2,7 @@
 
 namespace App\Controller\Security\Abstracts;
 
-use App\Constants\FilePathConstants;
+use App\Constants\PathConstant;
 use App\Controller\Security\Interfaces\SecurityControllerInterface;
 use App\Controller\Initial\Traits\InitialControllerTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
@@ -19,9 +19,9 @@ abstract class AbstractSecurityController extends AbstractDashboardController im
 
             ->addAssetMapperEntry('app')
 
-            ->addCssFile(Asset::new(FilePathConstants::SYSTEM_CSS_FILE))
+            ->addCssFile(Asset::new(PathConstant::SYSTEM_CSS_FILE))
 
-            ->addJsFile(Asset::new(FilePathConstants::SYSTEM_JS_FILE)->htmlAttr('type', 'module'))
+            ->addJsFile(Asset::new(PathConstant::SYSTEM_JS_FILE)->htmlAttr('type', 'module'))
 
         ;
     }
