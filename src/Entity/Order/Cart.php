@@ -15,7 +15,7 @@ class Cart
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-    
+
     #[ORM\Column(length: 10, unique: true)]
     private ?string $cartId = null;
 

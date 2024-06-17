@@ -23,7 +23,7 @@ class SampleCrudController extends AbstractCrudController
             [
                 AssociationField::new('image')
                     ->autocomplete()
-                    ->setQueryBuilder(function(QueryBuilder $builder) {
+                    ->setQueryBuilder(function (QueryBuilder $builder) {
                         // allow only image files
                         return $builder->andWhere("entity.embeddedFile.mimeType LIKE 'image/%'");
                     })

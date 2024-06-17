@@ -44,7 +44,7 @@ class Product
 
     #[ORM\Column]
     protected ?int $salePrice = 0;
-    
+
     #[ORM\Column(length: 20, unique: true)]
     protected ?string $sku = null;
 
