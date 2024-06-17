@@ -3,6 +3,7 @@
 namespace App\Controller\Admin\Crud\Product;
 
 use App\Entity\Product\Review;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -25,7 +26,7 @@ class ReviewCrudController extends AbstractCrudController
         ;
 
         yield AssociationField::new('product')
-            ->autocomplete()
+            // ->autocomplete()
         ;
 
         yield ChoiceField::new('rating')
@@ -43,5 +44,15 @@ class ReviewCrudController extends AbstractCrudController
                 'Declined' => 'declined'
             ])
         ;
+    }
+
+    /**
+     * @param Review $entityInstance
+     */
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $entityInstance->setCreatedAt(new \DateTimeImmutable());
+
+        parent::persistEntity($entityManager, $entityInstance);
     }
 }
