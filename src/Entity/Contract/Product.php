@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
 
 #[ORM\Entity]
 #[InheritanceType(value: "SINGLE_TABLE")]
-#[DiscriminatorColumn(name: "type", type: "string")]
+#[DiscriminatorColumn(name: "__discr__", type: "string")]
 #[DiscriminatorMap(value: [
     Sample::IDENTIFIER => Sample::class,
     // add more product classes here
