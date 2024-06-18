@@ -2,18 +2,17 @@
 
 namespace App\Twig;
 
-use App\Configuration\Factory\ContentSlotDesignFactory;
 use App\Configuration\Design\ContentSlotDesign;
-use App\Entity\ContentSlot;
+use App\Configuration\Factory\ContentSlotDesignFactory;
+use App\Entity\Slot\Slot;
 use App\Service\RequestManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use Webmozart\Assert\Assert;
 
-class ContentSlotExtension extends AbstractExtension
+class SlotExtension extends AbstractExtension
 {
     public function __construct(
         protected EntityManagerInterface   $entityManager,
@@ -27,7 +26,7 @@ class ContentSlotExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('_slot', [$this, 'contentSlotCallback'])
+            new TwigFunction('_slot', [$this, 'slotCallback'])
         ];
     }
 
@@ -37,24 +36,24 @@ class ContentSlotExtension extends AbstractExtension
      * This will search in the database for content that matches the slot name
      * and render them base on certain criteria.
      *
-     * @param string $slotName  The name of the slot
+     * @param string $position  The name of the slot
      * @return string           All content added to the named slot
      */
-    public function contentSlotCallback(string $slotName): string
+    public function slotCallback(string $position): string
     {
-        $queryBuilder = $this->entityManager->getRepository(ContentSlot::class)->createQueryBuilder('entity');
+        $queryBuilder = $this->entityManager->getRepository(Slot::class)->createQueryBuilder('entity');
 
         $queryBuilder
-            ->where("entity.slots LIKE :slot")
+            ->where("entity.positions LIKE :position")
             ->andWhere('entity.enabled = :enabled')
-            ->setParameter('slot', sprintf('%%"%s"%%', $slotName))
+            ->setParameter('position', sprintf('%%"%s"%%', $position))
             ->setParameter('enabled', true)
             ->orderBy('entity.sort', 'ASC')
         ;
 
         $entities = $queryBuilder->getQuery()->getResult();
 
-        $contentStack = array_map(fn (ContentSlot $entityInstance) => $this->getSlotContent($entityInstance), $entities);
+        $contentStack = array_map(fn (Slot $entityInstance) => $this->getSlotContent($entityInstance), $entities);
 
         return implode("\n", array_filter($contentStack));
     }
@@ -63,12 +62,12 @@ class ContentSlotExtension extends AbstractExtension
      * Get the content to be rendered in a slot by matching the current controller parent classes
      *
      * This method checks if the current controller class is subclass of some targeted classes
-     * and then returns the content of the ContentSlot entity if evaluated to true
+     * and then returns the content of the Slot entity if evaluated to true
      *
-     * @param ContentSlot $entityInstance   The entity containing the content and targeted areas
+     * @param Slot $entityInstance   The entity containing the content and targeted areas
      * @return string|null                  A string if controller has matching subclass, false otherwise
      */
-    protected function getSlotContent(ContentSlot $entityInstance): ?string
+    protected function getSlotContent(Slot $entityInstance): ?string
     {
         // Get filtered list of all ancestor classes not equal to null
 

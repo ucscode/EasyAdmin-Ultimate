@@ -3,9 +3,8 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Configuration\Factory\ContentSlotDesignFactory;
-use App\Constants\SlotConstant;
 use App\Controller\Admin\Abstracts\AbstractAdminCrudController;
-use App\Entity\ContentSlot;
+use App\Entity\Slot\Slot;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -15,20 +14,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ContentSlotCrudController extends AbstractAdminCrudController
 {
-    protected string $title;
-    protected array $slotChoices;
-
     public function __construct(protected ContentSlotDesignFactory $contentSlotVOFactory)
     {
-        $this->slotChoices =  SlotConstant::getChoices('SLOT_', null, function (string $value) {
-            $label = preg_replace(sprintf('/^%s/', preg_quote('SLOT_', '/')), '', $value);
-            return str_replace('_', ' ', $label);
-        });
+        
     }
 
     public static function getEntityFqcn(): string
     {
-        return ContentSlot::class;
+        return Slot::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -45,8 +38,8 @@ class ContentSlotCrudController extends AbstractAdminCrudController
             ->setHelp('Define a title to remember the code')
         ;
 
-        yield ChoiceField::new('slots', 'Position')
-            ->setFormTypeOption('choices', array_flip($this->slotChoices))
+        yield ChoiceField::new('positions', 'Position')
+            ->setFormTypeOption('choices', Slot::getChoices('POSITION_'))
             ->allowMultipleChoices()
             ->setHelp('Where in a page should the code be placed?')
             ->onlyOnForms()

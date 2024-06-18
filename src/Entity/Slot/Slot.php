@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Slot;
 
-use App\Repository\ContentSlotRepository;
-use DateTime;
+use App\Repository\Slot\SlotRepository;
+use App\Traits\ConstantTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ContentSlotRepository::class)]
-class ContentSlot
+#[ORM\Entity(repositoryClass: SlotRepository::class)]
+class Slot implements SlotInterface
 {
+    use ConstantTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -19,7 +21,7 @@ class ContentSlot
     private ?string $title = null;
 
     #[ORM\Column(type: Types::JSON)]
-    private array $slots = [];
+    private array $positions = [];
 
     #[ORM\Column(type: Types::JSON)]
     private array $targets = [];
@@ -38,8 +40,8 @@ class ContentSlot
 
     public function __construct()
     {
-        $this->setCreatedAt(new DateTime());
-        $this->setSort(0);
+        $this->createdAt = new \DateTime();
+        $this->sort = 0;
     }
 
     public function getId(): ?int
@@ -59,37 +61,37 @@ class ContentSlot
         return $this;
     }
 
-    public function getSlots(): array
+    public function getPositions(): array
     {
-        return $this->slots;
+        return $this->positions;
     }
 
-    public function setSlots(array $slots): static
+    public function setPositions(array $positions): static
     {
-        $this->slots = $slots;
+        $this->positions = $positions;
 
         return $this;
     }
 
-    public function hasSlot(string $slot): bool
+    public function hasPosition(string $slot): bool
     {
-        return in_array($slot, $this->slots, true);
+        return in_array($slot, $this->positions, true);
     }
 
-    public function addSlot(string $slot): static
+    public function addPosition(string $slot): static
     {
-        if(!$this->hasSlot($slot)) {
-            $this->slots[] = $slot;
+        if(!$this->hasPosition($slot)) {
+            $this->positions[] = $slot;
         }
 
         return $this;
     }
 
-    public function removeSlot(string $slot): static
+    public function removePosition(string $slot): static
     {
-        if(false !== $index = array_search($slot, $this->slots, true)) {
-            unset($this->slots[$index]);
-            $this->slots = array_values($this->slots);
+        if(false !== $index = array_search($slot, $this->positions, true)) {
+            unset($this->positions[$index]);
+            $this->positions = array_values($this->positions);
         }
 
         return $this;

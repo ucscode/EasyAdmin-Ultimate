@@ -2,17 +2,17 @@
 
 namespace App\DataFixtures;
 
-use App\Constants\SlotConstant;
-use App\Entity\ContentSlot;
+use App\Entity\Slot\Slot;
+use App\Entity\Slot\SlotInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class ContentSlotFixture extends Fixture
+class SlotFixture extends Fixture
 {
     public const SCRIPT_CONTENT = [
         [
             'title' => 'Example 1',
-            'slots' => [SlotConstant::SLOT_HEADER],
+            'slots' => [SlotInterface::POSITION_HEADER],
             'targets' => [
                 'TARGET_ADMIN',
                 'TARGET_USER',
@@ -22,7 +22,7 @@ class ContentSlotFixture extends Fixture
         ],
         [
             'title' => 'Example 2',
-            'slots' => [SlotConstant::SLOT_HEADER],
+            'slots' => [SlotInterface::POSITION_HEADER],
             'targets' => [
                 'TARGET_OTHERS',
             ],
@@ -31,7 +31,7 @@ class ContentSlotFixture extends Fixture
         ],
         [
             'title' => 'Example 3',
-            'slots' => [SlotConstant::SLOT_FOOTER],
+            'slots' => [SlotInterface::POSITION_FOOTER],
             'targets' => [
                 'TARGET_ADMIN',
                 'TARGET_USER',
@@ -45,13 +45,13 @@ class ContentSlotFixture extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        foreach(self::SCRIPT_CONTENT as $key => $slotinfo) {
-            $contentSlot = (new ContentSlot())
-                ->setTitle($slotinfo['title'])
-                ->setSlots($slotinfo['slots'])
-                ->setTargets($slotinfo['targets'])
-                ->setSort($slotinfo['sort'])
-                ->setEnabled($slotinfo['enabled'])
+        foreach(self::SCRIPT_CONTENT as $key => $slotInfo) {
+            $contentSlot = (new Slot())
+                ->setTitle($slotInfo['title'])
+                ->setPositions($slotInfo['slots'])
+                ->setTargets($slotInfo['targets'])
+                ->setSort($slotInfo['sort'])
+                ->setEnabled($slotInfo['enabled'])
                 ->setContent($this->getContent($key))
             ;
 

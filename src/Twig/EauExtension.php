@@ -11,7 +11,7 @@ use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class EauTwigExtension extends AbstractExtension implements GlobalsInterface
+class EauExtension extends AbstractExtension implements GlobalsInterface
 {
     public function __construct(protected EauContext $eauContext, protected JsPayload $javascriptContext)
     {

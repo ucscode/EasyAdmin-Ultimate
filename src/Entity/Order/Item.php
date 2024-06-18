@@ -31,6 +31,12 @@ class Item
     #[ORM\Column]
     private ?\DateTimeImmutable $timestamp = null;
 
+    public function __construct()
+    {
+        $this->quantity = 1;
+        $this->timestamp = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

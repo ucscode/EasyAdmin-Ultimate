@@ -9,10 +9,10 @@ use App\Controller\Admin\Crud\User\UserCrudController;
 use App\Controller\Admin\Interfaces\AdminControllerInterface;
 use App\Controller\Initial\Abstracts\AbstractInitialDashboardController;
 use App\Controller\Initial\Media\MediaCrudController;
-use App\Entity\ContentSlot;
 use App\Entity\Media;
 use App\Entity\Product\Review;
 use App\Entity\Product\Sample;
+use App\Entity\Slot\Slot;
 use App\Entity\User\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -66,7 +66,7 @@ abstract class AbstractAdminDashboardController extends AbstractInitialDashboard
         yield MenuItem::linkToCrud('Media', 'fa fa-camera', Media::class)
             ->setController(MediaCrudController::class);
 
-        yield MenuItem::linkToCrud('Slots', 'fa fa-code', ContentSlot::class)
+        yield MenuItem::linkToCrud('Slots', 'fa fa-code', Slot::class)
             ->setController(ContentSlotCrudController::class);
 
         yield MenuItem::section('Exit');

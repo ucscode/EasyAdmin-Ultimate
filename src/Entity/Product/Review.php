@@ -41,6 +41,7 @@ class Review
 
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
     }
 

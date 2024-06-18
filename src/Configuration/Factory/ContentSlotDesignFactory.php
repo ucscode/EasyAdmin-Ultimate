@@ -25,21 +25,21 @@ class ContentSlotDesignFactory extends AbstractConfigurationFactory
         $this->setItem(
             'TARGET_ADMIN',
             (new ContentSlotDesign())
-                ->setTitle('Admin Interface')
+                ->setTitle('Administration Area')
                 ->setMarkerInterface(AdminControllerInterface::class)
         );
 
         $this->setItem(
             'TARGET_USER',
             (new ContentSlotDesign())
-                ->setTitle('User Interface')
+                ->setTitle('User Dashboard')
                 ->setMarkerInterface(UserControllerInterface::class)
         );
 
         $this->setItem(
             'TARGET_SECURITY',
             (new ContentSlotDesign())
-                ->setTitle('Security Interface')
+                ->setTitle('Security Pages')
                 ->setMarkerInterface(SecurityControllerInterface::class)
         );
 
