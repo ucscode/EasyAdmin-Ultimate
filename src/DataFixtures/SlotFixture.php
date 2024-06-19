@@ -12,26 +12,31 @@ class SlotFixture extends Fixture
     public const SCRIPT_CONTENT = [
         [
             'title' => 'Example 1',
-            'slots' => [SlotInterface::POSITION_HEADER],
+            'positions' => [SlotInterface::POSITION_HEADER],
             'targets' => [
                 'TARGET_ADMIN',
                 'TARGET_USER',
             ],
             'sort' => 1,
             'enabled' => true,
+            'content' => "console.log('slot in header');"
         ],
         [
             'title' => 'Example 2',
-            'slots' => [SlotInterface::POSITION_HEADER],
+            'positions' => [SlotInterface::POSITION_FOOTER],
             'targets' => [
                 'TARGET_OTHERS',
             ],
             'sort' => 0,
             'enabled' => true,
+            'content' => "console.log('slot in footer');"
         ],
         [
             'title' => 'Example 3',
-            'slots' => [SlotInterface::POSITION_FOOTER],
+            'positions' => [
+                SlotInterface::POSITION_FOOTER,
+                SlotInterface::POSITION_HEADER
+            ],
             'targets' => [
                 'TARGET_ADMIN',
                 'TARGET_USER',
@@ -40,36 +45,25 @@ class SlotFixture extends Fixture
             ],
             'sort' => 1,
             'enabled' => true,
+            'content' => "console.log('slot in header & footer');"
         ],
     ];
 
     public function load(ObjectManager $manager)
     {
-        foreach(self::SCRIPT_CONTENT as $key => $slotInfo) {
+        foreach(self::SCRIPT_CONTENT as $key => $slotinfo) {
             $contentSlot = (new Slot())
-                ->setTitle($slotInfo['title'])
-                ->setPositions($slotInfo['slots'])
-                ->setTargets($slotInfo['targets'])
-                ->setSort($slotInfo['sort'])
-                ->setEnabled($slotInfo['enabled'])
-                ->setContent($this->getContent($key))
+                ->setTitle($slotinfo['title'])
+                ->setPositions($slotinfo['positions'])
+                ->setTargets($slotinfo['targets'])
+                ->setSort($slotinfo['sort'])
+                ->setEnabled($slotinfo['enabled'])
+                ->setContent(sprintf("<script>%s</script>", $slotinfo['content']))
             ;
 
             $manager->persist($contentSlot);
         }
 
         $manager->flush();
-    }
-
-    protected function getContent(int $key): string
-    {
-        $codes = [
-            "<script src='path/to/a/file.js'></script>",
-            "<style>background-color: blue;</style>",
-            "<script>alert('This is a working example of content slot');</script>",
-            "<script>console.log('Thank you for using ucscode/easyadmin-ultimate package');</script>"
-        ];
-
-        return $codes[$key];
     }
 }
