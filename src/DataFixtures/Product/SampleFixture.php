@@ -5,7 +5,7 @@ namespace App\DataFixtures\Product;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class EnrollmentFixture extends Fixture
+class SampleFixture extends Fixture
 {
     public function load(ObjectManager $manager)
     {
