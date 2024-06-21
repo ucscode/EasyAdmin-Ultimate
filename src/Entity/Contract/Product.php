@@ -9,6 +9,19 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Unless you are assured that all entities extending Product will contain the same attribute, do not set #[ORM\Column(nullable: true)].
+ * Instead, use an assertion constraint for entity-specific validation.
+ *
+ * Example:
+ *
+ * #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+ * #[ORM\JoinColumn(nullable: true)]
+ * #[Assert\NotNull]
+ * private ?Property $property = null;
+ */
 
 #[ORM\Entity]
 #[InheritanceType(value: "SINGLE_TABLE")]
@@ -49,7 +62,8 @@ class Product
     protected ?string $sku = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Assert\NotNull]
     protected ?Media $image = null;
 
     public function __construct()
