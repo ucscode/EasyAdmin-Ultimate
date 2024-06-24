@@ -155,7 +155,7 @@ class Cart
         return $this;
     }
 
-    public function getPropery(string $name): mixed
+    public function getProperty(string $name): mixed
     {
         return $this->properties[$name] ?? null;
     }
