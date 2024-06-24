@@ -2,7 +2,7 @@
 
 {# 
     {{ include('modal.html.twig', { 
-        modalTitle: 'Add a new Product', 
+        modalTitle: 'Add a new Ebook',
         modalId: 'my-modal', 
         modalContent: 'My custom value' 
     }) }} 
@@ -53,11 +53,11 @@
         <div class="modal-content">
 
             {% block modalHeader %}
-                {% if modalTitle|default(false) or not modalCloseButtonHidden %}
+                {% if modalTitle|default(false) or not modalCloseButtonHidden|default(false) %}
                     <div class="modal-header">
                         <h5 class="modal-title">
                             {% block modalTitle %}
-                                {{ modalTitle }}
+                                {{ modalTitle|default('')|raw }}
                             {% endblock %}
                         </h5>
                         {% if modalCloseButtonHidden|default(not has_multiple_buttons) %}
@@ -69,7 +69,7 @@
             
             <div class="modal-body">
                 {% block modalContent %}
-                    {{ modalContent }}
+                    {{ modalContent|raw }}
                 {% endblock %}
             </div>
 
@@ -79,7 +79,7 @@
                         {% for button in modalButtons %}
                             {% if not button|is_scalar and button.attributes|default(false)|is_array %}
                                 <button {{ button.attributes|html_attributes|raw }}>
-                                    {{ button.label|default('No Label!') }}
+                                    {{ button.label|default('No Label!')|raw }}
                                 </button>
                             {% endif %}
                         {% endfor %}
