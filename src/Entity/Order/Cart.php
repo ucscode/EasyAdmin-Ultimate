@@ -38,6 +38,9 @@ class Cart
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
+    #[ORM\Column]
+    private array $properties = [];
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -136,6 +139,39 @@ class Cart
     public function setCartId(string $cartId): static
     {
         $this->cartId = $cartId;
+
+        return $this;
+    }
+
+    public function getProperties(): array
+    {
+        return $this->properties;
+    }
+
+    public function setProperties(array $properties): static
+    {
+        $this->properties = $properties;
+
+        return $this;
+    }
+
+    public function getPropery(string $name): mixed
+    {
+        return $this->properties[$name] ?? null;
+    }
+
+    public function setProperty(string $name, mixed $value): static
+    {
+        $this->properties[$name] = $value;
+
+        return $this;
+    }
+
+    public function removeProperty(string $name): static
+    {
+        if(array_key_exists($name, $this->properties)) {
+            unset($this->properties[$name]);
+        }
 
         return $this;
     }
