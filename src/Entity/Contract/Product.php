@@ -4,6 +4,8 @@ namespace App\Entity\Contract;
 
 use App\Entity\Media;
 use App\Entity\Product\Sample;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
@@ -61,15 +63,17 @@ class Product
     #[ORM\Column(length: 20, unique: true)]
     protected ?string $sku = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: true)]
-    #[Assert\NotNull]
-    protected ?Media $image = null;
-
+    /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\ManyToMany(targetEntity: Media::class)]
+    private Collection $images;
+    
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -173,14 +177,26 @@ class Product
         return $this;
     }
 
-    public function getImage(): ?Media
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getImages(): Collection
     {
-        return $this->image;
+        return $this->images;
     }
 
-    public function setImage(?Media $image): static
+    public function addImage(Media $image): static
     {
-        $this->image = $image;
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Media $image): static
+    {
+        $this->images->removeElement($image);
 
         return $this;
     }
