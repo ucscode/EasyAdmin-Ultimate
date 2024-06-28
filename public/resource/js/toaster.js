@@ -1,5 +1,5 @@
 /**
- * https://github.com/jarstone/bs5-toast
+ * @see https://github.com/jarstone/bs5-toast
  */
 import bs5 from 'bs5-toast'; 
 
@@ -7,6 +7,7 @@ import bs5 from 'bs5-toast';
  * @typedef {Object} ToasterArgument
  * @property {string} body - The content to render
  * @property {string} header - The title of the toast
+ * @property {string} icon - Add icon to header or body (if header is not set)
  * @property {string} type - The toast type e.g Toaster.TYPE_SUCCESS
  * @property {string} placement - The position of the toast e.g Toaster.PLACEMENT_TOP_RIGHT
  * @property {string} className - Custom class attribute to be added to the toast
@@ -45,17 +46,36 @@ export class Toaster extends bs5.Toast
      */
     constructor(param) {
         const type = param.type || Toaster.TYPE_INFO;
-        param.btnCloseWhite = (type && type.trim().length && ![Toaster.TYPE_WARNING, Toaster.TYPE_INFO, Toaster.TYPE_LIGHT].includes(type) && !param.header) || param.btnCloseWhite;
+
+        param.btnCloseWhite = (
+            type && type.trim().length && 
+            ![Toaster.TYPE_WARNING, Toaster.TYPE_INFO, Toaster.TYPE_LIGHT].includes(type) && 
+            !param.header
+        ) || param.btnCloseWhite;
+        
+        if(param.icon) {
+            (function() {
+                const icon = `<i class="${param.icon}"></i>`;
+                if(param.header && param.header != '') param.header = `${icon} ${param.header}`;
+                else param.body = `${icon} ${param.body}`;
+            })();
+        }
+        
         super(param);
+        
         this.#type = `${type} bs5-toaster`;
     }
 
     show() {
+        this.#addTypeClasses();
+        super.show();
+    }
+
+    #addTypeClasses() {
         if(this.#type) {
             for(let className of this.#type.split(' ')) {
                 this.element.classList.add(className);
             }
         }
-        super.show();
     }
 }
