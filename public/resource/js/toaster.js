@@ -47,7 +47,7 @@ export class Toaster extends bs5.Toast
         const type = param.type || Toaster.TYPE_INFO;
         param.btnCloseWhite = (type && type.trim().length && ![Toaster.TYPE_WARNING, Toaster.TYPE_INFO, Toaster.TYPE_LIGHT].includes(type) && !param.header) || param.btnCloseWhite;
         super(param);
-        this.#type = `${type} opacity-75`;
+        this.#type = `${type} bs5-toaster`;
     }
 
     show() {

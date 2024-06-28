@@ -164,6 +164,10 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     background-color: var(--bs-white);
 }
 
+.bs5-toaster {
+    opacity: .88;
+}
+
 /* ----------- Tree Nodes -------------- */
 
 .nodes-item {
