@@ -19,6 +19,10 @@ update your design scheme in the future.
 */
 @import url('fontsize.min.css');
 
+:root {
+    --backdrop-zindex: 1050;
+}
+
 body {
     --break-word: break-word;
     word-wrap: var(--break-word);
@@ -164,12 +168,21 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     background-color: var(--bs-white);
 }
 
+/* ------------ pseudo ----------------- */
+
 .bs5-toaster {
     opacity: .88;
 }
 
 [v-cloak] {
     display: none;
+}
+
+/* ------------ zIndex(s) ---------------- */
+
+.responsive-header {
+    position: relative;
+    z-index: calc(var(--backdrop-zindex) - 20);
 }
 
 /* ----------- Tree Nodes -------------- */
@@ -179,10 +192,6 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     padding: 1rem;
     background-color: var(--bs-gray-100); 
     border-radius: 0.4rem;
-}
-
-#tree-nodes {
-    /* transform: scale(0.8); */
 }
 
 /* ---------- [ Genealogy Container Section ] --------- */
@@ -279,13 +288,10 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     color: #fff;
 }
 
-/* ----------- /Tree Nodes ------------- */
-
 /* ------------ TableBuilder -------------- */
 .cell-column {
     text-transform: capitalize;
 }
-/* ------------ /TableBuilder ------------- */
 
 @media (min-width: 992px) {
     .eau-security-wrapper {
