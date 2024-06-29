@@ -300,11 +300,10 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     }
 
     .sidebar {
-        --sidebar-z-index: 1045;
         position: fixed;
         left: 0;
         width: 100%;
-        z-index: var(--sidebar-z-index);
+        z-index: calc(var(--backdrop-zindex) - 10);
     }
 
     .notification-global.notification-list .notification-item {
