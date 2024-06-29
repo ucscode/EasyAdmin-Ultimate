@@ -21,6 +21,8 @@ update your design scheme in the future.
 
 :root {
     --backdrop-zindex: 1050;
+    --header-zindex: calc(var(--backdrop-zindex) - 20);
+    --sidebar-zindex: calc(var(--backdrop-zindex) - 10);
 }
 
 body {
@@ -182,7 +184,7 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
 
 .responsive-header {
     position: relative;
-    z-index: calc(var(--backdrop-zindex) - 20);
+    z-index: var(--header-zindex);
 }
 
 /* ----------- Tree Nodes -------------- */
@@ -303,7 +305,7 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
         position: fixed;
         left: 0;
         width: 100%;
-        z-index: calc(var(--backdrop-zindex) - 10);
+        z-index: var(--sidebar-zindex);
     }
 
     .notification-global.notification-list .notification-item {
