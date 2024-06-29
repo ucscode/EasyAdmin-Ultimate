@@ -168,6 +168,10 @@ input[type="text"] ~ .btn[data-password-toggle] > i::before {
     opacity: .88;
 }
 
+[v-cloak] {
+    display: none;
+}
+
 /* ----------- Tree Nodes -------------- */
 
 .nodes-item {
