@@ -81,7 +81,7 @@ class EauExtension extends AbstractExtension implements GlobalsInterface
         $request = $this->requestStack->getCurrentRequest();
         
         return array_replace_recursive($this->jsPayload->all(), [
-            'basepath' => $request->getBasePath(),
+            'basePath' => $request->getBasePath(),
         ]);
     }
 }
