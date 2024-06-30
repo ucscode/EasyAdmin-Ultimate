@@ -14,15 +14,20 @@
 {% endblock %}
 
 {% block wrapper_wrapper %}
+
+    {% include eau.templatePath('section/js_payload') %}
+    
     {{ parent() }}
+    
+    {% block floating_cart %}
+        {% include dirname(_self) ~ '/section/cart.html.twig' %}
+    {% endblock %}
 
     {% block modal_wrapper %}
         {% if eau.modals|length %}
             {% include 'utility/modal/modals.html.twig' %}
         {% endif %}
     {% endblock %}
-
-    {% include eau.templatePath('section/js_payload') %}
 
 {% endblock %}
 

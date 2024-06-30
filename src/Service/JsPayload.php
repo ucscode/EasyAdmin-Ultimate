@@ -2,8 +2,6 @@
 
 namespace App\Service;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
-
 /**
  * Class JsPayload
  *
@@ -28,6 +26,38 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * ```
  * @package App\Service
  */
-class JsPayload extends ParameterBag
+class JsPayload
 {
+    protected array $payload = [];
+
+    public function __construct(array $parameters = [])
+    {
+        $this->payload = array_replace($this->payload, $parameters);
+    }
+
+    public function set(string $key, mixed $value): static
+    {
+        $this->payload[$key] = $value;
+
+        return $this;
+    }
+
+    public function get(string $key, mixed $default = null): mixed
+    {
+        $this->payload[$key] ?? $default;
+    }
+
+    public function remove(string $key): static
+    {
+        if(array_key_exists($key, $this->payload)) {
+            unset($this->payload[$key]);
+        }
+
+        return $this;
+    }
+    
+    public function all(): array
+    {
+        return $this->payload;
+    }
 }

@@ -5,6 +5,8 @@ namespace App\Twig;
 use App\Context\EauContext;
 use App\Form\Extension\Affix\AffixResolver;
 use App\Service\JsPayload;
+use ParsedownExtra;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -13,7 +15,11 @@ use Twig\TwigFunction;
 
 class EauExtension extends AbstractExtension implements GlobalsInterface
 {
-    public function __construct(protected EauContext $eauContext, protected JsPayload $javascriptContext)
+    public function __construct(
+        protected EauContext $eauContext, 
+        protected JsPayload $jsPayload,
+        protected RequestStack $requestStack
+    )
     {
         //
     }
@@ -22,7 +28,7 @@ class EauExtension extends AbstractExtension implements GlobalsInterface
     {
         return [
             'eau' => $this->eauContext,
-            'js_payload' => base64_encode(json_encode($this->javascriptContext->all()))
+            'js:payload' => $this->getJsPayloadContext(),
         ];
     }
 
@@ -46,7 +52,8 @@ class EauExtension extends AbstractExtension implements GlobalsInterface
             new TwigFilter('html_attributes', fn (iterable $item) => $this->iterableToHtmlAttributes($item)),
             new TwigFilter('boolean_string', fn ($item) => is_bool($item) ? ($item ? 'true' : 'false') : $item),
             new TwigFilter('base64_encode', fn ($value) => base64_encode($value)),
-            new TwigFilter('base64_decode', fn ($value, bool $strict = false) => base64_decode($value, $strict))
+            new TwigFilter('base64_decode', fn ($value, bool $strict = false) => base64_decode($value, $strict)),
+            new TwigFilter('parsedown', fn ($value) => (new ParsedownExtra())->text($value)),
         ];
     }
 
@@ -67,5 +74,14 @@ class EauExtension extends AbstractExtension implements GlobalsInterface
     {
         $affixResolver = new AffixResolver();
         return $affixResolver->resolveAffixTypes(new OptionsResolver(), $value);
+    }
+
+    protected function getJsPayloadContext(): array
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        
+        return array_replace_recursive($this->jsPayload->all(), [
+            'basepath' => $request->getBasePath(),
+        ]);
     }
 }

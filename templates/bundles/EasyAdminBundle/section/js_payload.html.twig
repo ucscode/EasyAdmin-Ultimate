@@ -1,15 +1,8 @@
 {% 
-    set public = {
-        path: asset(''), 
-        url: absolute_url(asset(''))
-    } 
+    set payload = attribute(_context, 'js:payload')|merge({
+        userToken: csrf_token('app_user'),
+        asyncNotificationRoute: path(constant('App\\Controller\\Initial\\Notification\\NotificationController::ROUTE_NAME')),
+    })
 %}
 
-<div id="app-js-payload-container"
-    data-js-payload="{{ js_payload }}" 
-    data-public='{{ public|json_encode|raw|base64_encode }}'
-    data-security-token="{{ csrf_token('app-user') }}"
-    {% if app.user and ea is defined -%}
-        data-async-notification-route="{{ path('async_notification') }}"
-    {% endif -%}
-></div>
+<div id="app-js-payload" data-js-payload="{{ payload|json_encode|base64_encode|raw }}"></div>
