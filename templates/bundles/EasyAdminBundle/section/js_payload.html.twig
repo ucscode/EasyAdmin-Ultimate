@@ -1,8 +1,13 @@
-{% 
-    set payload = attribute(_context, 'js:payload')|merge({
+{# Pass a custom prop that will be added to payload #}
+{% set payload = attribute(_context, 'js:payload')|merge(props|default({})) %}
+
+{# Initialize payload with general properties #}
+{%
+    set payload = payload|merge({
         userToken: csrf_token('app_user'),
         asyncNotificationRoute: path(constant('App\\Controller\\Initial\\Notification\\NotificationController::ROUTE_NAME')),
     })
 %}
 
+{# Create the payload Element #}
 <div id="app-js-payload" data-js-payload="{{ payload|json_encode|base64_encode|raw }}"></div>
