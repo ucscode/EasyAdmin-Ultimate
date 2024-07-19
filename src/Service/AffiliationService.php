@@ -221,7 +221,7 @@ class AffiliationService
             SELECT 
                 kin.id, 
                 kin.email,
-                kin.parent_id as parentId, 
+                kin.parent_id AS parentId, 
                 nodes.depth + 1
             FROM `@entity` kin
             INNER JOIN nodes ON @traversalCondition
@@ -234,7 +234,7 @@ class AffiliationService
         ORDER BY depth
         ";
 
-        $traversalCondition = ($traversal === self::TRAVERSE_CHILDREN) ? "kin.parent_id = nodes.id" : "kin.id = nodes.parent_id";
+        $traversalCondition = ($traversal === self::TRAVERSE_CHILDREN) ? "kin.parent_id = nodes.id" : "kin.id = nodes.parentId";
 
         return strtr($recursionQuery, [
             '@entity' => $this->classMetaData->getTableName(),
