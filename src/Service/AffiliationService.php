@@ -253,6 +253,8 @@ class AffiliationService
      */
     private function resolveCriteriaOptions(array $criteria): array
     {
+        $criteria = array_map(fn ($value) => is_numeric($value) ? intval($value) : $value, $criteria);
+        
         $defaultOptions = [
             'depth' => null, // the depth to get/return
             'entity' => null, // the identity of a child
