@@ -2,7 +2,8 @@
 
 namespace App\Command;
 
-use App\Entity\User;
+use App\Constants\RoleConstant;
+use App\Entity\User\User;
 use App\Enums\RolesEnum;
 use App\Service\Util;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,7 +40,7 @@ class EauCreateUserCommand extends Command
     {
         $email = trim($input->getArgument('email'));
         $password = trim($input->getArgument('password'));
-        $role = trim($input->getArgument('role') ?: RolesEnum::USER->value);
+        $role = trim($input->getArgument('role') ?: RoleConstant::ROLE_USER);
 
         $user = new User();
         
@@ -47,14 +48,13 @@ class EauCreateUserCommand extends Command
             ->setEmail($email)
             ->setRoles([$role])
             ->setPassword($this->passwordHasher->hashPassword($user, $password))
-            ->setReferralCode(Util::generateReferralCode())
-            ->setVerified(true)
+            // add other methods
         ;
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $output->writeln('Admin user created successfully.');
+        $output->writeln('New user created successfully.');
 
         return Command::SUCCESS;
     }
