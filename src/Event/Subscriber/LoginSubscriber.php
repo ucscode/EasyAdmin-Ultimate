@@ -4,6 +4,7 @@ namespace App\Event\Subscriber;
 
 use App\Constants\RoleConstant;
 use App\Service\ConfigurationService;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -38,6 +39,7 @@ class LoginSubscriber implements EventSubscriberInterface
         protected RequestStack $requestStack,
         protected ConfigurationService $configurationService,
         protected UrlGeneratorInterface $urlGenerator,
+        protected Security $security
     ) {
 
     }
@@ -100,7 +102,7 @@ class LoginSubscriber implements EventSubscriberInterface
         ];
 
         foreach($redirections as $role => $pathname) {
-            if($user->hasRole($role)) {
+            if($this->security->isGranted($role)) {
                 $response = new RedirectResponse($this->urlGenerator->generate($pathname));
                 break;
             }
